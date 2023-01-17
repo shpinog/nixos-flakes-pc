@@ -1,0 +1,87 @@
+
+### Some setting
+hide_edge_borders smart_no_gaps
+smart_borders on
+gaps inner 10
+smart_gaps  on
+focus_follows_mouse no
+xwayland enable
+default_border none
+
+#Keyboard layout
+input * {
+    xkb_layout "us,ru"
+    xkb_options "grp:caps_toggle"
+}
+
+# Status Bar:
+bar {
+    position top
+    swaybar_command waybar
+}
+
+### Output configuration
+
+set $output-left DP-3
+#set $output-center DP-2
+set $output-right DP-2
+
+#output  $output-left  pos 0 0 res 1280x1024 max_render_time 20 subpixel rgb
+output  $output-left pos 0 0 res 1600x900@59.978hz max_render_time 20 subpixel rgb
+output  $output-right pos 1600 0 res 1280x1024 subpixel rgb max_render_time 20
+
+
+
+#
+### Workspaces:
+#
+    # Workspace names primary-output
+    set $ws1 "1": 🖥
+    set $ws2 "2": 🌐
+    set $ws3 "3": 
+    set $ws4 "4": 🎮
+    set $ws5 "5": 🎧
+    set $ws6 "6": 💬
+    set $ws7 "7"
+    set $ws8 "8"
+    set $ws9 "9"
+    # Workspace names second-output
+    set $ws11 "11": 🖥*
+    set $ws12 "12": 🌐*
+    set $ws13 "13": *
+    set $ws14 "14": 🎮*
+    set $ws15 "15": 🎧*
+    set $ws16 "16": 💬*
+    set $ws17 "17"  💾* 
+  
+
+# Set first monitor workspaces to first monitor
+workspace $ws3 output $output-left
+workspace $ws4 output $output-left
+workspace $ws5 output $output-left
+workspace $ws6 output $output-left
+workspace $ws7 output $output-left
+workspace $ws8 output $output-left
+workspace $ws9 output $output-left
+
+# Set center monitor workspaces to first monitor
+
+workspace $ws2 output $output-center
+workspace $ws14 output $output-center
+
+# Set second monitor workspaces to second monitor
+workspace $ws1 output $output-right
+workspace $ws11 output $output-right
+workspace $ws12 output $output-right
+workspace $ws13 output $output-right
+workspace $ws15 output $output-right
+workspace $ws16 output $output-right
+workspace $ws17 output $output-right
+workspace $ws18 output $output-right
+workspace $ws19 output $output-right
+
+
+
+include windows
+include bindings
+include autostart
