@@ -7,7 +7,7 @@
         term = "foot";
         login-shell = "yes";
         shell = "fish";
-        font = "Monospace:size=14";
+        font = "DroidSansMono Nerd Font:size=14";
         dpi-aware = "yes";
       };
 

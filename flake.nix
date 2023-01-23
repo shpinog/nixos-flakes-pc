@@ -2,7 +2,7 @@
 # home-manager switch --flake .#shpinog@nixos-pc
 {
   description = "nix config";
-
+  
   inputs = {
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-22.11";
@@ -20,7 +20,14 @@
       nixos-pc = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs; };
         modules = [ 
-          ./nixos/configuration.nix 
+          ./nixos/hosts/nixos-pc
+        ];
+      };
+      
+      nixos-book = nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit inputs; };
+        modules = [ 
+          ./nixos/hosts/nixos-book
         ];
       };
     };
@@ -33,7 +40,16 @@
         extraSpecialArgs = { inherit inputs; }; # Pass flake inputs to our config
         # > Our main home-manager configuration file <
         modules = [
-          ./home-manager/home.nix
+          ./home-manager/hosts/nixos-pc/nixos-pc.nix
+        ];
+      };
+
+      "shpinog@nixos-book" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+        extraSpecialArgs = { inherit inputs; }; # Pass flake inputs to our config
+        # > Our main home-manager configuration file <
+        modules = [
+          ./home-manager/hosts/nixos-book/nixos-book.nix
         ];
       };
     };

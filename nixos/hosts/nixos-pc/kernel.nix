@@ -1,28 +1,22 @@
 { config, pkgs, lib, ... }: {
 
-  # Boot and modules
-  nix.settings.cores = 12;
-  nix.settings.max-jobs = 12;
 
-  boot.kernelPackages = with pkgs; linuxPackages_xanmod;
+  boot.kernelPackages = with pkgs; linuxPackages_xanmod_latest;
 
   # Nvidia driver branch
   # hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.production;
   # hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.latest;
   hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
-
-  boot.initrd.enable = true;
-  boot.initrd.availableKernelModules = [ "ehci_pci" "ahci"  "nvme" "xhci_pci" "usb_storage" "usbhid" "sd_mod"  ];
-  boot.initrd.kernelModules = [ "dm-snapshot" "nvme"  ];
-  boot.kernelModules = [ "kvm-intel" ];
   boot.supportedFilesystems = [ "ntfs" ];
-  zramSwap.enable = false;
-  zramSwap.algorithm = "zstd";
 
+  zramSwap = {
+      enable = true;
+      algorithm = "zstd";
+      memoryPercent = 150;
+      priority = 10;
+    };
 
   ### Boot Kernel
-
-  # Use the systemd-boot EFI boot loader.
   boot = {
     loader = {
       systemd-boot.enable = true;

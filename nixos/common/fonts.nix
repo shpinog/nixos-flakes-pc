@@ -1,18 +1,18 @@
 { config, pkgs, ... }: {
-
-
   fonts = {
-
-    fontDir.enable = true;
-    enableGhostscriptFonts = true;
+    # fontDir.enable = true;
+    # enableGhostscriptFonts = true;
     enableDefaultFonts = true;
     fonts = with pkgs; [
-      ubuntu_font_family
       jetbrains-mono
       noto-fonts-emoji
+      noto-fonts
       dejavu_fonts
-      font-awesome
       liberation_ttf
+      terminus-nerdfont
+      hackgen-nf-font
+      powerline-symbols
+     (nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" ]; })
     ];
 
     fontconfig = {
@@ -30,11 +30,11 @@
       defaultFonts = {
         serif = [ "Noto Serif" ];
         sansSerif = [  "Noto Sans" ];
-        monospace = [ "JetBrains Mono Regular" "Noto Sans Mono" "Iosevka" ];
-        emoji = ["Font Awesome 5 Brands" "Noto Color Emoji" "Font Awesome 5 Free" "Font Awesome 5 Free Solid" ];
+        monospace = [ "JetBrains Mono Regular" "Noto Sans Mono" ];
+        emoji = [  "Noto Color Emoji" ];
 
       };
-    };
+     };
   };
 
 }
