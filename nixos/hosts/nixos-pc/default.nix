@@ -1,9 +1,7 @@
 { inputs, lib, config, pkgs, ... }: {
 
   # Boot and modules
-  nix.settings.cores = 12;
-  nix.settings.max-jobs = 12;
-
+  
   imports = [
     ./hardware-configuration.nix
     ./kernel.nix
@@ -19,7 +17,6 @@
     ../../common/audio.nix
   ];
 
-  networking.hostName = "nixos-pc";
 
   nixpkgs = {
     overlays = [
@@ -37,6 +34,8 @@
     settings = {
       experimental-features = "nix-command flakes";
       auto-optimise-store = true;
+      cores = 12;
+      max-jobs = 12;
     };
   };
 

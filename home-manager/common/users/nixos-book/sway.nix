@@ -2,7 +2,7 @@
 
 xdg.configFile."sway" = {
   recursive = false;
-  source = "${../dotfiles/sway}";
+  source = "${../../dotfiles/nixos-book/sway}";
 };
 
 home.packages = with pkgs; [

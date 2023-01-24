@@ -19,7 +19,7 @@
   #waybar configuration files
   xdg.configFile."waybar" = {
     recursive = false;
-    source = "${../dotfiles/waybar}";
+    source = "${../../dotfiles/nixos-pc/waybar}";
   };
 
 
