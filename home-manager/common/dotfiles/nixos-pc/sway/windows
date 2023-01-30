@@ -25,6 +25,7 @@ set $player mpv
 assign [app_id="$terminal"] → $ws1
 assign [app_id="Alacritty"] → $ws1
 for_window [app_id="$terminal"] move window to workspace "$ws1", focus, opacity $opacity
+for_window [app_id="$terminal"] layout tabbed
 for_window [app_id="Alacritty"] move window to workspace "$ws1", focus, opacity $opacity
                                 
                                 ####-2-####

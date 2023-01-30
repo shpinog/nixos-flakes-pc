@@ -4,6 +4,9 @@
   networking.enableIPv6 = false;
   networking.networkmanager.enable = true;
   networking.networkmanager.dns = "none";
+  networking.firewall.checkReversePath = false;
+  networking.firewall.allowedTCPPorts = [ 8868 4662 4679 22 ];
+  networking.firewall.allowedUDPPorts = [ 8868 4679 4672 69 ];
 
   services.openssh = {
     enable = true;

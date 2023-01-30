@@ -1,5 +1,7 @@
 
 { config, pkgs, system, ... }:{
+    
+
   programs = {
 
     thunar = {

@@ -1,6 +1,6 @@
 { pkgs, ... }:{
 
-  services.xserver.videoDrivers = ["nvidia" "radeon"];
+  services.xserver.videoDrivers = ["nvidia" "amdgpu"];
   hardware.nvidia.modesetting.enable = true;
   # hardware.nvidia.nvidiaPersistenced = true;
   # hardware.nvidia.powerManagement.enable = true;

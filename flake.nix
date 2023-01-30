@@ -4,6 +4,8 @@
   description = "nix config";
   
   inputs = {
+
+    impermanence.url = "github:nix-community/impermanence";
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-22.11";
     nur = {
@@ -15,12 +17,13 @@
 
   };
 
-  outputs = { nixpkgs, home-manager,  ... }@inputs: {
+  outputs = { nixpkgs, home-manager, impermanence, ... }@inputs: {
     nixosConfigurations = {
       nixos-pc = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs; };
         modules = [ 
           ./nixos/hosts/nixos-pc
+          impermanence.nixosModule
         ];
       };
       

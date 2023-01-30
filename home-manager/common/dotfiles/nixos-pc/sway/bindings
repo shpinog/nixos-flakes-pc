@@ -53,10 +53,10 @@ set $mod Mod4
 # Moving around:
 #
     # Move your focus around
-    bindsym --to-code $mod+h focus left
-    bindsym --to-code $mod+j focus down
-    bindsym --to-code $mod+k focus up
-    bindsym --to-code $mod+l focus right
+    bindsym --to-code $mod+Left focus left
+    bindsym --to-code $mod+Down focus down
+    bindsym --to-code $mod+Up focus up
+    bindsym --to-code $mod+Right focus right
 
     # Move t he focused window with the same, but add Shift
     bindsym --to-code $mod+Shift+h move left
@@ -139,10 +139,10 @@ set $mod Mod4
     bindsym  --to-code $mod+Shift+space floating toggle
 
     # Swap focus between the tiling area and the floating area
-    bindsym $mod+space focus mode_toggle
+    # bindsym $mod+space focus mode_toggle
 
     # Move focus to the parent container
-    bindsym  --to-code $mod+a focus parent
+    # bindsym  --to-code $mod+a focus parent
 #
 # Scratchpad:
 #

@@ -70,7 +70,7 @@ workspace $ws2 output $output-center
 workspace $ws14 output $output-center
 
 # Set second monitor workspaces to second monitor
-workspace $ws1 output $output-right
+workspace $ws1 output $output-right 
 workspace $ws11 output $output-right
 workspace $ws12 output $output-right
 workspace $ws13 output $output-right
