@@ -11,6 +11,7 @@
     ../../common/gtk.nix
     ../../common/mpv.nix
     ../../common/xdg.nix
+    ../../common/packages.nix
     
   ];
 
