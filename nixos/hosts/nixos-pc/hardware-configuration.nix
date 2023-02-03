@@ -28,6 +28,7 @@
     { device = "/dev/disk/by-uuid/081435b7-df56-426c-a121-b58204b2802f";
       fsType = "btrfs";
       options = [ "subvol=home" ];
+      neededForBoot = true;
     };
 
 

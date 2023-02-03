@@ -1,9 +1,8 @@
 { inputs, lib, config, pkgs, ... }: {
 
-  # Boot and modules
-  
   imports = [
     ./hardware-configuration.nix
+    ./persist.nix
     ./kernel.nix
     ./nvidia.nix
     ./programs.nix
@@ -18,13 +17,7 @@
   ];
 
 
-  nixpkgs = {
-    overlays = [
-    ];
-    config = {
-      allowUnfree = true;
-    };
-  };
+  nixpkgs = {overlays = []; config = {allowUnfree = true; }; };
 
   nix = {
     registry = lib.mapAttrs (_: value: { flake = value; }) inputs;
@@ -39,13 +32,15 @@
     };
   };
 
-  networking.hostName = "nixos-pc";
-
+  # networking.hostName = "nixos-pc";
+  
   users.users= {
   shpinog = {
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" "storage" "media" "lp"  "video" ];
-    initialPassword = "123";
+    hashedPassword = "$6$nBo/qjuyUFF2nzWL$MdmWyGhfbardBXoI9mT2p/kSvHCCCbdhD/kgt/VW/vTV.t9k5Lq04hPpg7jKQ5aEMzDHGDtXh.9uSBvvHQOcC0";
+
+    # initialPassword = "123";
     };
   };
 

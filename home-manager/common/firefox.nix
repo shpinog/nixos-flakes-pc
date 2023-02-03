@@ -10,6 +10,7 @@
   nixpkgs.overlays = with inputs; [nur.overlay];
   programs.firefox = {
     enable = true;
+    package = pkgs.firefox-esr;
     extensions = with pkgs.nur.repos.rycee.firefox-addons;[
       # https-everywhere
       bitwarden
