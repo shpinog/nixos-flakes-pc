@@ -10,8 +10,9 @@
         cache-pause-initial = "yes";
         cache-pause-wait = "10";
         interpolation = "yes";
-        video-sync = "display-resample";
-        tscale = "oversample";
+        hwdec = "auto-safe";
+        vo = "gpu";
+        gpu-context = "wayland";
         hwdec-codecs = "all";
         audio-channels = "stereo";
         #      gpu-context = "x11vk";

@@ -13,6 +13,7 @@ home.packages = with pkgs; [
   slurp # wayland
   wl-clipboard
   wofi
+  fuzzel
   flashfocus
   autotiling
   jq

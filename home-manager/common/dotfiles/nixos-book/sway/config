@@ -148,8 +148,7 @@ set $player mpv
     bindsym --to-code $mod+c kill
 
     # Start --to-code your launcher
-    bindsym --to-code $mod+r exec rofi -show drun
-
+    bindsym --to-code $mod+r exec fuzzel 
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
     # Despite the name, also works for non-floating windows.
@@ -225,7 +224,7 @@ set $player mpv
 
 
 ### Alt-tab switch Workspace and next
-    bindsym Mod1+Tab workspace back_and_forth
+    bindsym $mod_alt+Tab workspace prev
     bindsym $mod+Tab workspace next
 
 
@@ -309,7 +308,6 @@ exec autotiling
 exec_always --no-startup-id flashfocus
 exec swaykbdd
 #exec wl-paste -p -t text --watch clipman store -P --histpath="~/.local/share/clipman-primary.json" --no-startup-id flashfocus
-bindsym $mod+o exec clipman pick -t wofi
 exec_always nm-applet --indicator &
 exec udiskie   --tray &
 exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK

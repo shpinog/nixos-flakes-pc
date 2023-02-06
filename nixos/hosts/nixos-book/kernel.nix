@@ -26,14 +26,19 @@
 
       ];
 
-    # kernel.sysctl."vm.swappiness" = 200;
+    kernel.sysctl."vm.swappiness" = 100;
+    kernel.sysctl."vm.watermark_scale_factor" = 1000;
+
     # kernel.sysctl."kernel/sysrq" = 1;
     # kernel.sysctl."abi.vsyscall32" = 0;
     kernelParams = [
       "quiet"
       "fsck.mode=force"
       "mitigations=off"
+      "i915.mitigations=off"
       "intel_pstate=false"
+       "enable_dc=0" 
+       "enable_fbc=1"
     ];
   };
 
