@@ -25,7 +25,7 @@
             flags = {
                 basic = true;
                 tree = true;
-                mem_as_value = false;
+                mem_as_value = true;
               };
           };
       };
