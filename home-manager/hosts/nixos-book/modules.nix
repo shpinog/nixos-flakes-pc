@@ -5,6 +5,7 @@
     ../../common/users/nixos-book/waybar.nix
     ../../common/users/nixos-book/environment.nix
     ../../common/nvim.nix
+    ../../common/base.nix
     ../../common/firefox.nix
     ../../common/foot.nix
     ../../common/fish.nix
@@ -16,24 +17,4 @@
     
   ];
 
-  programs = {
-
-    bat = {
-      enable = true;
-      config = { paging = "never"; };
-    };
-
-    fzf = {
-      enable = true;
-      enableFishIntegration = true;
-    };
-
-
-    lsd = {
-      enable = true;
-      enableAliases = true;
-    };
-
-
-  };
 }

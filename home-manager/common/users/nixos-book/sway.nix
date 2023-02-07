@@ -19,8 +19,10 @@ home.packages = with pkgs; [
   jq
 ];
 
+
 wayland.windowManager.sway = {
   enable = true;
+  systemdIntegration = true;
   config = rec {
     modifier = "Mod4";
     # Use kitty as default terminal
@@ -30,6 +32,7 @@ wayland.windowManager.sway = {
       # {command = "firefox";}
     ];
   };
+
 };
 
 }

@@ -2,6 +2,9 @@
   programs.fish = {
     enable = true;
     package = pkgs.fish;
+    shellAbbrs = {
+        htop = "btm";
+      };
     plugins = [
     ]; 
     functions = {

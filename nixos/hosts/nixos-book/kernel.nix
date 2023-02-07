@@ -15,6 +15,7 @@
 
 
   boot = {
+    plymouth.enable = true;
     loader = {
       grub.enable = true;
       grub.device = "/dev/sda";
@@ -33,12 +34,11 @@
     # kernel.sysctl."abi.vsyscall32" = 0;
     kernelParams = [
       "quiet"
+      "vga=773"
       "fsck.mode=force"
       "mitigations=off"
       "i915.mitigations=off"
       "intel_pstate=false"
-       "enable_dc=0" 
-       "enable_fbc=1"
     ];
   };
 

@@ -34,15 +34,16 @@ set $mod_alt Mod1
     # Workspace names primary-output
     set $ws1 "1": 🖥
     set $ws2 "2": 🌐
-    set $ws3 "3": 
+    set $ws3 "3": 💬
     set $ws4 "4": 🎮
     set $ws5 "5": 🎧
-    set $ws6 "6": 💬
+    set $ws6 "6": 
   
 
 
 # Your apps
-set $terminal foot
+set $terminal footclient
+set $terminalID foot
 set $browser chromium
 set $browserClass Chromium-browser
 set $browserID chromium-browser
@@ -64,9 +65,9 @@ set $player mpv
     ### Assign apps to workspaces
 
                                     ####-1-####
-    assign [app_id="$terminal"] → $ws1
+    assign [app_id="$terminalID"] → $ws1
     assign [app_id="Alacritty"] → $ws1
-    for_window [app_id="$terminal"] move window to workspace "$ws1", focus, opacity $opacity, layout tabbed
+    for_window [app_id="$terminalID"] move window to workspace "$ws1", focus, opacity $opacity, layout tabbed
                                     ####-2-####
 
     assign [app_id="^firefox"] → $ws2
@@ -94,10 +95,10 @@ set $player mpv
 
                                     ####-5-####
 
-    assign [app_id="^kotatogramdesktop"] → $ws5
-    assign [app_id="^telegramdesktop"] → $ws5
-    for_window [app_id="^kotatogramdesktop"] move window to workspace "$ws5", focus
-    for_window [app_id="^telegramdesktop"] move window to workspace "$ws5", focus
+    assign [app_id="^kotatogramdesktop"] → $ws3
+    assign [app_id="^telegramdesktop"] → $ws3
+    for_window [app_id="^kotatogramdesktop"] move window to workspace "$ws3", focus
+    for_window [app_id="^telegramdesktop"] move window to workspace "$ws3", focus
 
                                     
                                     ####-6-####
