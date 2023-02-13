@@ -4,9 +4,9 @@
   boot.kernelPackages = with pkgs; linuxPackages_xanmod_latest;
 
   # Nvidia driver branch
-  # hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.production;
+  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.production;
   # hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
-  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
+  # hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
   boot.supportedFilesystems = [ "ntfs" ];
 
   zramSwap = {
@@ -27,7 +27,7 @@
     };
     blacklistedKernelModules =
       [ 
-        "radeon"
+        "amdgpu"
         "nouveau"
       ];
     kernel.sysctl."kernel/sysrq" = 1;
@@ -37,7 +37,7 @@
       "fsck.mode=force"
       "mitigations=off"
       "intel_pstate=enable"
-      "amdgpu.si_support=1"
+      "amdgpu.si_support=0"
     ];
   };
 

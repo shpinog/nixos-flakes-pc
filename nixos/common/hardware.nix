@@ -11,6 +11,7 @@
       vaapiIntel         # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
       vaapiVdpau
       libvdpau-va-gl
+      vulkan-tools
     ];
   };
 

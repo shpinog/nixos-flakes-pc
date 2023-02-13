@@ -12,6 +12,8 @@ environment.systemPackages = with pkgs; [
     coreutils
     killall
     gcc
+    btop
+    lm_sensors
     unzip
     wget
     iw

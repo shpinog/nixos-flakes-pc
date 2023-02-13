@@ -17,11 +17,11 @@
     #Nvidia X11
 
     #nvidia wayland
-    # __GL_THREADED_OPTIMIZATION = "1";
+     __GL_THREADED_OPTIMIZATION = "1";
     # GBM_BACKEND = "nvidia-drm";
     # __GLX_VENDOR_LIBRARY_NAME = "nvidia";
     #  __GLX_VENDOR_LIBRARY_NAME = "mesa";
-    # __VK_LAYER_NV_optimus = "NVIDIA_only";
+     __VK_LAYER_NV_optimus = "NVIDIA_only";
     # vblank_mode = "0";
     # __GL_SYNC_TO_VBLANK = "0";
     # LIBVA_DRIVER_NAME = "vdpau";

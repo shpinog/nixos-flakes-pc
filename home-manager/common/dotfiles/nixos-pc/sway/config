@@ -56,6 +56,7 @@ output  $output-right pos 1600 0 res 1280x1024 subpixel rgb max_render_time 20
   
 
 # Set first monitor workspaces to first monitor
+workspace $ws2 output $output-left
 workspace $ws3 output $output-left
 workspace $ws4 output $output-left
 workspace $ws5 output $output-left
@@ -66,7 +67,6 @@ workspace $ws9 output $output-left
 
 # Set center monitor workspaces to first monitor
 
-workspace $ws2 output $output-center
 workspace $ws14 output $output-center
 
 # Set second monitor workspaces to second monitor
