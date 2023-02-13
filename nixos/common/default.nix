@@ -10,6 +10,9 @@
 
 environment.systemPackages = with pkgs; [
     coreutils
+    lm_sensors
+    pciutils
+    btop
     killall
     gcc
     btop

@@ -15,6 +15,7 @@
 
 
   boot = {
+    plymouth.enable = true;
     loader = {
       grub.enable = true;
       grub.device = "/dev/sda";
@@ -26,13 +27,17 @@
 
       ];
 
-    # kernel.sysctl."vm.swappiness" = 200;
+    kernel.sysctl."vm.swappiness" = 100;
+    kernel.sysctl."vm.watermark_scale_factor" = 1000;
+
     # kernel.sysctl."kernel/sysrq" = 1;
     # kernel.sysctl."abi.vsyscall32" = 0;
     kernelParams = [
       "quiet"
+      "vga=773"
       "fsck.mode=force"
       "mitigations=off"
+      "i915.mitigations=off"
       "intel_pstate=false"
     ];
   };

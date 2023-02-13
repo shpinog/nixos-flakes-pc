@@ -14,10 +14,10 @@
     passwordAuthentication = true;
   };
 
-  programs.nm-applet = {
-    enable = true;
-    indicator = true;
-  };
+  # programs.nm-applet = {
+  #   enable = true;
+  #   indicator = true;
+  # };
 
   networking = {
     nameservers = [ "8.8.8.8" ];

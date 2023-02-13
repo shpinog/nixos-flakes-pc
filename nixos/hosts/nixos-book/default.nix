@@ -5,7 +5,6 @@
     ./programs.nix
     ../../common/hardware.nix
     ../../common/network.nix
-    ../../common/steam.nix
     ../../common/fonts.nix
     ../../common/default.nix
     ../../common/polkit.nix
