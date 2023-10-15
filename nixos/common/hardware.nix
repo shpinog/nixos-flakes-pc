@@ -3,8 +3,10 @@
   hardware.enableRedistributableFirmware = true; # For some unfree drivers
   hardware.cpu.intel.updateMicrocode = true;
   hardware.enableAllFirmware = true;
+
    hardware.opengl = {
     enable = true;
+    driSupport = true;
     driSupport32Bit = true;
     extraPackages = with pkgs; [
       intel-media-driver # LIBVA_DRIVER_NAME=iHD
@@ -14,11 +16,11 @@
       vulkan-tools
     ];
   };
-
   powerManagement = {
     enable = true;
-    cpuFreqGovernor = "schedutil";
+    cpuFreqGovernor = "performance";
   };
+  services.upower.enable = true;
 
 
 

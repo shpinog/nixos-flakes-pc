@@ -11,6 +11,7 @@
       liberation_ttf
       terminus-nerdfont
       hackgen-nf-font
+      ubuntu_font_family
       powerline-symbols
      (nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" ]; })
     ];
@@ -28,9 +29,9 @@
       };
       
       defaultFonts = {
-        serif = [ "Noto Serif" ];
-        sansSerif = [  "Noto Sans" ];
-        monospace = [ "JetBrains Mono Regular" "Noto Sans Mono" ];
+        serif = [ "Ubuntu" ];
+        sansSerif = [  "Ubuntu Sans" ];
+        monospace = [ "JetBrains Mono Regular"];
         emoji = [  "Noto Color Emoji" ];
 
       };

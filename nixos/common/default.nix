@@ -7,15 +7,17 @@
   };
 
   time.timeZone = "Europe/Moscow";
+  services.udisks2.enable = true;
 
 environment.systemPackages = with pkgs; [
+    cachix
+    vulkan-validation-layers
     coreutils
     lm_sensors
     pciutils
     btop
     killall
     gcc
-    btop
     lm_sensors
     unzip
     wget
@@ -31,5 +33,7 @@ environment.systemPackages = with pkgs; [
     ripgrep
     #Destop
     shotwell
+    nix-prefetch-github
+    swappy
   ];
 }

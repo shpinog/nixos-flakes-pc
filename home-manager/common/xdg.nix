@@ -23,17 +23,18 @@
         "video/mp4" = [ "mpv.desktop" "vlc.desktop" ];
         "audio/ogg" = [ "mpv.desktop" "vlc.desktop" ];
         "inode/directory" = [ "org.gnome.Nautilus.desktop" ];
-        "text/uri-list" = [ "firefox.desktop" ];
-        "text/x-uri" = [ "firefox.desktop" ];
-        "x-scheme-handler/http" = [ "firefox.desktop" ];
-        "x-scheme-handler/https" = [ "firefox.desktop" ];
-        "x-scheme-handler/chrome" = [ "firefox.desktop" ];
-        "application/x-extension-htm" = [ "firefox.desktop" ];
-        "application/x-extension-html" = [ "firefox.desktop" ];
-        "application/xhtml+xml" = [ "firefox.desktop" ];
-        "application/x-extension-xhtml" = [ "firefox.desktop" ];
-
-
+        "text/uri-list" = [ "vivaldi-stable.desktop" ];
+        "text/x-uri" = [ "vivaldi-stable.desktop" ];
+        "x-scheme-handler/http" = [ "vivaldi-stable.desktop" ];
+        "x-scheme-handler/https" = [ "vivaldi-stable.desktop" ];
+        "x-scheme-handler/chrome" = [ "vivaldi-stable.desktop" ];
+        "application/x-extension-htm" = [ "vivaldi-stable.desktop" ];
+        "application/x-extension-html" = [ "vivaldi-stable.desktop" ];
+        "application/xhtml+xml" = [ "vivaldi-stable.desktop" ];
+        # "application/x-extension-xhtml" = [ "vivaldi-stable.desktop" ];
+        "application/x-extension-xhtml" = [ "vivaldi-stable.desktop" ];
+        "application/pdf" = ["org.pwmt.zathura.desktop"]; #pdf
+        "image/jpeg" = ["org.gnome.Shotwell-Viewer.desktop"]; #jpg
       };
       associations.added = { };
 

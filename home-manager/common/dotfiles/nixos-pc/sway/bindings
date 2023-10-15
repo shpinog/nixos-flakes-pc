@@ -59,10 +59,10 @@ set $mod Mod4
     bindsym --to-code $mod+Right focus right
 
     # Move t he focused window with the same, but add Shift
-    bindsym --to-code $mod+Shift+h move left
-    bindsym --to-code $mod+Shift+j move down
-    bindsym --to-code $mod+Shift+k move up
-    bindsym --to-code $mod+Shift+l move right
+    bindsym --to-code $mod+Shift+Left focus left
+    bindsym --to-code $mod+Shift+Down focus down
+    bindsym --to-code $mod+Shift+Up focus up
+    bindsym --to-code $mod+Shift+Right focus right
     bindsym --to-code $mod+KP_Multiply move container to workspace prev; workspace prev
     bindsym --to-code $mod+KP_Subtract move container to workspace next; workspace next
 #
@@ -79,10 +79,10 @@ set $mod Mod4
     
     bindsym Mod1+1 workspace $ws11
     bindsym Mod1+2 workspace $ws12
-    bindsym Mod1+3 workspace $ws13
+    bindsym Mod1+6 workspace $ws13
     bindsym Mod1+4 workspace $ws14
     bindsym Mod1+5 workspace $ws15
-    bindsym Mod1+6 workspace $ws16
+    bindsym Mod1+3 workspace $ws16
 
     
     

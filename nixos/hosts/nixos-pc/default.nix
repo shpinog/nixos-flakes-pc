@@ -4,7 +4,7 @@
     ./hardware-configuration.nix
     ./persist.nix
     ./kernel.nix
-    ./nvidia.nix
+    # ./nvidia.nix
     ./programs.nix
     ../../common/hardware.nix
     ../../common/network.nix
@@ -14,8 +14,14 @@
     ../../common/polkit.nix
     ../../common/greetd.nix
     ../../common/audio.nix
+    ../../common/filesystem.nix
+    ../../common/hyperland.nix
   ];
 
+
+
+
+  services.xserver.videoDrivers = ["modesettings"];
 
   nixpkgs = {overlays = []; config = {allowUnfree = true; }; };
 
@@ -37,7 +43,7 @@
   users.users= {
   shpinog = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" "storage" "media" "lp"  "video" ];
+    extraGroups = [ "wheel" "networkmanager" "storage" "media" "lp"  "video" "input" ];
     hashedPassword = "$6$nBo/qjuyUFF2nzWL$MdmWyGhfbardBXoI9mT2p/kSvHCCCbdhD/kgt/VW/vTV.t9k5Lq04hPpg7jKQ5aEMzDHGDtXh.9uSBvvHQOcC0";
 
     # initialPassword = "123";

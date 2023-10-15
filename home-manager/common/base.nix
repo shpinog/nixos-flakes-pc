@@ -1,5 +1,8 @@
 { config, pkgs,inputs, ... }: {
 
+  nixpkgs.config.permittedInsecurePackages = [
+                "openssl-1.1.1u"
+              ];
 
   programs = {
 
@@ -18,6 +21,16 @@
       enable = true;
       enableAliases = true;
     };
+
+    alacritty = {
+        enable = true;
+        settings = {
+            shell = {
+                program = "fish";
+              }; 
+          };
+
+      };
 
     bottom = {
         enable = true;

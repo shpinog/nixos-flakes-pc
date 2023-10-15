@@ -17,5 +17,13 @@
       enable = true;
     };
 
+    droidcam = {
+      enable = true;
+    };
+
+    adb = {
+      enable= true;
+      };
+
   };
 }

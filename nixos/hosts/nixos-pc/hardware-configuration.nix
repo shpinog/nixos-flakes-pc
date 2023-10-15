@@ -8,9 +8,9 @@
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "radeon" "nvidia" "ehci_pci" "ahci" "nvme" "xhci_pci" "usbhid" "sd_mod" ];
-  boot.initrd.kernelModules = [ ];
-  boot.kernelModules = ["nvidia" "kvm-intel" ];
+  boot.initrd.availableKernelModules = [ "amdgpu" "ehci_pci" "ahci" "nvme" "xhci_pci" "usbhid" "sd_mod" ];
+  boot.initrd.kernelModules = ["amdgpu" ];
+  boot.kernelModules = ["amdgpu" "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
@@ -21,16 +21,27 @@
   fileSystems."/nix" =
     { device = "/dev/disk/by-uuid/081435b7-df56-426c-a121-b58204b2802f";
       fsType = "btrfs";
-      options = [ "subvol=nix" ];
+      options = [ "subvol=nix" "compress=zstd" ];
     };
 
   fileSystems."/home" =
     { device = "/dev/disk/by-uuid/081435b7-df56-426c-a121-b58204b2802f";
       fsType = "btrfs";
-      options = [ "subvol=home" ];
+      options = [ "subvol=home" "compress=zstd" ];
       neededForBoot = true;
     };
 
+  fileSystems."/home/shpinog/mnt/files" =
+  { device = "/dev/disk/by-uuid/04af76ef-a8d9-4ce4-80dd-375339c81164";
+    fsType = "ext4";
+    options = [ "noauto" "x-systemd.automount" ];
+  };
+
+  fileSystems."/home/shpinog/mnt/backup" =
+  { device = "/dev/disk/by-uuid/4e52c8ed-2dc3-4796-9ca2-cc2f80b561ff";
+    fsType = "ext4";
+    options = [ "noauto" "x-systemd.automount" ];
+  };
 
   fileSystems."/boot" =
     { device = "/dev/disk/by-uuid/9464-1E2B";

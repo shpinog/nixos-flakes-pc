@@ -1,7 +1,7 @@
 { inputs, lib, config, pkgs, ... }: {
 
   networking.useDHCP = false;
-  networking.enableIPv6 = false;
+  networking.enableIPv6 = true;
   networking.networkmanager.enable = true;
   networking.networkmanager.dns = "none";
   networking.firewall.checkReversePath = false;

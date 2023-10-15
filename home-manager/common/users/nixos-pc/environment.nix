@@ -2,15 +2,15 @@
   home.sessionVariables = {
     #User vars
     EDITOR = "nvim";
+    NIXOS_OZONE_WL = 1;
     #GTK & QT settings
-    # GTK_THEME = "Yaru:dark";
+    GTK_THEME = "Yaru:dark";
     # MOZ_ENABLE_WAYLAND = 1;
     # XDG_CURRENT_DESKTOP = "sway";
     # XDG_SESSION_TYPE = "wayland";
     # _JAVA_AWT_WM_NONREPARENTING = "1";
     QT_QPA_PLATFORM = "wayland";
     QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
-    MOZ_DISABLE_RDD_SANDBOX = "1";
     #Sway
     # WLR_NO_HARDWARE_CURSORS = 1;
     # WLR_DRM_NO_MODIFIERS = 1;
@@ -18,14 +18,18 @@
     #Nvidia X11
 
     #nvidia wayland
+    # VK_LOADER_DRIVERS_SELECT="nvidia*";
+    # VK_ICD_FILENAMES="/run/opengl-driver/share/vulkan/icd.d/nvidia_icd.x86_64.json";
     # __GL_THREADED_OPTIMIZATION = "1";
     # GBM_BACKEND = "nvidia-drm";
     # __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-    #  __GLX_VENDOR_LIBRARY_NAME = "mesa";
+      # __GLX_VENDOR_LIBRARY_NAME = "mesa";
     # __VK_LAYER_NV_optimus = "NVIDIA_only";
     # vblank_mode = "0";
     # __GL_SYNC_TO_VBLANK = "0";
     # LIBVA_DRIVER_NAME = "vdpau";
+    # VDPAU_DRIVER="radeonsi";
+    # LIBVA_DRIVER_NAME="radeonsi";
 
   };
 

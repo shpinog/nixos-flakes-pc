@@ -6,7 +6,7 @@ environment.systemPackages = [
       "$@"
       systemctl --user import-environment PATH
 
-      ${pkgs.sway}/bin/sway --unsupported-gpu
+      ${pkgs.hyprland}/bin/Hyprland
     '')
 ];
 

@@ -13,6 +13,7 @@
       ../../common/xdg.nix
       ../../common/packages.nix
       ../../common/chromium.nix
+      ../../common/base.nix
   ];
   nixpkgs.config.allowUnfree = true;
   home.packages = with pkgs; [
@@ -31,11 +32,6 @@
         enableFishIntegration = true;
       };
 
-
-      lsd = {
-        enable = true;
-        enableAliases = true;
-      };
 
 
     };

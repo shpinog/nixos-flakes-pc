@@ -10,13 +10,16 @@ let
 in
 {
   environment.systemPackages = [ nvidia-offload ];
-  services.xserver.videoDrivers = ["nvidia" "radeon"];
   hardware.nvidia.modesetting.enable = true;
-  # hardware.nvidia.nvidiaPersistenced = true;
-  # hardware.nvidia.powerManagement.enable = true;
+  hardware.nvidia.nvidiaPersistenced = true;
+  hardware.nvidia.powerManagement.enable = true;
   hardware.nvidia.prime = {
-    offload.enable = true;
-    sync.enable = false;
+    # offload.enable = true;
+     reverseSync.enable = false;
+     sync = {
+       enable = true;
+       allowExternalGpu = true;
+       };
 
     # # Bus ID of the Intel GPU. You can find it using lspci, either under 3D or VGA
     amdgpuBusId = "PCI:4:0:0";

@@ -15,7 +15,7 @@ exec hash dbus-update-activation-environment 2>/dev/null && \
      dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK
 exec wl-paste -t text --watch clipman store --no-persist
 exec swaykbdd
-exec  xrandr --output XWAYLAND1 --primary
+exec xrandr --output DP-3 --primary
 
 ##gtk theme
 exec_always {

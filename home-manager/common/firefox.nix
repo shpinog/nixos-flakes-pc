@@ -11,17 +11,17 @@
   programs.firefox = {
     enable = true;
     package = pkgs.firefox-esr;
-    extensions = with pkgs.nur.repos.rycee.firefox-addons;[
-      # https-everywhere
-      bitwarden
-      ublock-origin
-      violentmonkey
-      translate-web-pages
-      languagetool
-    ];
     profiles = {
       shpinog = {
         isDefault = true;
+        extensions = with pkgs.nur.repos.rycee.firefox-addons;[
+            # https-everywhere
+            bitwarden
+            ublock-origin
+            violentmonkey
+            translate-web-pages
+            languagetool
+        ];
         settings = {
           "browser.startup.homepage" = "https://nixos.org";
           "browser.search.region" = "RU";

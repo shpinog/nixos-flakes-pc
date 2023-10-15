@@ -4,10 +4,12 @@
   description = "nix config";
   
   inputs = {
-
+    
+    #Hyprland
+    hyprland.url = "github:hyprwm/Hyprland";
     impermanence.url = "github:nix-community/impermanence";
     # Nixpkgs
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-22.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nur = {
       url = github:nix-community/NUR;
     };
@@ -23,6 +25,7 @@
         specialArgs = { inherit inputs; };
         modules = [ 
           ./nixos/hosts/nixos-pc
+          ./nixos/common/hyperland.nix
           impermanence.nixosModule
         ];
       };

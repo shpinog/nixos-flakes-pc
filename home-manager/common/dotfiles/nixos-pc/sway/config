@@ -12,7 +12,12 @@ default_border none
 input * {
     xkb_layout "us,ru"
     xkb_options "grp:caps_toggle"
+    accel_profile "flat"
+    pointer_accel  0
 }
+
+
+
 
 # Status Bar:
 bar {
@@ -22,13 +27,14 @@ bar {
 
 ### Output configuration
 
-set $output-left DP-3
-#set $output-center DP-2
 set $output-right DP-2
+#set $output-center DP-2
+set $output-left DP-3
 
-#output  $output-left  pos 0 0 res 1280x1024 max_render_time 20 subpixel rgb
-output  $output-left pos 0 0 res 1600x900@59.978hz max_render_time 20 subpixel rgb
-output  $output-right pos 1600 0 res 1280x1024 subpixel rgb max_render_time 20
+output  $output-right  pos 0 0 res 1280x1024 subpixel rgb
+# output  $output-left pos 0 0 res 1600x900@59.978hz subpixel rgb
+output  $output-left pos 1280 0 res 1920x1080@119.982hz subpixel rgb
+output * adaptive_sync on
 
 
 
@@ -47,15 +53,15 @@ output  $output-right pos 1600 0 res 1280x1024 subpixel rgb max_render_time 20
     set $ws9 "9"
     # Workspace names second-output
     set $ws11 "11": 🖥*
-    set $ws12 "12": 🌐*
+    set $ws12 "12"  💾* 
     set $ws13 "13": *
     set $ws14 "14": 🎮*
     set $ws15 "15": 🎧*
     set $ws16 "16": 💬*
-    set $ws17 "17"  💾* 
   
 
 # Set first monitor workspaces to first monitor
+workspace $ws1 output $output-left
 workspace $ws2 output $output-left
 workspace $ws3 output $output-left
 workspace $ws4 output $output-left
@@ -70,7 +76,6 @@ workspace $ws9 output $output-left
 workspace $ws14 output $output-center
 
 # Set second monitor workspaces to second monitor
-workspace $ws1 output $output-right 
 workspace $ws11 output $output-right
 workspace $ws12 output $output-right
 workspace $ws13 output $output-right
