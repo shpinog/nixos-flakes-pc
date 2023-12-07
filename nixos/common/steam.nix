@@ -15,7 +15,7 @@
   
 
   programs.gamemode = {
-    enable  = true;
+    enable  = false;
     enableRenice = true;
   };
   environment.systemPackages = with pkgs; [

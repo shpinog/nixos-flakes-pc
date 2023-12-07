@@ -32,7 +32,7 @@
         serif = [ "Ubuntu" ];
         sansSerif = [  "Ubuntu Sans" ];
         monospace = [ "JetBrains Mono Regular"];
-        emoji = [  "Noto Color Emoji" ];
+        emoji = [  "Noto Color Emoji" "FiraCode Nerd Font" ];
 
       };
      };

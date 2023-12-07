@@ -2,7 +2,7 @@
 
   imports = [
     ./hardware-configuration.nix
-    ./persist.nix
+    #./persist.nix
     ./kernel.nix
     # ./nvidia.nix
     ./programs.nix
@@ -21,7 +21,6 @@
 
 
 
-  services.xserver.videoDrivers = ["modesettings"];
 
   nixpkgs = {overlays = []; config = {allowUnfree = true; }; };
 

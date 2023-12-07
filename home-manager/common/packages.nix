@@ -2,6 +2,10 @@
 {
   nixpkgs.config.allowUnfree = true;
   home.packages = with pkgs; [
+  
+    xorg.xrandr
+    wlr-randr
+    vivaldi-ffmpeg-codecs
     ##vim
     obsidian
     rnix-lsp

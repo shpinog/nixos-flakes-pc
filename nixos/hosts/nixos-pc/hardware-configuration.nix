@@ -12,43 +12,20 @@
   boot.initrd.kernelModules = ["amdgpu" ];
   boot.kernelModules = ["amdgpu" "kvm-intel" ];
   boot.extraModulePackages = [ ];
-
+  
   fileSystems."/" =
-    { device = "none";
-      fsType = "tmpfs";
+    { device = "/dev/disk/by-uuid/67c33a85-0c32-4f21-89de-8482d1ac7d52";
+      fsType = "ext4";
     };
-
-  fileSystems."/nix" =
-    { device = "/dev/disk/by-uuid/081435b7-df56-426c-a121-b58204b2802f";
-      fsType = "btrfs";
-      options = [ "subvol=nix" "compress=zstd" ];
-    };
-
-  fileSystems."/home" =
-    { device = "/dev/disk/by-uuid/081435b7-df56-426c-a121-b58204b2802f";
-      fsType = "btrfs";
-      options = [ "subvol=home" "compress=zstd" ];
-      neededForBoot = true;
-    };
-
-  fileSystems."/home/shpinog/mnt/files" =
-  { device = "/dev/disk/by-uuid/04af76ef-a8d9-4ce4-80dd-375339c81164";
-    fsType = "ext4";
-    options = [ "noauto" "x-systemd.automount" ];
-  };
-
-  fileSystems."/home/shpinog/mnt/backup" =
-  { device = "/dev/disk/by-uuid/4e52c8ed-2dc3-4796-9ca2-cc2f80b561ff";
-    fsType = "ext4";
-    options = [ "noauto" "x-systemd.automount" ];
-  };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/9464-1E2B";
+    { device = "/dev/disk/by-uuid/F49A-F6BE";
       fsType = "vfat";
     };
 
   swapDevices = [ ];
+
+
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's

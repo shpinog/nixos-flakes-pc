@@ -1,4 +1,4 @@
-{ config, pkgs,inputs, ... }: {
+{ config, pkgs, ... }: {
 
   imports = [
     ../../common/users/nixos-pc/sway.nix
@@ -14,6 +14,7 @@
       ../../common/packages.nix
       ../../common/chromium.nix
       ../../common/base.nix
+       ../../common/hyprland.nix
   ];
   nixpkgs.config.allowUnfree = true;
   home.packages = with pkgs; [

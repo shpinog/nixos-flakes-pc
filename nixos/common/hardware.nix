@@ -2,7 +2,8 @@
 
   hardware.enableRedistributableFirmware = true; # For some unfree drivers
   hardware.cpu.intel.updateMicrocode = true;
-  hardware.enableAllFirmware = true;
+  services.xserver.videoDriver = ["amdgpu"];
+
 
    hardware.opengl = {
     enable = true;

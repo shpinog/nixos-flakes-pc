@@ -11,7 +11,6 @@
 
 environment.systemPackages = with pkgs; [
     cachix
-    vulkan-validation-layers
     coreutils
     lm_sensors
     pciutils

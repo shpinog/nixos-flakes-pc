@@ -9,11 +9,12 @@
     // Choose the order of the modules
     "modules-left": ["hyprland/workspaces"],
     //"modules-center": [],
-    "modules-right": ["pulseaudio",  "cpu", "memory", "temperature", "keyboard-state", "sway/language", "battery", "clock","scratchpad_indicator", "tray"],
+    "modules-right": ["pulseaudio",  "cpu", "memory", "temperature", "keyboard-state", "sway/language", "clock", "tray"],
     //Modules configuration
     
     "hyprland/workspaces": {
         "disable-scroll": true,
+        "active-only": false,
         "all-outputs": false,
         "on-click": "activate",
 
@@ -30,11 +31,23 @@
             "13": "",
             "14": "",
             "15": "",
+            "21": "",
+            "22": "",
+            "23": "",
+            "24": "",
+            "25": "",
             "urgent": "",
-            "focused": "",
-            "default": ""
+            "default": "",
+            "active": "󰭯",
+            "empty": "󱋭",
+            "persistent": "󱋭"
             
-            
+        },
+
+        "persistent-workspaces": {
+          "HDMI-A-1": [ 21,22,23,24,25 ],
+          "DP-2": [ 11,12,13,14,15 ],
+          "DP-3": [ 1,2,3,4,5 ] 
         }
     },
     "keyboard-state": {

@@ -10,6 +10,7 @@
     impermanence.url = "github:nix-community/impermanence";
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    unstable.url = "nixpkgs/nixos-23.11";
     nur = {
       url = github:nix-community/NUR;
     };
@@ -19,7 +20,7 @@
 
   };
 
-  outputs = { nixpkgs, home-manager, impermanence, ... }@inputs: {
+  outputs = { nixpkgs, home-manager, impermanence, unstable, hyprland, ... }@inputs: {
     nixosConfigurations = {
       nixos-pc = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs; };
@@ -46,6 +47,7 @@
         extraSpecialArgs = { inherit inputs; }; # Pass flake inputs to our config
         # > Our main home-manager configuration file <
         modules = [
+           hyprland.homeManagerModules.default
           ./home-manager/hosts/nixos-pc/nixos-pc.nix
         ];
       };
@@ -56,6 +58,7 @@
         # > Our main home-manager configuration file <
         modules = [
           ./home-manager/hosts/nixos-book/nixos-book.nix
+          hyprland.homeManagerModules.default
         ];
       };
     };
