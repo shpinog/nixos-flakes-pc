@@ -27,7 +27,6 @@
         modules = [ 
           ./nixos/hosts/nixos-pc
           ./nixos/common/hyperland.nix
-          impermanence.nixosModule
         ];
       };
       
@@ -47,7 +46,6 @@
         extraSpecialArgs = { inherit inputs; }; # Pass flake inputs to our config
         # > Our main home-manager configuration file <
         modules = [
-           hyprland.homeManagerModules.default
           ./home-manager/hosts/nixos-pc/nixos-pc.nix
         ];
       };

@@ -38,7 +38,7 @@
       systemd-boot.enable = true;
       systemd-boot.memtest86.enable = true;
       efi.canTouchEfiVariables = true;
-      systemd-boot.consoleMode = "max";
+      systemd-boot.consoleMode = "auto";
       timeout = 30;
     };
     blacklistedKernelModules =
@@ -52,8 +52,14 @@
 
     kernelParams = [
       "quiet"
+      "amdgpu.ppfeaturemask=0xfffd7fff"
       "fsck.mode=force"
       "mitigations=off"
+      "nvme_core.default_ps_max_latency_us=5500"
+      # "amdgpu.virtual_display=0000:05:00.0,1"
+      "video=DP-3:1920x1080@165"
+      "video=DP-2:1280x1024@74"
+      "video=DP-1:1920x1080@75"
 
     ];
 

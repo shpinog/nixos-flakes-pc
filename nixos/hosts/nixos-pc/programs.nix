@@ -1,7 +1,8 @@
 
 { config, pkgs, system, ... }:{
     
-  services.atftpd.enable = true;
+  services.flatpak.enable = true;
+
   programs = {
 
     thunar = {

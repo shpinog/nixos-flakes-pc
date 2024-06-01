@@ -3,22 +3,19 @@
   nixpkgs.config.allowUnfree = true;
   home.packages = with pkgs; [
   
-    xorg.xrandr
-    wlr-randr
-    vivaldi-ffmpeg-codecs
-    ##vim
-    obsidian
-    rnix-lsp
-    vimPlugins.packer-nvim
+     xorg.xrandr
+     wlr-randr
+     vivaldi-ffmpeg-codecs
+    # ##vim
+    # obsidian
+     rnix-lsp
+     vimPlugins.packer-nvim
     ##
     pavucontrol
     #Media
     okular
-    zathura
-    sayonara
     audio-recorder
     #
-    github-desktop
     libreoffice-qt
     swaybg
     #nix

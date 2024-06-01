@@ -12,14 +12,14 @@
   boot.initrd.kernelModules = ["amdgpu" ];
   boot.kernelModules = ["amdgpu" "kvm-intel" ];
   boot.extraModulePackages = [ ];
-  
+
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/67c33a85-0c32-4f21-89de-8482d1ac7d52";
+    { device = "/dev/disk/by-uuid/cf421345-5580-45cb-9e00-bffc50109675";
       fsType = "ext4";
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/F49A-F6BE";
+    { device = "/dev/disk/by-uuid/12CE-A600";
       fsType = "vfat";
     };
 

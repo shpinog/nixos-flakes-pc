@@ -8,7 +8,7 @@
     QT_QPA_PLATFORM = "wayland";
     QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
     #Sway
-    # WLR_NO_HARDWARE_CURSORS = 1;
+     WLR_NO_HARDWARE_CURSORS = 1;
     # WLR_DRM_NO_MODIFIERS = 1;
     # WLR_DRM_DEVICES = "/dev/dri/card0";
 

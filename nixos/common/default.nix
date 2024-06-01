@@ -8,8 +8,12 @@
 
   time.timeZone = "Europe/Moscow";
   services.udisks2.enable = true;
+  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+  xdg.portal.config.common.default = "gtk"; 
 
 environment.systemPackages = with pkgs; [
+    flatpak
+    gnome.gnome-software
     cachix
     coreutils
     lm_sensors
