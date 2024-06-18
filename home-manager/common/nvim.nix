@@ -13,7 +13,6 @@
   };
   home.packages = with pkgs; [
     gcc 
-    rnix-lsp
     rustup
   ];
 }

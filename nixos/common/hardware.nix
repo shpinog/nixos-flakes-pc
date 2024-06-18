@@ -1,7 +1,7 @@
 { pkgs, config, lib, ... }:{
 
   hardware.enableRedistributableFirmware = true; # For some unfree drivers
-  hardware.cpu.intel.updateMicrocode = true;
+  hardware.cpu.amd.updateMicrocode = true;
   services.xserver.videoDriver = ["amdgpu"];
 
 

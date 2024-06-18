@@ -7,14 +7,15 @@
      wlr-randr
      vivaldi-ffmpeg-codecs
     # ##vim
+    neovim-qt
     # obsidian
-     rnix-lsp
      vimPlugins.packer-nvim
     ##
     pavucontrol
     #Media
     okular
     audio-recorder
+    oculante
     #
     libreoffice-qt
     swaybg

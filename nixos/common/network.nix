@@ -10,8 +10,10 @@
 
   services.openssh = {
     enable = true;
-    permitRootLogin = "no";
-    passwordAuthentication = true;
+    settings = {
+     PermitRootLogin = "no";
+     PasswordAuthentication = true;
+    };
   };
 
   # programs.nm-applet = {

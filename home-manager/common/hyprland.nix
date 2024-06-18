@@ -7,15 +7,16 @@ xdg.configFile."hypr/config" = {
 
   wayland.windowManager.hyprland = {
     enable = true;
+    package = inputs.hyprland.packages.${pkgs.system}.hyprland;
     extraConfig = ''
       source=~/.config/hypr/config/default.cfg
       '';
   };
 
-
   home.packages = with pkgs; [
     swaylock-effects
     swayidle
+    hyprshot
   ];
 
   }

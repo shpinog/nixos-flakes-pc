@@ -12,7 +12,9 @@
     QT_QPA_PLATFORM = "wayland";
     QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
     #Sway
-    # WLR_NO_HARDWARE_CURSORS = 1;
+    WLR_NO_HARDWARE_CURSORS = 1;
+    WLR_DRM_NO_ATOMIC = 0;
+    XDG_DATA_DIRS = "$XDG_DATA_DIRS:/usr/share:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share";
     # WLR_DRM_NO_MODIFIERS = 1;
     # WLR_DRM_DEVICES = "/dev/dri/card0";
     #Nvidia X11

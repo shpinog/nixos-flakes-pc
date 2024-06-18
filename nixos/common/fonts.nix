@@ -2,8 +2,8 @@
   fonts = {
     # fontDir.enable = true;
     # enableGhostscriptFonts = true;
-    enableDefaultFonts = true;
-    fonts = with pkgs; [
+    enableDefaultPackages = true;
+    packages = with pkgs; [
       jetbrains-mono
       noto-fonts-emoji
       noto-fonts

@@ -1,4 +1,9 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, ... }: 
+let
+tuigreet = "${pkgs.greetd.tuigreet}/bin/tuigreet";
+in
+ 
+{
 
 environment.systemPackages = [
     (pkgs.writeShellScriptBin "wayland-session" ''
@@ -12,12 +17,12 @@ environment.systemPackages = [
 
 services.greetd = {
   enable = true;
-  settings = rec {
-    initial_session = {
-      command = "wayland-session";
-      user = "shpinog";
-    };
-    default_session = initial_session;
+  settings = {
+    default_session = {
+      command = "${tuigreet} --time --time-format '%a, %d %b %Y • %T' --greeting  '[Become \n          Visible]' --asterisks --remember --cmd wayland-session";
+      user = "greeter";
+      };
+
   };
 };
 }
