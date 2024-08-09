@@ -11,7 +11,7 @@ environment.systemPackages = [
       "$@"
       systemctl --user import-environment PATH
 
-      ${inputs.hyprland.packages.${pkgs.system}.hyprland}/bin/Hyprlad
+      ${inputs.hyprland.packages.${pkgs.system}.hyprland}/bin/Hyprland
 
     '')
 ];
