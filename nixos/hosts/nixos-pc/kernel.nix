@@ -58,8 +58,8 @@
       # "nvme_core.default_ps_max_latency_us=5500"
       # "amdgpu.virtual_display=0000:05:00.0,1"
       "video=DP-3:1920x1080@165"
-      "video=DP-2:3840x2160@30"
-      "video=DP-1:1920x1080@75"
+      "video=DP-2:3840x2160@61"
+      "video=DP-1:2560x1440@100"
 
     ];
 

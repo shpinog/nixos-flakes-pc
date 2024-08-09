@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: 
+{ config, pkgs, inputs, ... }: 
 let
 tuigreet = "${pkgs.greetd.tuigreet}/bin/tuigreet";
 in
@@ -11,7 +11,8 @@ environment.systemPackages = [
       "$@"
       systemctl --user import-environment PATH
 
-      ${pkgs.hyprland}/bin/Hyprland
+      ${inputs.hyprland.packages.${pkgs.system}.hyprland}/bin/Hyprlad
+
     '')
 ];
 

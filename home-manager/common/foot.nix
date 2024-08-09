@@ -40,7 +40,5 @@
     };
   };
 
-   systemd.user.services.foot.Install.WantedBy = ["sway-session.target"]; 
-   systemd.user.services.foot.Service.ExecStartPre = ["-/bin/sleep 10"]; 
 
 }

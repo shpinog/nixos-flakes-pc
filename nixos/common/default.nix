@@ -14,6 +14,19 @@ console = {
   xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
   xdg.portal.config.common.default = "gtk"; 
   services.colord.enable= true;
+  services.joycond.enable = true;
+  hardware.xpadneo.enable= true;
+  security.rtkit.enable = true;
+  services.dbus.enable = true;
+
+  #Docker
+  virtualisation.docker.enable = true;
+  users.users.shpinog.extraGroups = [ "docker" ];
+  users.extraGroups.docker.members = [ "shpinog" ];
+  virtualisation.docker.rootless = {
+  enable = true;
+  setSocketVariable = true;
+  };
 
 environment.systemPackages = with pkgs; [
     flatpak

@@ -32,6 +32,11 @@
 
       };
 
+    thunderbird = {
+      enable = true;
+      profiles.shpinog.isDefault = true;
+    };
+
     bottom = {
         enable = true;
         settings = {

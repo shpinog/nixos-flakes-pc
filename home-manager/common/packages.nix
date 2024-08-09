@@ -6,6 +6,7 @@
      xorg.xrandr
      wlr-randr
      vivaldi-ffmpeg-codecs
+     zed-editor
     # ##vim
     neovim-qt
     # obsidian

@@ -16,7 +16,9 @@
     ../../common/audio.nix
     ../../common/filesystem.nix
     ../../common/hyperland.nix
+    ../../common/ananicy.nix
      ../../common/services.sunshine.nix
+
   ];
 
 

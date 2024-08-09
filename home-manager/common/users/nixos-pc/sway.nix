@@ -7,7 +7,6 @@ xdg.configFile."sway" = {
 
 home.packages = with pkgs; [
   swaykbdd
-  swayidle
   mako # notification daemon
   grim
   slurp # wayland
@@ -20,6 +19,8 @@ home.packages = with pkgs; [
 
 wayland.windowManager.sway = {
   enable = true;
+  package = pkgs.swayfx;
+  checkConfig = false;
   config = rec {
     modifier = "Mod4";
     # Use kitty as default terminal

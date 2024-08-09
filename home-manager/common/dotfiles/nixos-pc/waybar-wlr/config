@@ -9,7 +9,7 @@
     // Choose the order of the modules
     "modules-left": ["hyprland/workspaces"],
     //"modules-center": [],
-    "modules-right": ["pulseaudio",  "cpu", "memory", "temperature", "keyboard-state", "sway/language", "clock", "tray"],
+    "modules-right": ["pulseaudio",  "cpu", "memory", "temperature", "keyboard-state", "hyprland/language", "clock", "tray"],
     //Modules configuration
     
     "hyprland/workspaces": {
@@ -46,7 +46,7 @@
 
         "persistent-workspaces": {
           "DP-2": [ 21,22,23,24,25 ],
-          "HDMI-A-1": [ 11,12,13,14,15 ],
+          "DP-1": [ 11,12,13,14,15 ],
           "DP-3": [ 1,2,3,4,5 ] 
         }
     },
@@ -58,6 +58,12 @@
             "locked": "",
             "unlocked": ""
         }
+    },
+
+    "hyprland/language": {
+        "format": "{}",
+        "format-en": "🇺🇸",
+        "format-ru": "🇷🇺",
     },
     "sway/mode": {
         "format": "<span style=\"italic\">{}</span>"

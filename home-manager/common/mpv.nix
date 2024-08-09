@@ -1,6 +1,12 @@
 { config, pkgs, ... }: {
   programs.mpv = {
     enable = true;
+    scripts = [
+    pkgs.mpvScripts.webtorrent-mpv-hook
+    ];
+    bindings = {
+      "ctrl+r" = ''cycle_values video-rotate "90" "180" "270" "0" '';
+    };
     config =
       {
         keepaspect = "yes";

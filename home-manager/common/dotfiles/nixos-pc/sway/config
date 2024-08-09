@@ -26,15 +26,15 @@ bar {
 }
 
 ### Output configuration
-
-set $output-right DP-2
-#set $output-center DP-2
-set $output-left DP-3
-
-output  $output-right  pos 0 0 res 1280x1024 subpixel rgb
-# output  $output-left pos 0 0 res 1600x900@59.978hz subpixel rgb
-output  $output-left pos 1280 0 res 1920x1080@119.982hz subpixel rgb
-output * adaptive_sync on
+output HEADLESS-1 mode 1920x1080 subpixel rgb
+# set $output-right DP-2
+# #set $output-center DP-2
+# set $output-left DP-3
+#
+# output  $output-right  pos 0 0 res 1280x1024 subpixel rgb
+# # output  $output-left pos 0 0 res 1600x900@59.978hz subpixel rgb
+# output  $output-left pos 1280 0 res 1920x1080@119.982hz subpixel rgb
+# output * adaptive_sync on
 
 
 
