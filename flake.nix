@@ -6,7 +6,7 @@
   inputs = {
     
     #Hyprland
-    hyprland.url = "github:hyprwm/Hyprland";
+    hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1&ref=refs/tags/v0.42.0";
     impermanence.url = "github:nix-community/impermanence";
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -25,6 +25,7 @@
       nixos-pc = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs; };
         modules = [ 
+           hyprland.nixosModules.default
           ./nixos/hosts/nixos-pc
           ./nixos/common/hyperland.nix
         ];
