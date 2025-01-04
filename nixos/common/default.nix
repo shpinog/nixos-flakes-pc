@@ -19,25 +19,43 @@ console = {
   security.rtkit.enable = true;
   services.dbus.enable = true;
 
-  #Docker
-  virtualisation.docker.enable = true;
-  users.users.shpinog.extraGroups = [ "docker" ];
-  users.extraGroups.docker.members = [ "shpinog" ];
-  virtualisation.docker.rootless = {
+
+  #Distobox
+  virtualisation.spiceUSBRedirection.enable = true;
+  virtualisation.podman = {
   enable = true;
-  setSocketVariable = true;
+  dockerCompat = true;
+};
+  users.users.shpinog = {
+  isNormalUser = true;
+  extraGroups = [ "podman" ];
   };
 
+
+  # #Docker
+  # virtualisation.docker.enable = true;
+  # users.users.shpinog.extraGroups = [ "docker" ];
+  # users.extraGroups.docker.members = [ "shpinog" ];
+  # virtualisation.docker.rootless = {
+  # enable = true;
+  # setSocketVariable = true;
+  # };
+
 environment.systemPackages = with pkgs; [
-    flatpak
-    gnome.gnome-software
+    qemu
+    quickemu
+    distrobox #distrobox
+    gperftools
     cachix
     coreutils
     lm_sensors
     pciutils
     btop
     killall
+##Compile
     gcc
+    pkg-config
+    binutils
     lm_sensors
     unzip
     wget

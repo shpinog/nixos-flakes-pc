@@ -1,7 +1,6 @@
 { config, pkgs,inputs, ... }: {
 
   nixpkgs.config.permittedInsecurePackages = [
-                "openssl-1.1.1u"
               ];
 
   programs = {
@@ -25,7 +24,7 @@
     alacritty = {
         enable = true;
         settings = {
-            shell = {
+            terminal.shell = {
                 program = "fish";
               }; 
           };

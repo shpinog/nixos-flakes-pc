@@ -6,11 +6,12 @@
      xorg.xrandr
      wlr-randr
      vivaldi-ffmpeg-codecs
-     zed-editor
+     sublime3-dev
+     doublecmd
     # ##vim
-    neovim-qt
+    
     # obsidian
-     vimPlugins.packer-nvim
+    vimPlugins.packer-nvim
     ##
     pavucontrol
     #Media

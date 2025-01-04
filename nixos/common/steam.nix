@@ -21,7 +21,7 @@
   environment.systemPackages = with pkgs; [
     gnutls
     openldap
-    libgpgerror
+    libgpg-error
     freetype
     sqlite
     libxml2

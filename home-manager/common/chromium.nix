@@ -5,6 +5,8 @@ let
     vivaldi \
    --enable-oop-rasterization \
    --enable-gpu-compositing \
+   --disable-gpu-memory-buffer-video-frames \
+   --process-per-site \
    --enable-accelerated-2d-canvas \
    --enable-zero-copy \
    --canvas-oop-rasterization \
@@ -17,7 +19,7 @@ let
    --enable-features=CanvasOopRasterization,VaapiVideoDecoder,VaapiVideoEncoder,VaapiIgnoreDriverChecks,RawDraw \
    --disable-gpu-driver-bug-workarounds \
    --enable-features=UseOzonePlatform  \
-   --ozone-platform=wayland \
+   --ozone-platform=wayland \ 
   '';
 in
 {

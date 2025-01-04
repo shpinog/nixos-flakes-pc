@@ -8,7 +8,7 @@
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "amdgpu" "ahci" "nvme" "xhci_pci" "usbhid" "sd_mod" ];
+  boot.initrd.availableKernelModules = [ "amdgpu" "ahci" "nvme"  "xhci_pci" "usbhid" "sd_mod" ];
   boot.initrd.kernelModules = ["amdgpu" ];
   boot.kernelModules = ["amdgpu" ];
   boot.extraModulePackages = [ ];
@@ -25,7 +25,18 @@
 
   swapDevices = [ ];
 
+  fileSystems."/home/shpinog/Files" =
+    { device = "/dev/disk/by-uuid/315fdacf-5d62-45a8-9d86-028afb2c83c9";
+      options = ["noauto" "rw" "user" "exec" "dev" "suid"];
+      fsType = "ext4";
+    };
 
+
+  fileSystems."/home/shpinog/mnt" =
+    { device = "/dev/disk/by-uuid/4b9bc8ea-b6e4-4cd1-845d-45f08723915b";
+      options = ["defaults" "user" "noauto"];
+      fsType = "ext4";
+    };
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's

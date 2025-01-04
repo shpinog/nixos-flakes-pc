@@ -9,11 +9,9 @@
       noto-fonts
       dejavu_fonts
       liberation_ttf
-      terminus-nerdfont
       hackgen-nf-font
       ubuntu_font_family
       powerline-symbols
-     (nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" ]; })
     ];
 
     fontconfig = {

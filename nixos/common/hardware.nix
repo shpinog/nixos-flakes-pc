@@ -9,18 +9,38 @@
     enable = true;
     enable32Bit = true;
     extraPackages = with pkgs; [
-      intel-media-driver # LIBVA_DRIVER_NAME=iHD
-      vaapiIntel         # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
+      pkgs.amdvlk
       vaapiVdpau
       libvdpau-va-gl
       vulkan-tools
+      rocmPackages.clr.icd #following for GPU AI acceleration
+      rocmPackages.rocm-smi
+      rocmPackages.clr
+      rocmPackages.hipblas
+      rocmPackages.rocblas
+      rocmPackages.rocsolver
+      rocmPackages.rocm-comgr
+      rocmPackages.rocm-runtime
+      rocmPackages.rocsparse
+    ];
+    extraPackages32 = [
+      pkgs.driversi686Linux.amdvlk
     ];
   };
+  
+
+# Force radv
+   environment.variables.AMD_VULKAN_ICD = "RADV";
+# Or
+# environment.variables.VK_ICD_FILENAMES =
+#   "/run/opengl-driver/share/vulkan/icd.d/radeon_icd.x86_64.json";
+
   powerManagement = {
     enable = true;
     cpuFreqGovernor = "performance";
   };
-  services.upower.enable = true;
+
+  services.upower.enable = false;
 
 
 

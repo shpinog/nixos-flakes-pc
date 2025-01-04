@@ -10,7 +10,7 @@
 
   boot.initrd.availableKernelModules = [ "uhci_hcd" "ehci_pci" "ahci" "firewire_ohci" "usb_storage" "sd_mod" "sr_mod" "sdhci_pci" ];
   boot.initrd.kernelModules = [ "i915" ];
-  boot.kernelModules = [ ];
+  boot.kernelModules = [ "i2c-dev" ];
   boot.extraModulePackages = [ ];
   boot.tmpOnTmpfsSize = "50%";
   services.logind.extraConfig = ''
@@ -38,4 +38,11 @@
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+
+
+# Для пользователей в группе i2c
+  systemd.udev.rules = [
+    "KERNEL==\"i2c-[0-9]*\", GROUP=\"i2c\", MODE=\"0660\""
+  ];
+
 }

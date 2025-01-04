@@ -3,13 +3,15 @@
   programs.alacritty = {
     enable = true;
     settings = {
-      shell = {
-        program = "fish";
-      };
       env = {
         TERM = "xterm-256color";
         WINIT_X11_SCALE_FACTOR = "1.0";
       };
+
+      terminal.shell = {
+        program = "fish";
+      };
+
       window = {
         dynamic_padding = true;
       };
