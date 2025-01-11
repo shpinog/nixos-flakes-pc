@@ -15,7 +15,7 @@
   #   };
   #     rocmOverrideGfx = "10.3.1";
   #   };
-
+  #
     hardware.amdgpu.opencl.enable = true;
 
   # services.open-webui = {

@@ -5,6 +5,22 @@
   services.xserver.videoDriver = ["amdgpu"];
 
 
+
+  systemd.tmpfiles.rules = 
+    let
+    rocmEnv = pkgs.symlinkJoin {
+      name = "rocm-combined";
+      paths = with pkgs.rocmPackages; [
+        rocblas
+          hipblas
+          clr
+      ];
+    };
+  in [
+    "L+    /opt/rocm   -    -    -     -    ${rocmEnv}"
+  ];
+
+
    hardware.graphics = {
     enable = true;
     enable32Bit = true;
@@ -13,15 +29,9 @@
       vaapiVdpau
       libvdpau-va-gl
       vulkan-tools
-      rocmPackages.clr.icd #following for GPU AI acceleration
-      rocmPackages.rocm-smi
+      clblast
       rocmPackages.clr
-      rocmPackages.hipblas
       rocmPackages.rocblas
-      rocmPackages.rocsolver
-      rocmPackages.rocm-comgr
-      rocmPackages.rocm-runtime
-      rocmPackages.rocsparse
     ];
     extraPackages32 = [
       pkgs.driversi686Linux.amdvlk

@@ -1,171 +1,167 @@
-{
-    "layer": "top", // Waybar at top layer
-    "exclusive": "false",
-    "position": "bottom", // Waybar position (top|bottom|left|right)
-    "height": 24, // Waybar height (to be removed for auto height)
-     //"width": 10, // Waybar width
-     
-     
-    // Choose the order of the modules
-    "modules-left": ["hyprland/workspaces"],
-    //"modules-center": [],
-    "modules-right": ["pulseaudio",  "cpu", "memory", "temperature", "keyboard-state", "hyprland/language", "clock", "tray"],
-    //Modules configuration
-    
-    "hyprland/workspaces": {
-        "disable-scroll": true,
-        "active-only": false,
-        "all-outputs": false,
-        "on-click": "activate",
+[
+    {
+        "layer": "top",
+        "output": "DP-3",
+        "position": "bottom",
+        "height": 30,
+        "spacing": 0,
 
-        
-        "format": "{name}:  {icon}",
-        "format-icons": {
-            "1": "",
-            "2": "",
-            "3": "",
-            "4": "",
-            "5": "",
-            "11": "",
-            "12": "",
-            "13": "",
-            "14": "",
-            "15": "",
-            "21": "",
-            "22": "",
-            "23": "",
-            "24": "",
-            "25": "",
-            "urgent": "",
-            "default": "",
-            "active": "󰭯",
-            "empty": "󱋭",
-            "persistent": "󱋭"
-            
+        "modules-left": ["hyprland/workspaces"],
+        "modules-center": [],
+        "modules-right": [
+            "pulseaudio",
+            "cpu",
+            "memory",
+            "temperature",
+            "hyprland/language",
+            "keyboard-state",
+            "tray",
+            "clock"
+        ],
+
+        "hyprland/workspaces": {
+            "disable-scroll": true,
+            "active-only": false,
+            "format": "{name}: {icon}",
+            "format-icons": {
+                "21": "❶", "22": "❷", "23": "❸", "24": "❹", "25": "❺",
+                "urgent": "⚠",
+                "default": "•",
+                "active": "●"
+            },
+            "persistent-workspaces": {
+                "DP-3": [21, 22, 23, 24, 25]
+            }
         },
 
-        "persistent-workspaces": {
-          "DP-1": [ 21,22,23,24,25 ],
-          "DP-3": [ 11,12,13,14,15 ],
-          "DP-2": [ 1,2,3,4,5 ] 
-        }
-    },
-    "keyboard-state": {
-        "numlock": true,
-        "capslock": true,
-        "format": "{name} {icon}",
-        "format-icons": {
-            "locked": "",
-            "unlocked": ""
-        }
-    },
+        "clock": {
+            "format": "{:%H:%M | %d.%m.%Y}"
+        },
 
-    "hyprland/language": {
-        "format": "{}",
-        "format-en": "🇺🇸",
-        "format-ru": "🇷🇺",
-    },
-    "sway/mode": {
-        "format": "<span style=\"italic\">{}</span>"
-    },
-    "mpd": {
-        "format": "{stateIcon} {consumeIcon}{randomIcon}{repeatIcon}{singleIcon}{artist} - {album} - {title} ({elapsedTime:%M:%S}/{totalTime:%M:%S}) ⸨{songPosition}|{queueLength}⸩ {volume}% ",
-        "format-disconnected": "Disconnected ",
-        "format-stopped": "{consumeIcon}{randomIcon}{repeatIcon}{singleIcon}Stopped ",
-        "unknown-tag": "N/A",
-        "interval": 2,
-        "consume-icons": {
-            "on": " "
+        "hyprland/language": {
+            "format": "{} 🌐",
+            "format-en": "EN 🇺🇸",
+            "format-ru": "RU 🇷🇺",
+            "on-click": "hyprctl switchxkblayout at-translated-set-2-keyboard next",
+            "tooltip": false
         },
-        "random-icons": {
-            "off": "<span color=\"#f53c3c\"></span> ",
-            "on": " "
+
+        "pulseaudio": {
+            "format": "{volume}% 🔊",
+            "format-muted": "🔇 Muted"
         },
-        "repeat-icons": {
-            "on": " "
+
+        "cpu": {
+            "format": "💻 {usage}%",
+            "tooltip": true
         },
-        "single-icons": {
-            "on": "1 "
+
+        "memory": {
+            "format": "🧠 {}%"
         },
-        "state-icons": {
-            "paused": "",
-            "playing": ""
+
+        "temperature": {
+            "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
+            "critical-threshold": 80,
+            "format": "🌡️ {temperatureC}°C",
+            "format-critical": "🔥 {temperatureC}°C"
         },
-        "tooltip-format": "MPD (connected)",
-        "tooltip-format-disconnected": "MPD (disconnected)"
-    },
-    "idle_inhibitor": {
-        "format": "{icon}",
-        "format-icons": {
-            "activated": "",
-            "deactivated": ""
+
+        "keyboard-state": {
+            "capslock": true,
+            "format": "{name} {icon}",
+            "format-icons": {
+                "locked": "🔒",
+                "unlocked": "🔓"
+            }
+        },
+
+        "tray": {
+            "spacing": 10,
+            "icon-size": 16
         }
     },
-    
-    "tray": {
-        // "icon-size": 21,
-        "spacing": 10
-    },
-    "clock": {
-        // "timezone": "America/New_York",
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "format-alt": "{:%Y-%m-%d}"
-    },
-    "cpu": {
-        "format": "{usage}% ",
-        "tooltip": false
-    },
-    "memory": {
-        "format": "{}% "
-    },
-    "temperature": {
-        // "thermal-zone": 2,
-        // "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
-        "critical-threshold": 80,
-        // "format-critical": "{temperatureC}°C {icon}",
-        "format": "{temperatureC}°C {icon}",
-        "format-icons": ["", "", ""]
-    },
-    
-    "network": {
-        // "interface": "wlp2*", // (Optional) To force the use of this interface
-        "format-wifi": "{essid} ({signalStrength}%) ",
-        "format-ethernet": "{ifname}: {ipaddr}/{cidr} ",
-        "format-linked": "{ifname} (No IP) ",
-        "format-disconnected": "Disconnected ⚠",
-        "format-alt": "{ifname}: {ipaddr}/{cidr}"
-    },
-    "pulseaudio": {
-        // "scroll-step": 1, // %, can be a float
-        "format": "{volume}% {icon} {format_source}",
-        "format-bluetooth": "{volume}% {icon} {format_source}",
-        "format-bluetooth-muted": " {icon} {format_source}",
-        "format-muted": " {format_source}",
-        "format-source": "{volume}%  ",
-        "format-source-muted": "",
-        "format-icons": {
-            "headphone": "",
-            "hands-free": "",
-            "headset": "",
-            "phone": "",
-            "portable": "",
-            "car": "",
-            "default": ["", "", ""]
+    {
+        "layer": "top",
+        "output": ["DP-1", "DP-2"],
+        "position": "bottom",
+        "height": 40,
+        "spacing": 0,
+
+        "modules-left": ["hyprland/workspaces"],
+        "modules-center": [],
+        "modules-right": [
+            "pulseaudio",
+            "cpu",
+            "memory",
+            "temperature",
+            "hyprland/language",
+            "keyboard-state",
+            "tray",
+            "clock"
+        ],
+
+        "hyprland/workspaces": {
+            "disable-scroll": true,
+            "active-only": false,
+            "format": "{name}: {icon}",
+            "format-icons": {
+                "1": "❶", "2": "❷", "3": "❸", "4": "❹", "5": "❺",
+                "11": "❶", "12": "❷", "13": "❸", "14": "❹", "15": "❺",
+                "urgent": "⚠",
+                "default": "•",
+                "active": "●"
+            },
+            "persistent-workspaces": {
+                "DP-1": [11, 12, 13, 14, 15],
+                "DP-2": [1, 2, 3, 4, 5]
+            }
         },
-        "on-click": "pavucontrol"
-    },
-    "custom/media": {
-        "format": "{icon} {}",
-        "return-type": "json",
-        "max-length": 40,
-        "format-icons": {
-            "spotify": "",
-            "default": "🎜"
+
+        "clock": {
+            "format": "{:%H:%M | %d.%m.%Y}"
         },
-        "escape": true,
-        "exec": "$HOME/.config/waybar/mediaplayer.py 2> /dev/null" // Script in resources folder
-        // "exec": "$HOME/.config/waybar/mediaplayer.py --player spotify 2> /dev/null" // Filter player based on name
+
+        "hyprland/language": {
+            "format": "{} 🌐",
+            "format-en": "EN 🇺🇸",
+            "format-ru": "RU 🇷🇺",
+            "on-click": "hyprctl switchxkblayout at-translated-set-2-keyboard next"
+        },
+
+        "pulseaudio": {
+            "format": "{volume}% 🔊",
+            "format-muted": "🔇 Muted"
+        },
+
+        "cpu": {
+            "format": "💻 {usage}%",
+            "tooltip": true
+        },
+
+        "memory": {
+            "format": "🧠 {}%"
+        },
+
+        "temperature": {
+            "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
+            "critical-threshold": 80,
+            "format": "🌡️ {temperatureC}°C",
+            "format-critical": "🔥 {temperatureC}°C"
+        },
+
+        "keyboard-state": {
+            "capslock": true,
+            "format": "{name} {icon}",
+            "format-icons": {
+                "locked": "🔒",
+                "unlocked": "🔓"
+            }
+        },
+
+        "tray": {
+            "spacing": 10,
+            "icon-size": 16
+        }
     }
-}
-
-
+]

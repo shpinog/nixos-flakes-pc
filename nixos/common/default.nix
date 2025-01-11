@@ -42,8 +42,10 @@ console = {
   # };
 
 environment.systemPackages = with pkgs; [
-    qemu
-    quickemu
+    koboldcpp
+    python312Packages.psutil
+    psutils
+
     distrobox #distrobox
     gperftools
     cachix

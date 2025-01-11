@@ -1,26 +1,16 @@
-{ config, pkgs, inputs,lib, ... }: 
-
-  let
-    addons = inputs.firefox-addons.packages.${pkgs.system};
-
-  in  
-
-{
-
-  nixpkgs.overlays = with inputs; [nur.overlay];
+{ config, pkgs, inputs, lib, ... }: {
   programs.firefox = {
     enable = true;
     package = pkgs.firefox-esr;
     profiles = {
       shpinog = {
         isDefault = true;
-        extensions = with pkgs.nur.repos.rycee.firefox-addons;[
-            # https-everywhere
-            bitwarden
-            ublock-origin
-            violentmonkey
-            translate-web-pages
-            languagetool
+        extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+          bitwarden
+          ublock-origin
+          violentmonkey
+          translate-web-pages
+          languagetool
         ];
         settings = {
           "browser.startup.homepage" = "https://nixos.org";
@@ -39,11 +29,9 @@
           "Home-manager options" = {
             url = "https://rycee.gitlab.io/home-manager/options.html";
             keyword = "home";
-
           };
         };
       };
     };
   };
-
 }

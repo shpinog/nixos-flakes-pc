@@ -1,0 +1,90 @@
+/* Общие стили */
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Roboto", sans-serif;
+    color: #ffffff;
+}
+
+#modules-left,
+#modules-center,
+#modules-right {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* Разделители между виджетами */
+#modules-left > *,
+#modules-center > *,
+#modules-right > * {
+    margin-right: 15px; /* Расстояние между виджетами */
+}
+
+#modules-left > *:last-child,
+#modules-center > *:last-child,
+#modules-right > *:last-child {
+    margin-right: 0;
+}
+
+/* Стили для рабочего пространства */
+#hyprland-workspaces {
+    padding: 5px 10px;
+    border-radius: 10px;
+    background-color: #333333;
+}
+
+#hyprland-workspaces > * {
+    padding: 5px 10px;
+    border-radius: 10px;
+    background-color: #444444;
+    margin-right: 10px; /* Расстояние между воркспейсами */
+}
+
+#hyprland-workspaces > *:last-child {
+    margin-right: 0;
+}
+
+/* Общие стили для всех виджетов */
+#hyprland\/language,
+#pulseaudio,
+#cpu,
+#memory,
+#temperature,
+#keyboard-state,
+#tray,
+#clock {
+    padding: 5px 10px;
+    border-radius: 10px;
+    background-color: #444444;
+    margin: 5px; /* Добавляем внешнее расстояние для всех виджетов */
+}
+
+#pulseaudio {
+    background-color: #555555;
+}
+
+#cpu {
+    background-color: #666666;
+}
+
+#memory {
+    background-color: #777777;
+}
+
+#temperature {
+    background-color: #888888;
+}
+
+#keyboard-state {
+    background-color: #999999;
+}
+
+#tray {
+    background-color: #aaaaaa;
+}
+
+#clock {
+    background-color: #bbbbbb;
+}
