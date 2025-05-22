@@ -8,9 +8,9 @@
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "amdgpu" "ahci" "nvme"  "xhci_pci" "usbhid" "sd_mod" ];
+  boot.initrd.availableKernelModules = [ "amdgpu" "ahci" "nvme" "xhci_pci" "usbhid" "sd_mod" "usb_storage" ];
   boot.initrd.kernelModules = ["amdgpu" ];
-  boot.kernelModules = ["amdgpu" ];
+  boot.kernelModules = ["amdgpu" "kvm-intel" "i2c-dev" "x86_energy_perf_policy" ];
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =

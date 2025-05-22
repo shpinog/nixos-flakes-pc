@@ -1,11 +1,11 @@
 { config, pkgs, inputs, lib, ... }: {
   programs.firefox = {
     enable = true;
-    package = pkgs.firefox-esr;
+    package = pkgs.firefox;
     profiles = {
       shpinog = {
         isDefault = true;
-        extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+        extensions.packages = with pkgs.nur.repos.rycee.firefox-addons; [
           bitwarden
           ublock-origin
           violentmonkey
@@ -18,18 +18,6 @@
           "browser.search.isUS" = false;
           "distribution.searchplugins.defaultLocale" = "ru-RU";
           "general.useragent.locale" = "ru-RU";
-          "browser.bookmarks.showMobileBookmarks" = true;
-        };
-
-        bookmarks = {
-          NixSearch = {
-            keyword = "nix";
-            url = "https://search.nixos.org";
-          };
-          "Home-manager options" = {
-            url = "https://rycee.gitlab.io/home-manager/options.html";
-            keyword = "home";
-          };
         };
       };
     };

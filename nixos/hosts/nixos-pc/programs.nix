@@ -33,6 +33,12 @@
 
   programs = {
 
+    weylus = {
+      enable = true;
+      users = ["shpinog"];
+      openFirewall = true;
+    };
+
     thunar = {
       enable = true;
       plugins = with pkgs.xfce; [thunar-archive-plugin thunar-volman];

@@ -10,15 +10,20 @@ console = {
 
   time.timeZone = "Europe/Moscow";
   services.udisks2.enable = true;
-  xdg.portal.enable = true;
-  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-  xdg.portal.config.common.default = "gtk"; 
-  services.colord.enable= true;
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    config = {
+      common = {
+        default = "wlr";
+      };
+    };
+    wlr.enable = true;
+  };
   services.joycond.enable = true;
   hardware.xpadneo.enable= true;
   security.rtkit.enable = true;
   services.dbus.enable = true;
-
 
   #Distobox
   virtualisation.spiceUSBRedirection.enable = true;
@@ -45,6 +50,7 @@ environment.systemPackages = with pkgs; [
     koboldcpp
     python312Packages.psutil
     psutils
+    wakeonlan
 
     distrobox #distrobox
     gperftools

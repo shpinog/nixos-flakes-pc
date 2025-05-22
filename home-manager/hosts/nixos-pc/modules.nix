@@ -14,9 +14,13 @@
       ../../common/packages.nix
       ../../common/chromium.nix
       ../../common/base.nix
-       ../../common/hyprland.nix
+      ../../common/psd.nix
+       # ../../common/hyprland.nix
+      ../../common/stylix.nix
+      # ../../common/niri.nix
+
   ];
-  nixpkgs.config.allowUnfree = true;
+
   home.packages = with pkgs; [
     google-chrome
   ];

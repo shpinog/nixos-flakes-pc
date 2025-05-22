@@ -1,7 +1,25 @@
-{ config, pkgs,inputs, ... }: {
+{ config, lib, pkgs, inputs, ... }: {
 
-  nixpkgs.config.permittedInsecurePackages = [
-              ];
+  home.activation.createMesaShaderCache =
+    lib.hm.dag.entryAfter ["writeBoundary"] ''
+     mkdir -p "$HOME/.mesa_shader_cache"
+  '';
+
+  home.sessionVariables = {
+    MESA_SHADER_CACHE_DIR = "$HOME/.mesa_shader_cache";
+  };
+  
+  dconf = {
+    enable = true;
+  };
+
+  services = {
+      kdeconnect = {
+          enable = false;
+          indicator = false;
+        };
+    };
+
 
   programs = {
 
@@ -18,7 +36,6 @@
 
     lsd = {
       enable = true;
-      enableAliases = true;
     };
 
     alacritty = {
@@ -30,11 +47,6 @@
           };
 
       };
-
-    thunderbird = {
-      enable = true;
-      profiles.shpinog.isDefault = true;
-    };
 
     bottom = {
         enable = true;

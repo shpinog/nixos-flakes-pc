@@ -4,19 +4,19 @@
     EDITOR = "nvim";
     NIXOS_OZONE_WL = 1;
     #GTK & QT settings
-    GTK_THEME = "Yaru:dark";
-    # MOZ_ENABLE_WAYLAND = 1;
-    # XDG_CURRENT_DESKTOP = "sway";
-    # XDG_SESSION_TYPE = "wayland";
+    XDG_CURRENT_DESKTOP = "sway";
+    XDG_SESSION_TYPE = "wayland";
     # _JAVA_AWT_WM_NONREPARENTING = "1";
     QT_QPA_PLATFORM = "wayland";
     QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
     #Sway
     WLR_NO_HARDWARE_CURSORS = 1;
-    WLR_DRM_NO_ATOMIC = 0;
+    # WLR_DRM_NO_ATOMIC = 0;
+    WLR_RENDERER="vulkan";
     XDG_DATA_DIRS = "$XDG_DATA_DIRS:/usr/share:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share";
     # WLR_DRM_NO_MODIFIERS = 1;
     # WLR_DRM_DEVICES = "/dev/dri/card0";
+    
     #Nvidia X11
 
     #nvidia wayland

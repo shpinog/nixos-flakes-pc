@@ -15,21 +15,16 @@ home.packages = with pkgs; [
   flashfocus
   autotiling
   jq
+  satty
 ];
 
 wayland.windowManager.sway = {
   enable = true;
   package = pkgs.swayfx;
   checkConfig = false;
-  config = rec {
-    modifier = "Mod4";
-    # Use kitty as default terminal
-    terminal = "foot"; 
-    startup = [
-      # Launch Firefox on start
-      # {command = "firefox";}
-    ];
+  wrapperFeatures = { 
+    base = true;
+    gtk = true;
   };
 };
-
 }

@@ -1,35 +1,48 @@
 { config, pkgs, lib, ... }: {
 
-  nixpkgs.config.allowUnfree = true; 
-  
-
-
   #Gaming response-time
   systemd.tmpfiles.settings = {
     "consistent-response-time-for-gaming" = {
-      "/proc/sys/vm/compaction_proactiveness" = {w = { argument = "0"; }; }; 
-      "/proc/sys/vm/watermark_boost_factor" = {w = { argument = "1"; }; }; 
-      "/proc/sys/vm/min_free_kbytes" = {w = { argument = "1048576"; }; }; 
-      "/sys/vm/watermark_scale_factor" = {w = { argument = "500"; }; }; 
+      # "/proc/sys/vm/compaction_proactiveness" = {w = { argument = "0"; }; }; 
+      # "/proc/sys/vm/watermark_boost_factor" = {w = { argument = "1"; }; }; 
+      # "/proc/sys/vm/min_free_kbytes" = {w = { argument = "1048576"; }; }; 
+      # "/sys/vm/watermark_scale_factor" = {w = { argument = "500"; }; }; 
       "/sys/vm/swappiness" = {w = { argument = "10"; }; }; 
       "/sys/kernel/mm/lru_gen/enabled" = {w = { argument = "5"; }; }; 
-      "/proc/sys/vm/zone_reclaim_mode" = {w = { argument = "0"; }; }; 
+      # "/proc/sys/vm/zone_reclaim_mode" = {w = { argument = "0"; }; }; 
       "/sys/kernel/mm/transparent_hugepage/enabled" = {w = { argument = "madvise"; }; }; 
       "/sys/kernel/mm/transparent_hugepage/shmem_enabled" = {w = { argument = "advise"; }; }; 
-      "ys/kernel/mm/transparent_hugepage/defrag" = {w = { argument = "never"; }; }; 
+      # "ys/kernel/mm/transparent_hugepage/defrag" = {w = { argument = "never"; }; }; 
       "/proc/sys/vm/page_lock_unfairness" = {w = { argument = "1"; }; }; 
       "/proc/sys/kernel/sched_child_runs_first" = {w = { argument = "0"; }; }; 
       "/proc/sys/kernel/sched_autogroup_enabled" = {w = { argument = "0"; }; }; 
       "/proc/sys/kernel/sched_cfs_bandwidth_slice_us" = {w = { argument = "3000"; }; }; 
       "/sys/kernel/debug/sched/base_slice_ns" = {w = { argument = "3000000"; }; }; 
       "/sys/kernel/debug/sched/migration_cost_ns" = {w = { argument = "500000"; }; }; 
-      "/sys/kernel/debug/sched/nr_migrate" = {w = { argument = ""; }; }; 
+      "/sys/kernel/debug/sched/nr_migrate" = {w = { argument = "1"; }; }; 
+      "kernel.numa_balancing" = {w = { argument = "1"; }; }; 
+      "vm.zone_reclaim_mode" = {w = { argument = "0"; }; }; 
 
       }; 
     };
     
+  programs.corectrl = {
+    enable = true;
+    gpuOverclock = {
+        enable = true;
+        ppfeaturemask = "0xfffd7fff";
+      };
+  };
+  # services.undervolt = {
+  #     enable = true;
+  #     uncoreOffset = -25;
+  #     p1.window = 3;
+  #     p2.window = 5;
+  #     p1.limit = 200;
+  #     p2.limit = 180;
+  #
+  #   };
 
-  programs.corectrl.enable = true;
   boot.kernelPackages = with pkgs; linuxPackages_xanmod;
   #  boot.extraModulePackages = [
   #   config.boot.kernelPackages.r8168
@@ -40,7 +53,6 @@
       options v4l2loopback exclusive_caps=1 video_nr=9 Video-Loopback
     '';
 
-  boot.kernelModules = [ "i2c-dev" ];
 
 
 # Добавляем правило для устройств i2c
@@ -55,7 +67,7 @@
   boot.supportedFilesystems = [ "ntfs" ];
 
   zramSwap = {
-      enable = true;
+      enable = false;
       algorithm = "zstd";
       memoryPercent = 50;
       priority = 10;
@@ -96,6 +108,12 @@
       # "amdgpu.ppfeaturemask=0xfffd7fff"
       "fsck.mode=force"
       "mitigations=off"
+      "nohz_full=2-23,26-47"
+      "rcu_nocbs=0-1,24-25"
+      "rcutree.kthread_prio=1"
+      "skew_tick=1"
+      "intel_pstate=passive"
+      "nmi_watchdog=0"
       # "nvme_core.default_ps_max_latency_us=5500"
       # "amdgpu.virtual_display=0000:05:00.0,1"
       "video=DP-2:1920x1080@144"

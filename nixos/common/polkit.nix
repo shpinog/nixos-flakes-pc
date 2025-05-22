@@ -6,4 +6,7 @@
   security.rtkit.enable = true;
 
   security.pam.services.shpinog.startSession = true;
+  security.pam.loginLimits = [
+  { domain = "@users"; item = "rtprio"; type = "-"; value = 1; }
+];
 }

@@ -9,7 +9,7 @@
     // Choose the order of the modules
     "modules-left": ["sway/workspaces"],
     //"modules-center": [],
-    "modules-right": ["custom/scratchpad_indicator", "pulseaudio",  "cpu", "memory", "temperature", "keyboard-state", "sway/language", "battery", "clock","scratchpad_indicator", "tray"],
+    "modules-right": ["custom/scratchpad_indicator", "pulseaudio",  "cpu", "memory", "temperature#cpu0", "temperature#cpu1","temperature#gpu1", "temperature#gpu2", "keyboard-state", "sway/language", "battery", "clock","scratchpad_indicator", "tray"],
     //Modules configuration
     
     "sway/workspaces": {
@@ -93,14 +93,34 @@
     "memory": {
         "format": "{}% "
     },
-    "temperature": {
-        // "thermal-zone": 2,
-        // "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
-        "critical-threshold": 80,
-        // "format-critical": "{temperatureC}°C {icon}",
-        "format": "{temperatureC}°C {icon}",
-        "format-icons": ["", "", ""]
+    "temperature#cpu0": {
+    "hwmon-path": "/sys/class/hwmon/hwmon6/temp1_input",  // путь для первого процессора
+    "critical-threshold": 80,
+    "format-critical": "CPU0-1: {temperatureC}°C ",
+    "format": "CPU0: {temperatureC}°C ",
+    "interval": 1
     },
+    "temperature#cpu1": {
+    "hwmon-path": "/sys/class/hwmon/hwmon7/temp1_input",  // путь для второго процессора
+    "critical-threshold": 80,
+    "format-critical": "|: {temperatureC}°C ",
+    "format": "CPU1: {temperatureC}°C ",
+    "interval": 1
+    },
+    "temperature#gpu1": {
+        "hwmon-path": "/sys/class/hwmon/hwmon0/temp1_input",
+        "critical-threshold": 85,
+        "format-critical": "GPU1: {temperatureC}°C",
+        "format": "GPU: {temperatureC}°C",
+        "interval": 1
+    },
+    "temperature#gpu2": {
+        "hwmon-path": "/sys/class/hwmon/hwmon0/temp2_input",
+        "critical-threshold": 105,
+        "format-critical": "GPU2: {temperatureC}°C",
+        "format": "|J: {temperatureC}°C",
+        "interval": 1
+        },
     
     "network": {
         // "interface": "wlp2*", // (Optional) To force the use of this interface

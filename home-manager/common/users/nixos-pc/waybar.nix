@@ -14,7 +14,7 @@
   #waybar configuration files
   xdg.configFile."waybar" = {
     recursive = false;
-    source = "${../../dotfiles/nixos-pc/waybar-wlr}";
+    source = "${../../dotfiles/nixos-pc/waybar}";
   };
 
 

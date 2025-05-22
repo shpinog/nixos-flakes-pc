@@ -7,7 +7,6 @@ exec_always --no-startup-id flashfocus
 exec swaykbdd
 #exec wl-paste -p -t text --watch clipman store -P --histpath="~/.local/share/clipman-primary.json" --no-startup-id 
 exec flashfocus
-bindsym $mod+o exec clipman pick -t wofi
 exec_always nm-applet --indicator &
 exec udiskie   --tray &
 exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK
@@ -17,10 +16,3 @@ exec wl-paste -t text --watch clipman store --no-persist
 exec swaykbdd
 exec xrandr --output DP-3 --primary
 
-##gtk theme
-exec_always {
-    gsettings set $gnome-schema gtk-theme 'yaru'
-    gsettings set $gnome-schema icon-theme 'yaru'
-    gsettings set $gnome-schema cursor-theme 'yaru'
-    gsettings set $gnome-schema font-name 'Noto'
-}

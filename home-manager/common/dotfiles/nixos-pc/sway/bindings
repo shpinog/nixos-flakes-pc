@@ -1,162 +1,78 @@
-# Logo key. Use Mod1 for Alt.
-set $mod Mod4
-### Key bindings
-#
-# Basics:
-#
-    # Start a terminal
-    bindsym --to-code $mod+Return exec $terminal
-    # Start --to-code a browser
-    bindsym --to-code $mod+q exec $browser
-    # Start --to-code a filemanager
-    bindsym --to-code KP_Insert+KP_Left exec  $filemanager
-    # Start --to-code a editor
-    bindsym --to-code KP_Insert+KP_Begin exec $editor
-    # Start --to-code a filemanager
-    bindsym --to-code KP_Insert+KP_Home exec $telegram
-     # Start --to-code a Spotify
-    bindsym --to-code KP_Insert+KP_Up exec $spotify
+# Мониторы
+set $LMonitor DP-2
+set $CMonitor DP-3
+set $RMonitor DP-1
+set $TV HDMI-A-1
+
+# Основные переменные
+set $mainMod Mod4
+
+# Основные приложения
+bindsym --to-code $mainMod+Return exec alacritty, focus
+bindsym --to-code $mainMod+c kill
+bindsym --to-code $mainMod+Shift+m exec "swaymsg exit"
+bindsym --to-code $mainMod+KP_Left exec "nautilus", focus
+bindsym --to-code $mainMod+q exec firefox , focus
+bindsym --to-code $mainMod+KP_Home exec telegram-desktop, focus
+bindsym --to-code $mainMod+space floating toggle
+bindsym --to-code $mainMod+r exec "wofi --show drun"
+bindsym --to-code $mainMod+f fullscreen toggle
+
+# DPMS и перезагрузка
+bindsym --to-code $mainMod+F12 exec "swaymsg 'output * dpms off'"
+bindsym --to-code $mainMod+F11 exec "swaymsg 'output $LMonitor dpms toggle'; swaymsg 'output $CMonitor dpms toggle'; swaymsg 'output $RMonitor dpms toggle'"
+bindsym --to-code $mainMod+Shift+r exec "swaymsg reload"
+
+# Скриншоты (с использованием grim)
+# bindsym --to-code $mainMod+Print exec "grim -g "$(slurp)" - | wl-copy"
+bindsym --to-code Mod4+Shift+Print exec grim -g "$(slurp -o -r -c '#ff0000ff')" -t ppm - | satty --filename - --fullscreen --output-filename ~/Pictures/Screenshots/satty-$(date '+%Y%m%d-%H:%M:%S').png
 
 
-    # take  --to-codescreen
-    bindsym --to-code $mod+p exec grim -g "$(slurp)" -t png - | wl-copy -t image/png
-    
-    # Display sleep | disable keys
-    bindsym $mod+F12 exec swaymsg "output * dpms off"
-    bindsym $mod+F11 exec swaymsg "output * dpms on"
-    bindsym $mod+F10 exec swaymsg "output $output-left dpms off" | swaymsg "output $output-right dpms off"
-    bindsym $mod+F9  exec swaymsg "output $output-left dpms on"  | swaymsg "output $output-right dpms on"
-    bindsym $mod+F8  exec swaymsg "output $output-left disable" | swaymsg "output $output-right disable"
-    bindsym $mod+F7  exec swaymsg "output $output-left enable"  | swaymsg "output $output-right enable"
+# Перемещение фокуса
+bindsym --to-code $mainMod+Left focus left
+bindsym --to-code $mainMod+Right focus right
+bindsym --to-code $mainMod+Up focus up
+bindsym --to-code $mainMod+Down focus down
+
+# Перемещение контейнеров между воркспейсами
+bindsym --to-code $mainMod+Shift+Right exec swaymsg move window to workspace $(( $(swaymsg -t get_workspaces | jq -r '.[] | select(.focused==true) | .name') + 1 )) && swaymsg workspace next_on_output
+bindsym --to-code $mainMod+Shift+Left exec swaymsg move window to workspace $(( $(swaymsg -t get_workspaces | jq -r '.[] | select(.focused==true) | .name') - 1 )) && swaymsg workspace prev_on_output
 
 
+# Переключение воркспейсов
+bindsym --to-code $mainMod+Tab workspace next_on_output
 
-    # Kill  --to-codefocused window
-    bindsym --to-code $mod+c kill
+# Фокус на мониторы
+bindsym --to-code $mainMod+1 focus output $LMonitor
+bindsym --to-code $mainMod+2 focus output $RMonitor
+bindsym --to-code $mainMod+3 focus output $CMonitor
 
-    # Start --to-code your launcher
-    bindsym --to-code $mod+r exec wofi --show drun -i --monitor DP-3 --gtk-dark
+# Перемещение контейнеров между воркспейсами и мониторами
+bindsym --to-code $mainMod+Shift+1 [con_id=__focused__] move to output $LMonitor, focus
+bindsym --to-code $mainMod+Shift+2 [con_id=__focused__] move to output $RMonitor, focus
+bindsym --to-code $mainMod+Shift+3 [con_id=__focused__] move to output $CMonitor, focus
 
-    # Drag floating windows by holding down $mod and left mouse button.
-    # Resize them with right mouse button + $mod.
-    # Despite the name, also works for non-floating windows.
-    # Change normal to inverse to use left mouse button for resizing and right
-    # mouse button for dragging.
-    floating_modifier $mod normal
+# Перемещение между мониторами
+bindsym --to-code $mainMod+Ctrl+Shift+Left move container to output left
+bindsym --to-code $mainMod+Ctrl+Shift+Right move container to output right
 
-    # Reload the configuration file
-    bindsym --to-code $mod+Shift+r reload
+# Управление мышью
+bindsym --to-code $mainMod+button2 move window
+bindsym --to-code $mainMod+button3 resize window
 
-    # Exit sway (logs you out of your Wayland session)
-    bindsym --to-code $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'
-#
-# Moving around:
-#
-    # Move your focus around
-    bindsym --to-code $mod+Left focus left
-    bindsym --to-code $mod+Down focus down
-    bindsym --to-code $mod+Up focus up
-    bindsym --to-code $mod+Right focus right
+# Режим resize
+mode "resize" {
+    bindsym --to-code Left resize shrink width 10px
+    bindsym --to-code Right resize grow width 10px
+    bindsym --to-code Up resize shrink height 10px
+    bindsym --to-code Down resize grow height 10px
 
-    # Move t he focused window with the same, but add Shift
-    bindsym --to-code $mod+Shift+Left focus left
-    bindsym --to-code $mod+Shift+Down focus down
-    bindsym --to-code $mod+Shift+Up focus up
-    bindsym --to-code $mod+Shift+Right focus right
-    bindsym --to-code $mod+KP_Multiply move container to workspace prev; workspace prev
-    bindsym --to-code $mod+KP_Subtract move container to workspace next; workspace next
-#
-#include /home/shpinog/.config/sway/config.d/*
+    # Возврат в нормальный режим
+    bindsym --to-code Return mode "default"
+    bindsym --to-code Escape mode "default"
+}
+bindsym --to-code $mainMod+Shift+e mode "resize"
 
-# Switch to workspace
-    bindsym $mod+1 workspace $ws1
-    bindsym $mod+2 workspace $ws2
-    bindsym $mod+3 workspace $ws3
-    bindsym $mod+4 workspace $ws4
-    bindsym $mod+5 workspace $ws5
-    bindsym $mod+6 workspace $ws6
-
-    
-    bindsym Mod1+1 workspace $ws11
-    bindsym Mod1+2 workspace $ws12
-    bindsym Mod1+6 workspace $ws13
-    bindsym Mod1+4 workspace $ws14
-    bindsym Mod1+5 workspace $ws15
-    bindsym Mod1+3 workspace $ws16
-
-    
-    
-    mode "mode_game" {
-    bindsym F11+1 workspace $ws11
-    bindsym F11+2 workspace $ws12
-    bindsym F11+3 workspace $ws13
-    bindsym F11+4 workspace $ws14
-    bindsym F11+5 workspace $ws15
-    bindsym F11+6 workspace $ws16
-    bindsym $mod+m mode "default"
-    }
-    bindsym $mod+m mode "mode_game"
-
-    # Move focused container to workspace
-    bindsym $mod+Shift+1 move container to workspace $ws1
-    bindsym $mod+Shift+2 move container to workspace $ws2
-    bindsym $mod+Shift+3 move container to workspace $ws3
-    bindsym $mod+Shift+4 move container to workspace $ws4
-    bindsym $mod+Shift+5 move container to workspace $ws5
-    bindsym $mod+Shift+6 move container to workspace $ws6
-   
-    
-
-    bindsym Mod1+Shift+1 move container to workspace $ws11
-    bindsym Mod1+Shift+2 move container to workspace $ws12
-    bindsym Mod1+Shift+3 move container to workspace $ws13
-    bindsym Mod1+Shift+4 move container to workspace $ws14
-    bindsym Mod1+Shift+5 move container to workspace $ws15
-    bindsym Mod1+Shift+6 move container to workspace $ws16
-   
-    # Note: workspaces can have any name you want, not just numbers.
-    # We just use 1-10 as the default.
-
-
-# Layout stuff:
-#
-    # You can "split" the current object of your focus with
-    # $mod+b or $mod+v, for horizontal and vertical splits
-    # respectively.
-    bindsym $mod+b splith
-    bindsym $mod+v splitv
-
-    # Switch the current container between different layout styles
-    bindsym --to-code $mod+s layout stacking
-    bindsym --to-code $mod+w layout tabbed
-    bindsym --to-code $mod+e layout toggle split
-
-    # Make the current focus fullscreen
-    bindsym  --to-code $mod+f fullscreen
-    bindsym  --to-code $mod+Shift+f fullscreen global
-
-    # Toggle the current focus between tiling and floating mode
-    bindsym  --to-code $mod+Shift+space floating toggle
-
-    # Swap focus between the tiling area and the floating area
-    # bindsym $mod+space focus mode_toggle
-
-    # Move focus to the parent container
-    # bindsym  --to-code $mod+a focus parent
-#
-# Scratchpad:
-#
-   # You can send windows there and get them back later.
-
-    # Move the currently focused window to the scratchpad
-    bindsym  --to-code $mod+n move scratchpad
-
-    # Show the next scratchpad window or hide the focused scratchpad window.
-    # If there are multiple scratchpad windows, this command cycles through them.
-    bindsym  --to-code $mod+Shift+n scratchpad show
-
-#Multimedia keys
-
-bindsym --locked XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
-bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
-bindsym --locked XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+# Дополнительные настройки
+floating_modifier $mainMod normal
+focus_follows_mouse yes

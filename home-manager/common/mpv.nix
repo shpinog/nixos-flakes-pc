@@ -6,6 +6,7 @@
     ];
     bindings = {
       "ctrl+r" = ''cycle_values video-rotate "90" "180" "270" "0" '';
+      "CTRL+1 " = ''no-osd change-list glsl-shaders set "~~/shaders/FSR.glsl"; show-text "FSR" '';
     };
     config =
       {

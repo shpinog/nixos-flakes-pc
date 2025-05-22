@@ -1,6 +1,6 @@
 [
     {
-        "layer": "top",
+        "layer": "overlay",
         "output": "DP-3",
         "position": "bottom",
         "height": 30,
@@ -82,11 +82,13 @@
         }
     },
     {
-        "layer": "top",
+        "layer": "bottom",
         "output": ["DP-1", "DP-2"],
         "position": "bottom",
         "height": 40,
         "spacing": 0,
+        "exclusive":0,
+        "passthrough":1,
 
         "modules-left": ["hyprland/workspaces"],
         "modules-center": [],

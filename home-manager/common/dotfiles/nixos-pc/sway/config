@@ -21,72 +21,58 @@ input * {
 
 # Status Bar:
 bar {
-    position top
+    position bottom
     swaybar_command waybar
 }
 
-### Output configuration
-output HEADLESS-1 mode 1920x1080 subpixel rgb
-# set $output-right DP-2
-# #set $output-center DP-2
-# set $output-left DP-3
-#
-# output  $output-right  pos 0 0 res 1280x1024 subpixel rgb
-# # output  $output-left pos 0 0 res 1600x900@59.978hz subpixel rgb
-# output  $output-left pos 1280 0 res 1920x1080@119.982hz subpixel rgb
-# output * adaptive_sync on
+# Определение мониторов
+set $LMonitor DP-2
+set $CMonitor DP-1
+set $RMonitor DP-3
+set $TV HDMI-A-1
+
+# Мониторы
+output $LMonitor mode 1920x1080@144Hz pos 640 0 adaptive_sync on
+output $CMonitor mode 2560x1440@144Hz pos 0 1080 adaptive_sync on
+output $RMonitor mode 3840x2160 pos 2560 600 transform 270 scale 2 adaptive_sync on
 
 
 
-#
-### Workspaces:
-#
-    # Workspace names primary-output
-    set $ws1 "1": 🖥
-    set $ws2 "2": 🌐
-    set $ws3 "3": 
-    set $ws4 "4": 🎮
-    set $ws5 "5": 🎧
-    set $ws6 "6": 💬
-    set $ws7 "7"
-    set $ws8 "8"
-    set $ws9 "9"
-    # Workspace names second-output
-    set $ws11 "11": 🖥*
-    set $ws12 "12"  💾* 
-    set $ws13 "13": *
-    set $ws14 "14": 🎮*
-    set $ws15 "15": 🎧*
-    set $ws16 "16": 💬*
-  
+# Воркспейсы
+workspace 1 output $LMonitor
+workspace 2 output $LMonitor
+workspace 3 output $LMonitor
+workspace 4 output $LMonitor
+workspace 5 output $LMonitor
 
-# Set first monitor workspaces to first monitor
-workspace $ws1 output $output-left
-workspace $ws2 output $output-left
-workspace $ws3 output $output-left
-workspace $ws4 output $output-left
-workspace $ws5 output $output-left
-workspace $ws6 output $output-left
-workspace $ws7 output $output-left
-workspace $ws8 output $output-left
-workspace $ws9 output $output-left
+workspace 11 output $CMonitor
+workspace 12 output $CMonitor
+workspace 13 output $CMonitor
+workspace 14 output $CMonitor
+workspace 15 output $CMonitor
 
-# Set center monitor workspaces to first monitor
-
-workspace $ws14 output $output-center
-
-# Set second monitor workspaces to second monitor
-workspace $ws11 output $output-right
-workspace $ws12 output $output-right
-workspace $ws13 output $output-right
-workspace $ws15 output $output-right
-workspace $ws16 output $output-right
-workspace $ws17 output $output-right
-workspace $ws18 output $output-right
-workspace $ws19 output $output-right
-
-
+workspace 21 output $RMonitor
+workspace 22 output $RMonitor
+workspace 23 output $RMonitor
+workspace 24 output $RMonitor
+workspace 25 output $RMonitor
 
 include windows
 include bindings
 include autostart
+
+exec gsettings set $gnome-schema gtk-theme 'Yaru-dark'
+exec gsettings set $gnome-schema icon-theme 'Yaru-dark' 
+exec gsettings set $gnome-schema cursor-theme 'Yaru-dark'
+exec gsettings set $gnome-schema font-name 'Yaru-dark'
+exec hypridle
+exec_always --no-startup-id "swaybg -i ~/nixos-flakes-pc/home-manager/common/dotfiles/default/night.jpg"
+exec udiskie --tray &
+exec xrandr --output DP-1 --primary
+exec nm-applet --indicator
+
+#clipse
+exec clipse -listen 
+
+# bind for clipse is in keybinds.cfg
+

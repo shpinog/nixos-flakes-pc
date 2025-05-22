@@ -3,6 +3,8 @@
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
+    audio.enable = true;
+    wireplumber.enable = true;
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
@@ -11,7 +13,7 @@
   programs.noisetorch.enable = true;
 
 
-  hardware.pulseaudio = {
+  services.pulseaudio = {
     enable = false;
     package = pkgs.pulseaudioFull;
   };
