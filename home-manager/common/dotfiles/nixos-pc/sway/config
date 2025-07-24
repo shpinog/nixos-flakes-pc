@@ -9,14 +9,26 @@ xwayland enable
 default_border none
 
 #Keyboard layout
-input * {
+input type:keyboard {
     xkb_layout "us,ru"
     xkb_options "grp:caps_toggle"
     accel_profile "flat"
     pointer_accel  0
 }
 
+input type:touchpad {
+    # note that DWT only works for internal touchpads (see libinput issue #524)
+    dwt disable
+    drag enabled
+    drag_lock enable
+    tap enabled
+    natural_scroll disable
+    middle_emulation enabled
+    pointer_accel 0.7
+    accel_profile adaptive
 
+
+}
 
 
 # Status Bar:
@@ -34,7 +46,7 @@ set $TV HDMI-A-1
 # Мониторы
 output $LMonitor mode 1920x1080@144Hz pos 640 0 adaptive_sync on
 output $CMonitor mode 2560x1440@144Hz pos 0 1080 adaptive_sync on
-output $RMonitor mode 3840x2160 pos 2560 600 transform 270 scale 2 adaptive_sync on
+output $RMonitor mode 3840x2160@60Hz pos 2560 600 transform 270 scale 2 adaptive_sync on
 
 
 

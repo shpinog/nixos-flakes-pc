@@ -1,6 +1,11 @@
+{
+  config,
+  pkgs,
+  system,
+  ...
+}:
+{
 
-{ config, pkgs, system, ... }:{
-    
   services.flatpak.enable = true;
 
   # services.ollama = {
@@ -16,7 +21,7 @@
   #     rocmOverrideGfx = "10.3.1";
   #   };
   #
-    hardware.amdgpu.opencl.enable = true;
+  # hardware.amdgpu.opencl.enable = true;
 
   # services.open-webui = {
   #   enable = true;
@@ -24,24 +29,33 @@
   #   host = "0.0.0.0";
   #  };
 
+  services.udev.packages = [ pkgs.yubikey-personalization ];
+
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
+  };
 
   programs.appimage = {
     enable = true;
     binfmt = true;
 
-     };
+  };
 
   programs = {
 
     weylus = {
       enable = true;
-      users = ["shpinog"];
+      users = [ "shpinog" ];
       openFirewall = true;
     };
 
     thunar = {
       enable = true;
-      plugins = with pkgs.xfce; [thunar-archive-plugin thunar-volman];
+      plugins = with pkgs.xfce; [
+        thunar-archive-plugin
+        thunar-volman
+      ];
     };
 
     file-roller = {
@@ -57,8 +71,8 @@
     };
 
     adb = {
-      enable= true;
-      };
+      enable = true;
+    };
 
   };
 }

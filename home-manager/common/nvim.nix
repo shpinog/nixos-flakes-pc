@@ -1,18 +1,21 @@
-{ config, lib, pkgs, ... }: {
+{ config, lib, pkgs, inputs, ... }:{
+  imports = [ inputs.LazyVim.homeManagerModules.default ];
+  programs.neovim = {
+        enable = true;
+        vimAlias = true;
+        vimdiffAlias = true;
+        withNodeJs = true;
+  };
 
-  programs = {
-    neovim = {
-      enable = true;
-      vimAlias = true;
-      viAlias = true;
-      withNodeJs = true;
-      # extraConfig = ''
-      #   lua require('.')
-      # '';
+  programs.lazyvim = {
+    enable = true;
+    extras = {
+      lang = {
+        nix.enable = true;
+      };
     };
   };
-  home.packages = with pkgs; [
-    gcc 
-    rustup
-  ];
+
 }
+
+

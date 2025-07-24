@@ -1,8 +1,6 @@
 { config, pkgs, ... }: {
 
   imports = [
-    ../../common/users/nixos-pc/sway.nix
-      ../../common/users/nixos-pc/waybar.nix
       ../../common/users/nixos-pc/environment.nix
       ../../common/nvim.nix
       ../../common/firefox.nix
@@ -18,6 +16,8 @@
        # ../../common/hyprland.nix
       ../../common/stylix.nix
       # ../../common/niri.nix
+      ../../common/users/nixos-pc/sway.nix
+      ../../common/dotfiles/nixos-pc/waybar-sway.nix
 
   ];
 

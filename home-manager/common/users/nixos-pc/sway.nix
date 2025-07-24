@@ -20,7 +20,7 @@ home.packages = with pkgs; [
 
 wayland.windowManager.sway = {
   enable = true;
-  package = pkgs.swayfx;
+  package = pkgs.sway;
   checkConfig = false;
   wrapperFeatures = { 
     base = true;

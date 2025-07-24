@@ -1,4 +1,11 @@
-{ inputs, lib, config, pkgs, ... }: {
+{
+  inputs,
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+{
 
   imports = [
     ./hardware-configuration.nix
@@ -14,34 +21,53 @@
     ../../common/greetd.nix
     ../../common/audio.nix
     ../../common/filesystem.nix
-
-     ../../common/services.sunshine.nix
+    ../../common/yubikey.nix
+    # ../../common/niri.nix
+    ../../common/services.sunshine.nix
 
   ];
 
   nix = {
     settings = {
-      trusted-users = [ "shpinog" "root" ];
-      experimental-features = "nix-command flakes";
+      trusted-users = [
+        "shpinog"
+        "root"
+      ];
+
+      system-features = [
+        "big-parallel"
+        "gccarch-x86-64-v4"
+      ];
+      experimental-features = [
+        "nix-command flakes"
+      ];
       auto-optimise-store = true;
       cores = 24;
       max-jobs = 1;
     };
   };
 
- 
-  users.groups.i2c = {};
-  users.users= {
-  shpinog = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" "storage" "media" "lp"  "video" "input" "i2c" ];
-    hashedPassword = "$6$nBo/qjuyUFF2nzWL$MdmWyGhfbardBXoI9mT2p/kSvHCCCbdhD/kgt/VW/vTV.t9k5Lq04hPpg7jKQ5aEMzDHGDtXh.9uSBvvHQOcC0";
+  services.pcscd.enable = true;
+  users.groups.i2c = { };
+  users.users = {
+    shpinog = {
+      isNormalUser = true;
+      extraGroups = [
+        "wheel"
+        "networkmanager"
+        "storage"
+        "media"
+        "lp"
+        "video"
+        "input"
+        "i2c"
+      ];
+      hashedPassword = "$6$nBo/qjuyUFF2nzWL$MdmWyGhfbardBXoI9mT2p/kSvHCCCbdhD/kgt/VW/vTV.t9k5Lq04hPpg7jKQ5aEMzDHGDtXh.9uSBvvHQOcC0";
 
-    # initialPassword = "123";
+      # initialPassword = "123";
     };
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "22.11";
 }
-

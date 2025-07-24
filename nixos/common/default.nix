@@ -1,12 +1,19 @@
-{ inputs, lib, config, pkgs, ... }: {
-  
+{
+  inputs,
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+{
+
   i18n.defaultLocale = "ru_RU.UTF-8";
-console = {
+  console = {
     earlySetup = true;
     font = "${pkgs.terminus_font}/share/consolefonts/ter-v16n.psf.gz";
     packages = [ pkgs.terminus_font ];
     keyMap = "us";
-};
+  };
 
   time.timeZone = "Europe/Moscow";
   services.udisks2.enable = true;
@@ -21,21 +28,20 @@ console = {
     wlr.enable = true;
   };
   services.joycond.enable = true;
-  hardware.xpadneo.enable= true;
+  hardware.xpadneo.enable = true;
   security.rtkit.enable = true;
   services.dbus.enable = true;
 
   #Distobox
   virtualisation.spiceUSBRedirection.enable = true;
   virtualisation.podman = {
-  enable = true;
-  dockerCompat = true;
-};
-  users.users.shpinog = {
-  isNormalUser = true;
-  extraGroups = [ "podman" ];
+    enable = true;
+    dockerCompat = true;
   };
-
+  users.users.shpinog = {
+    isNormalUser = true;
+    extraGroups = [ "podman" ];
+  };
 
   # #Docker
   # virtualisation.docker.enable = true;
@@ -46,13 +52,14 @@ console = {
   # setSocketVariable = true;
   # };
 
-environment.systemPackages = with pkgs; [
-    koboldcpp
+  environment.systemPackages = with pkgs; [
+    amneziawg-tools
+    nmap
     python312Packages.psutil
     psutils
     wakeonlan
 
-    distrobox #distrobox
+    distrobox # distrobox
     gperftools
     cachix
     coreutils
@@ -60,7 +67,7 @@ environment.systemPackages = with pkgs; [
     pciutils
     btop
     killall
-##Compile
+    ##Compile
     gcc
     pkg-config
     binutils

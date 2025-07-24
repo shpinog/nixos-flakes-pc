@@ -1,4 +1,11 @@
-{ config, pkgs, inputs, lib, ... }: {
+{
+  config,
+  pkgs,
+  inputs,
+  lib,
+  ...
+}:
+{
   programs.firefox = {
     enable = true;
     package = pkgs.firefox;

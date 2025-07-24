@@ -11,9 +11,11 @@ set $mainMod Mod4
 bindsym --to-code $mainMod+Return exec alacritty, focus
 bindsym --to-code $mainMod+c kill
 bindsym --to-code $mainMod+Shift+m exec "swaymsg exit"
-bindsym --to-code $mainMod+KP_Left exec "nautilus", focus
+bindsym --to-code $mainMod+KP_Left exec "flatpak run org.gnome.NautilusDevel", focus
+bindsym --to-code $mainMod+KP_Prior exec "steam -silent -nochatui -nofriendsui", focus
+bindsym --to-code $mainMod+KP_Up exec "mpv --player-operation-mode=pseudo-gui --keep-open", focus
 bindsym --to-code $mainMod+q exec firefox , focus
-bindsym --to-code $mainMod+KP_Home exec telegram-desktop, focus
+bindsym --to-code $mainMod+KP_Home exec Telegram, focus
 bindsym --to-code $mainMod+space floating toggle
 bindsym --to-code $mainMod+r exec "wofi --show drun"
 bindsym --to-code $mainMod+f fullscreen toggle
@@ -59,6 +61,16 @@ bindsym --to-code $mainMod+Ctrl+Shift+Right move container to output right
 # Управление мышью
 bindsym --to-code $mainMod+button2 move window
 bindsym --to-code $mainMod+button3 resize window
+
+#Жесты
+
+bindgesture swipe:4:right [con_id=__focused__] move to output $CMonitor, focus
+bindgesture swipe:4:left [con_id=__focused__] move to output $RMonitor, focus
+bindgesture swipe:4:up [con_id=__focused__] move to output $LMonitor, focus
+
+
+bindgesture hold:4 exec "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
+bindgesture hold:3 exec "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
 
 # Режим resize
 mode "resize" {
