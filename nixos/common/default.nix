@@ -33,7 +33,6 @@
   services.dbus.enable = true;
 
   #Distobox
-  virtualisation.spiceUSBRedirection.enable = true;
   virtualisation.podman = {
     enable = true;
     dockerCompat = true;
@@ -43,19 +42,26 @@
     extraGroups = [ "podman" ];
   };
 
-  # #Docker
-  # virtualisation.docker.enable = true;
-  # users.users.shpinog.extraGroups = [ "docker" ];
-  # users.extraGroups.docker.members = [ "shpinog" ];
-  # virtualisation.docker.rootless = {
-  # enable = true;
-  # setSocketVariable = true;
+  # users.extraGroups.vboxusers.members = [ "shpinog" ];
+  # virtualisation.virtualbox = {
+  #   host = {
+  #     enable = true;
+  #     enableExtensionPack = true;
+  #   };
+  #   guest = {
+  #     enable = true;
+  #   };
+  #
   # };
+
+  programs.virt-manager.enable = true;
+  users.groups.libvirtd.members = [ "shpinog" ];
+  virtualisation.libvirtd.enable = true;
+  virtualisation.spiceUSBRedirection.enable = true;
 
   environment.systemPackages = with pkgs; [
     amneziawg-tools
     nmap
-    python312Packages.psutil
     psutils
     wakeonlan
 

@@ -10,7 +10,22 @@
   networking.useDHCP = false;
   networking.enableIPv6 = true;
   networking.networkmanager.enable = true;
-  networking.networkmanager.dns = "none";
+  networking.networkmanager.plugins = with pkgs; [
+    networkmanager-fortisslvpn
+    networkmanager-iodine
+    networkmanager-l2tp
+    networkmanager-openconnect
+    networkmanager-openvpn
+    networkmanager-vpnc
+    networkmanager-sstp
+  ];
+  networking.nameservers = [
+    "192.168.1.1"
+    "8.8.8.8"
+  ]; # Основной DNS + резервный (Google)
+  networking.networkmanager.dns = "none"; # Отключаем DNS от NetworkManager
+
+  # networking.networkmanager.dns = "systemd-resolved";
   networking.firewall = rec {
     checkReversePath = false;
     allowedTCPPorts = [
@@ -63,8 +78,4 @@
   #   indicator = true;
   # };
 
-  networking = {
-    nameservers = [ "192.168.4.1" ];
-    resolvconf.useLocalResolver = false;
-  };
 }

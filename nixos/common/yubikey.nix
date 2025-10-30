@@ -9,8 +9,7 @@
   # YubiKey
   environment.systemPackages = with pkgs; [
     yubikey-personalization # CLI tools for configuring YubiKey
-    yubikey-manager # Manage YubiKey settings
-    yubikey-manager-qt # GUI for managing YubiKey
+    yubioath-flutter
     yubikey-agent
     libfido2 # Support for FIDO2/WebAuthn
     opensc # Smart card support

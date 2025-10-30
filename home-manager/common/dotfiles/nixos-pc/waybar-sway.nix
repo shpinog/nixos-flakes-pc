@@ -6,11 +6,25 @@
   programs.waybar = {
     enable = true;
     settings = {
+      secondBar = {
+        layer = "bottom";
+        exclusive = true;
+        position = "bottom";
+        height = 144;
+        output = [
+          "DP-2"
+        ];
+      };
+
       mainBar = {
         layer = "bottom";
         exclusive = true;
         position = "bottom";
         height = 16;
+        output = [
+          "DP-1"
+          "DP-3"
+        ];
 
         modules-left = [ "sway/workspaces" ];
         modules-right = [
@@ -61,7 +75,6 @@
           format = "<span style=\"italic\">{}</span>";
         };
 
-
         "idle_inhibitor" = {
           format = "{icon}";
           format-icons = {
@@ -74,7 +87,7 @@
           "format" = " ";
           "tooltip" = false;
           "interval" = "once";
-          };
+        };
 
         "tray" = {
           spacing = 10;
@@ -148,7 +161,11 @@
             "phone" = "";
             "portable" = "";
             "car" = "";
-            "default" = [ "" "" "" ];
+            "default" = [
+              ""
+              ""
+              ""
+            ];
           };
           on-click = "pavucontrol";
         };
@@ -161,4 +178,3 @@
     '';
   };
 }
-

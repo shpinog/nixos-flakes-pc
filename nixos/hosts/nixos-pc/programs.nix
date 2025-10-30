@@ -29,13 +29,6 @@
   #   host = "0.0.0.0";
   #  };
 
-  services.udev.packages = [ pkgs.yubikey-personalization ];
-
-  programs.gnupg.agent = {
-    enable = true;
-    enableSSHSupport = true;
-  };
-
   programs.appimage = {
     enable = true;
     binfmt = true;

@@ -74,7 +74,7 @@
   hardware.bluetooth = {
     settings = {
       General = {
-        MultiProfile = "multiple";
+        # MultiProfile = "multiple";
         ControllerMode = "bredr";
         # FastConnectable = "true";
         # Experimental = true;

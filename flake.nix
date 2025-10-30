@@ -38,7 +38,9 @@
           specialArgs = { inherit inputs; };
           modules = [
             home-manager.nixosModules.home-manager
-            chaotic.nixosModules.default
+            chaotic.nixosModules.nyx-cache
+            chaotic.nixosModules.nyx-overlay
+            chaotic.nixosModules.nyx-registry
             stylix.nixosModules.stylix
             niri.nixosModules.niri
             ./nixos/hosts/nixos-pc

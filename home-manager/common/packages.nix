@@ -1,6 +1,8 @@
- { config, pkgs, ... }:{
+{ config, pkgs, ... }:
+{
 
   home.packages = with pkgs; [
+    eog
     jellyfin-ffmpeg
     zathura
     vipsdisp
@@ -27,4 +29,3 @@
     xfce.thunar-media-tags-plugin
   ];
 }
-

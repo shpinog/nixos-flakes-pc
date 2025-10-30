@@ -11,6 +11,7 @@
     ./hardware-configuration.nix
     ./kernel.nix
     ./programs.nix
+    ./amdgpu-patch.nix
     ../../common/hardware.nix
     ../../common/stylix.nix
     ../../common/network.nix
@@ -47,7 +48,6 @@
     };
   };
 
-  services.pcscd.enable = true;
   users.groups.i2c = { };
   users.users = {
     shpinog = {
@@ -61,6 +61,7 @@
         "video"
         "input"
         "i2c"
+        "vboxusers"
       ];
       hashedPassword = "$6$nBo/qjuyUFF2nzWL$MdmWyGhfbardBXoI9mT2p/kSvHCCCbdhD/kgt/VW/vTV.t9k5Lq04hPpg7jKQ5aEMzDHGDtXh.9uSBvvHQOcC0";
 

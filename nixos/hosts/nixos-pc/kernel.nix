@@ -6,22 +6,6 @@
 }:
 {
 
-  systemd.services.setpci-latency = {
-    description = "Set PCI latency timers";
-    wantedBy = [ "multi-user.target" ];
-    after = [ "systemd-udev-settle.service" ];
-    path = [ pkgs.pciutils ]; # Добавляем pciutils в environment
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-    };
-    script = ''
-      ${pkgs.pciutils}/bin/setpci -v -s '*:*' latency_timer=20
-      ${pkgs.pciutils}/bin/setpci -v -s '0:0' latency_timer=0
-      ${pkgs.pciutils}/bin/setpci -v -d "*:*:04xx" latency_timer=80
-    '';
-  };
-
   #Gaming response-time
   systemd.tmpfiles.settings = {
     "consistent-response-time-for-gaming" = {
@@ -83,8 +67,8 @@
     # };
   };
 
-  boot.kernelPackages = with pkgs; linuxPackages_6_6;
-  chaotic.mesa-git.enable = true;
+  boot.kernelPackages = with pkgs; linuxPackages_6_1;
+  # chaotic.mesa-git.enable = true;
   # services.scx.enable = true;
   # services.scx.scheduler = "scx_lavd";
 
@@ -144,6 +128,7 @@
       # "amdgpu.ppfeaturemask=0xfffd7fff"
       "fsck.mode=force"
       "mitigations=off"
+      "amdgpu.dcdebugmask=0x10"
       # "nohz_full=2-23,26-47"
       # "rcu_nocbs=0-1,24-25"
       # "rcutree.kthread_prio=1"
