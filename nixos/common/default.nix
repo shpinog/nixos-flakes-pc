@@ -28,9 +28,17 @@
     wlr.enable = true;
   };
   services.joycond.enable = true;
-  hardware.xpadneo.enable = true;
   security.rtkit.enable = true;
   services.dbus.enable = true;
+  services.libinput = {
+    enable = true;
+    mouse = {
+      accelProfile = "flat";
+      accelSpeed = "0";
+    };
+  };
+
+  hardware.xpadneo.enable = true;
 
   #Distobox
   virtualisation.podman = {
@@ -54,17 +62,20 @@
   #
   # };
 
-  programs.virt-manager.enable = true;
-  users.groups.libvirtd.members = [ "shpinog" ];
-  virtualisation.libvirtd.enable = true;
-  virtualisation.spiceUSBRedirection.enable = true;
+  # programs.virt-manager.enable = true;
+  # users.groups.libvirtd.members = [ "shpinog" ];
+  # virtualisation.libvirtd.enable = true;
+  # virtualisation.spiceUSBRedirection.enable = true;
+  services.xserver.videoDrivers = [ "vmware" ];
+  virtualisation.vmware.guest.enable = true;
+  virtualisation.vmware.host.enable = true;
 
   environment.systemPackages = with pkgs; [
     amneziawg-tools
     nmap
     psutils
     wakeonlan
-
+    libinput
     distrobox # distrobox
     gperftools
     cachix
@@ -86,9 +97,8 @@
     gptfdisk
     util-linux
     ddrescue
-    udiskie
     usbutils
-    glxinfo
+    mesa-demos
     ripgrep
     #Destop
     shotwell

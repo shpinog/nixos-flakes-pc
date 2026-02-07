@@ -1,4 +1,12 @@
-{ inputs, pkgs, config, lib, stylix, ... }: {
+{
+  inputs,
+  pkgs,
+  config,
+  lib,
+  stylix,
+  ...
+}:
+{
   stylix.enable = true;
   stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-soft.yaml";
   stylix.fonts = {
@@ -18,7 +26,7 @@
     };
 
     emoji = {
-      package = pkgs.noto-fonts-emoji;
+      package = pkgs.noto-fonts-color-emoji;
       name = "Noto Color Emoji";
     };
   };

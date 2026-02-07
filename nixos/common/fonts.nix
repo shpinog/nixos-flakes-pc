@@ -1,16 +1,17 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, ... }:
+{
   fonts = {
     # fontDir.enable = true;
     # enableGhostscriptFonts = true;
     enableDefaultPackages = true;
     packages = with pkgs; [
       jetbrains-mono
-      noto-fonts-emoji
       noto-fonts
+      noto-fonts-color-emoji
       dejavu_fonts
       liberation_ttf
       hackgen-nf-font
-      ubuntu_font_family
+      ubuntu-classic
       powerline-symbols
     ];
 
@@ -18,22 +19,25 @@
       enable = true;
       antialias = true;
       subpixel.lcdfilter = "default";
-      subpixel.rgba = "rgb"; 
-      
+      subpixel.rgba = "rgb";
+
       hinting = {
         enable = true;
         autohint = true;
 
       };
-      
+
       defaultFonts = {
         serif = [ "Ubuntu" ];
-        sansSerif = [  "Ubuntu Sans" ];
-        monospace = [ "JetBrains Mono Regular"];
-        emoji = [  "Noto Color Emoji" "FiraCode Nerd Font" ];
+        sansSerif = [ "Ubuntu Sans" ];
+        monospace = [ "JetBrains Mono Regular" ];
+        emoji = [
+          "Noto Color Emoji"
+          "FiraCode Nerd Font"
+        ];
 
       };
-     };
+    };
   };
 
 }

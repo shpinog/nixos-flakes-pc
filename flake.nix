@@ -2,8 +2,12 @@
   description = "nix config";
 
   inputs = {
-    LazyVim.url = "github:matadaniel/LazyVim-module";
-    niri.url = "github:sodiboo/niri-flake";
+    lazy-nvim-nix = {
+      url = "github:josh/lazy-nvim-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # niri.url = "github:sodiboo/niri-flake";
     #stylix
     stylix.url = "github:nix-community/stylix";
     #Hyprland
@@ -19,19 +23,37 @@
     # Home manager
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    dgop = {
+      url = "github:AvengeMedia/dgop";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    dankMaterialShell = {
+      url = "github:AvengeMedia/DankMaterialShell";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.dgop.follows = "dgop";
+    };
   };
 
   outputs =
     {
+      self,
       nixpkgs,
       home-manager,
       chaotic,
       stylix,
       nur,
-      niri,
+      lazy-nvim-nix,
       ...
     }@inputs:
     {
+      homeModules.default = {
+        programs.neovim.finalPackage = lazy-nvim-nix.packages.x86_64-linux.LazyVim;
+      };
+      nixosModules.default = {
+        programs.neovim.finalPackage = inputs.lazy-nvim-nix.packages.x86_64-linux.default;
+      };
+
+
       nixosConfigurations = {
         nixos-pc = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
@@ -42,14 +64,12 @@
             chaotic.nixosModules.nyx-overlay
             chaotic.nixosModules.nyx-registry
             stylix.nixosModules.stylix
-            niri.nixosModules.niri
             ./nixos/hosts/nixos-pc
 
             {
               nixpkgs = {
                 overlays = [
                   nur.overlays.default
-                  niri.overlays.niri
                 ];
                 config = {
                   allowUnfree = true;
@@ -67,49 +87,21 @@
                     imports = [
                       ./home-manager/hosts/nixos-pc/nixos-pc.nix
                     ];
+
                   };
               };
             }
           ];
         };
 
-        nixos-book = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs = { inherit inputs; };
-          modules = [
-            ./nixos/hosts/nixos-book
-            home-manager.nixosModules.home-manager
-            {
-              nixpkgs = {
-                config = {
-                  allowUnfree = true;
-                };
-              };
-
-              home-manager = {
-                useGlobalPkgs = true;
-                useUserPackages = true;
-                extraSpecialArgs = { inherit inputs; };
-                users.shpinog =
-                  { pkgs, ... }:
-                  {
-                    imports = [ ./home-manager/hosts/nixos-book/nixos-book.nix ];
-                    nixpkgs.config.allowUnfree = true;
-                  };
-              };
-            }
-          ];
-        };
       };
     };
   nixConfig = {
     extra-substituters = [
       "https://nix-community.cachix.org"
-      # "https://niri.cachix.org"
     ];
     extra-trusted-public-keys = [
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-      # "niri.cachix.org-1:Wv0OmO7PsuocRKzfDoJ3mulSl7Z6oezYhGhR+3W2964="
     ];
   };
 

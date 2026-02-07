@@ -25,6 +25,11 @@
   ]; # Основной DNS + резервный (Google)
   networking.networkmanager.dns = "none"; # Отключаем DNS от NetworkManager
 
+  services.v2raya = {
+    enable = true;
+    cliPackage = pkgs.xray;
+  };
+
   # networking.networkmanager.dns = "systemd-resolved";
   networking.firewall = rec {
     checkReversePath = false;
@@ -77,5 +82,27 @@
   #   enable = true;
   #   indicator = true;
   # };
+  #
+  environment.systemPackages = [
+    pkgs.autossh
+  ];
+
+  services.autossh.sessions = [
+    {
+      name = "rescue";
+      user = "root";
+
+      monitoringPort = 0;
+      extraArguments = "-N -R 2223:localhost:22 -i /root/.ssh/rescue_ed25519 -o IdentitiesOnly=yes -o BindAddress=0.0.0.0 -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -o ExitOnForwardFailure=yes -o StrictHostKeyChecking=yes root@95.81.115.246";
+    }
+  ];
+  systemd.services.autossh-rescue.serviceConfig = {
+    Restart = lib.mkForce "always";
+    RestartSec = "10s";
+
+    # 🔥 полностью отключаем start-limit
+    StartLimitIntervalSec = lib.mkForce 0;
+    StartLimitBurst = lib.mkForce 0;
+  };
 
 }

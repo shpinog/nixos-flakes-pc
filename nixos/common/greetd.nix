@@ -1,14 +1,19 @@
-{ config, pkgs, inputs, ... }:
+{
+  config,
+  pkgs,
+  inputs,
+  ...
+}:
 
 let
-  tuigreet = "${pkgs.greetd.tuigreet}/bin/tuigreet";
-  hyprland = "${inputs.hyprland.packages.${pkgs.system}.hyprland}/bin/Hyprland";
-  sway= "${pkgs.sway}/bin/sway";
+  tuigreet = "${pkgs.tuigreet}/bin/tuigreet";
+  hyprland = "${pkgs.hyprland}/bin/start-hyprland";
+  # sway= "${pkgs.sway}/bin/sway";
 in
 {
   environment.systemPackages = [
     (pkgs.writeShellScriptBin "wayland-session" ''
-      exec ${sway}
+      exec ${hyprland}
     '')
   ];
 

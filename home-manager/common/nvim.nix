@@ -1,21 +1,22 @@
-{ config, lib, pkgs, inputs, ... }:{
-  imports = [ inputs.LazyVim.homeManagerModules.default ];
-  programs.neovim = {
-        enable = true;
-        vimAlias = true;
-        vimdiffAlias = true;
-        withNodeJs = true;
-  };
+{
+  inputs,
+  pkgs,
+  config,
+  lib,
+  stylix,
+  ...
+}:
+{
 
-  programs.lazyvim = {
-    enable = true;
-    extras = {
-      lang = {
-        nix.enable = true;
-      };
-    };
-  };
 
+  home.packages = [
+    (inputs.lazy-nvim-nix.packages.x86_64-linux.LazyVim.override {
+    })
+  ];
+
+  # programs.neovim = {
+  #   enable = true;
+  #   defaultEditor = true;
+  #   vimAlias = true;
+  # };
 }
-
-

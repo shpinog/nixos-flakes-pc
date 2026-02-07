@@ -59,15 +59,17 @@
     };
   };
 
-  programs.corectrl = {
+  services.lact = {
     enable = true;
     # gpuOverclock = {
     #   enable = true;
     #   ppfeaturemask = "0xfffd7fff";
     # };
   };
+  hardware.amdgpu.initrd.enable = true;
+  hardware.amdgpu.overdrive.enable = true;
 
-  boot.kernelPackages = with pkgs; linuxPackages_6_1;
+  boot.kernelPackages = with pkgs; linuxPackages;
   # chaotic.mesa-git.enable = true;
   # services.scx.enable = true;
   # services.scx.scheduler = "scx_lavd";
@@ -82,7 +84,11 @@
     KERNEL=="i2c-[0-9]*", GROUP="i2c", MODE="0660"
   '';
 
-  boot.supportedFilesystems = [ "ntfs" ];
+  boot.supportedFilesystems = [
+    "ntfs"
+    "exfat"
+    "f2fs"
+  ];
 
   zramSwap = {
     enable = false;
@@ -129,6 +135,8 @@
       "fsck.mode=force"
       "mitigations=off"
       "amdgpu.dcdebugmask=0x10"
+      "nowatchdog"
+      "nmi_watchdog=0"
       # "nohz_full=2-23,26-47"
       # "rcu_nocbs=0-1,24-25"
       # "rcutree.kthread_prio=1"

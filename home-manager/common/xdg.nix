@@ -1,38 +1,8 @@
 { config, pkgs, ... }:
 
 {
-  # Явное копирование .desktop-файлов в ~/.local/share/applications
-  xdg.configFile = {
-    # --- Файловый менеджер ---
-    "applications/org.gnome.Nautilus.desktop".source =
-      "${pkgs.nautilus}/share/applications/org.gnome.Nautilus.desktop";
 
-    # --- Браузеры ---
-    "applications/firefox.desktop".source = "${pkgs.firefox}/share/applications/firefox.desktop";
-    "applications/vivaldi-stable.desktop".source =
-      "${pkgs.vivaldi}/share/applications/vivaldi-stable.desktop";
-
-    # --- Медиа ---
-    "applications/mpv.desktop".source = "${pkgs.mpv}/share/applications/mpv.desktop";
-    "applications/vlc.desktop".source = "${pkgs.vlc}/share/applications/vlc.desktop";
-
-    # --- PDF / Офис ---
-    "applications/org.pwmt.zathura.desktop".source =
-      "${pkgs.zathura}/share/applications/zathura.desktop";
-    "applications/libreoffice-writer.desktop".source =
-      "${pkgs.libreoffice}/share/applications/libreoffice-writer.desktop";
-
-    # --- Изображения ---
-    "applications/org.gnome.eog.desktop".source = "${pkgs.eog}/share/applications/eog.desktop";
-    "applications/org.libvips.vipsdisp.desktop".source =
-      "${pkgs.vips}/share/applications/vipsdisp.desktop";
-
-    # --- Архивы ---
-    "applications/org.gnome.FileRoller.desktop".source =
-      "${pkgs.file-roller}/share/applications/file-roller.desktop";
-  };
-
-  # Настройки XDG MIME (ассоциации файлов)
+  xdg.configFile."mimeapps.list".force = true;
   xdg.mimeApps = {
     enable = true;
     defaultApplications = {
@@ -178,13 +148,13 @@
     };
   };
 
-  # Автоматическое обновление MIME-кэша
-  systemd.user.services.update-desktop-db = {
-    Unit.Description = "Update desktop database";
-    Service = {
-      ExecStart = "${pkgs.buildPackages.desktop-file-utils}/bin/update-desktop-database %h/.local/share/applications";
-      Type = "oneshot";
-    };
-    Install.WantedBy = [ "default.target" ];
-  };
+  # # Автоматическое обновление MIME-кэша
+  # systemd.user.services.update-desktop-db = {
+  #   Unit.Description = "Update desktop database";
+  #   Service = {
+  #     ExecStart = "${pkgs.buildPackages.desktop-file-utils}/bin/update-desktop-database %h/.local/share/applications";
+  #     Type = "oneshot";
+  #   };
+  #   Install.WantedBy = [ "default.target" ];
+  # };
 }

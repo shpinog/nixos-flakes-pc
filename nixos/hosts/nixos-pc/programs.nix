@@ -34,6 +34,13 @@
     binfmt = true;
 
   };
+  programs.appimage.package = pkgs.appimage-run.override { extraPkgs = pkgs: [
+    pkgs.icu
+      pkgs.libxcrypt-legacy
+      pkgs.python312
+      pkgs.python312Packages.torch
+  ]; };
+
 
   programs = {
 
@@ -51,19 +58,12 @@
       ];
     };
 
-    file-roller = {
-      enable = true;
-    };
 
     dconf = {
       enable = true;
     };
 
     droidcam = {
-      enable = true;
-    };
-
-    adb = {
       enable = true;
     };
 

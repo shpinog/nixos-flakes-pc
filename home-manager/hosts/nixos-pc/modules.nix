@@ -11,15 +11,15 @@
     ../../common/mpv.nix
     ../../common/xdg.nix
     ../../common/packages.nix
-    ../../common/chromium.nix
+    # ../../common/chromium.nix
     ../../common/base.nix
     ../../common/psd.nix
     ../../common/nautilus.nix
-    # ../../common/hyprland.nix
+    ../../common/hyprland.nix
     ../../common/stylix.nix
     # ../../common/niri.nix
-    ../../common/users/nixos-pc/sway.nix
-    ../../common/dotfiles/nixos-pc/waybar-sway.nix
+    # ../../common/users/nixos-pc/sway.nix
+    # ../../common/dotfiles/nixos-pc/waybar-sway.nix
 
   ];
 

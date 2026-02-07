@@ -8,20 +8,17 @@
     vipsdisp
     xorg.xrandr
     wlr-randr
-    vivaldi-ffmpeg-codecs
     sublime3-dev
-    vimPlugins.packer-nvim
     pavucontrol
-    audio-recorder
-    oculante
-    libreoffice-qt
+    libreoffice-fresh
     swaybg
     nixpkgs-fmt
     qbittorrent
     networkmanagerapplet
     peek
-    tdesktop
-    du-dust
+    udiskie
+    telegram-desktop
+    dust
     duf
     xfce.thunar
     xfce.thunar-volman

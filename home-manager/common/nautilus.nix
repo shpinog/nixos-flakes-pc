@@ -9,7 +9,7 @@
     pkgs.nautilus-python # Поддержка скриптов Python
     ffmpegthumbnailer # Эскизы для видео
     evince # Просмотр PDF (для эскизов)
-    poppler_utils # Дополнительные инструменты для PDF
+    poppler-utils # Дополнительные инструменты для PDF
     pkgs.file-roller # Архиватор (интеграция с Nautilus)
   ];
 

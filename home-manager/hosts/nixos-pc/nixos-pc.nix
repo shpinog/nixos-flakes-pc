@@ -38,8 +38,10 @@
 
   programs.git = {
     enable = true;
-    userName = "Shpinog";
-    userEmail = "shpinog@gmail.com";
+    settings = {
+      user.Name = "Shpinog";
+      user.Email = "shpinog@gmail.com";
+    };
   };
 
   programs.gpg.scdaemonSettings = {

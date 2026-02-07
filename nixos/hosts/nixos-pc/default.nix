@@ -11,8 +11,8 @@
     ./hardware-configuration.nix
     ./kernel.nix
     ./programs.nix
-    ./amdgpu-patch.nix
     ../../common/hardware.nix
+    ../../common/nfs.nix
     ../../common/stylix.nix
     ../../common/network.nix
     ../../common/steam.nix
@@ -25,6 +25,7 @@
     ../../common/yubikey.nix
     # ../../common/niri.nix
     ../../common/services.sunshine.nix
+
 
   ];
 
