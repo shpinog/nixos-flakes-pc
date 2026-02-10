@@ -7,7 +7,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # niri.url = "github:sodiboo/niri-flake";
+    niri.url = "github:sodiboo/niri-flake";
     #stylix
     stylix.url = "github:nix-community/stylix";
     #Hyprland
@@ -27,7 +27,7 @@
       url = "github:AvengeMedia/dgop";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    dankMaterialShell = {
+    dms = {
       url = "github:AvengeMedia/DankMaterialShell";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.dgop.follows = "dgop";
@@ -43,6 +43,7 @@
       stylix,
       nur,
       lazy-nvim-nix,
+      niri,
       ...
     }@inputs:
     {

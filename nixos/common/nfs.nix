@@ -29,11 +29,11 @@
   };
 
   # Раздел shares остается без изменений
-  shares = {
+  settings = {
     "files" = {
       path = "/home/shpinog/Files";
       "read only" = "no";
-      guest_ok = "no";
+      "guest ok" = "no";
       "valid users" = "shpinog";
       "force create mode" = "0660";
       "force directory mode" = "0770";

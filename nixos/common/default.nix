@@ -40,6 +40,10 @@
 
   hardware.xpadneo.enable = true;
 
+  systemd.tmpfiles.rules = [
+    "d /mesa_shader_cache 1777 root root -"
+  ];
+
   #Distobox
   virtualisation.podman = {
     enable = true;
@@ -47,7 +51,7 @@
   };
   users.users.shpinog = {
     isNormalUser = true;
-    extraGroups = [ "podman" ];
+    extraGroups = [ "podman" "i2c" ];
   };
 
   # users.extraGroups.vboxusers.members = [ "shpinog" ];

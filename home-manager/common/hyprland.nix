@@ -5,9 +5,9 @@
   ...
 }:
 {
-  imports = [
-    inputs.dankMaterialShell.homeModules.dankMaterialShell.default
-  ];
+  # imports = [
+  #   inputs.dms.homeModules.dankMaterialShell.default
+  # ];
   programs.dankMaterialShell.enable = true;
 
   xdg.configFile."hypr/config" = {

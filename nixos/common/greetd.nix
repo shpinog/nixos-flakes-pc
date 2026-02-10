@@ -7,13 +7,14 @@
 
 let
   tuigreet = "${pkgs.tuigreet}/bin/tuigreet";
-  hyprland = "${pkgs.hyprland}/bin/start-hyprland";
+  niri = "${pkgs.niri}/bin/niri-session";
+  # hyprland = "${pkgs.hyprland}/bin/start-hyprland";
   # sway= "${pkgs.sway}/bin/sway";
 in
 {
   environment.systemPackages = [
     (pkgs.writeShellScriptBin "wayland-session" ''
-      exec ${hyprland}
+      exec ${niri}
     '')
   ];
 

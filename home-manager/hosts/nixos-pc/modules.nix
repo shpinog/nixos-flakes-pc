@@ -15,9 +15,9 @@
     ../../common/base.nix
     ../../common/psd.nix
     ../../common/nautilus.nix
-    ../../common/hyprland.nix
+    # ../../common/hyprland.nix
     ../../common/stylix.nix
-    # ../../common/niri.nix
+    ../../common/niriwm.nix
     # ../../common/users/nixos-pc/sway.nix
     # ../../common/dotfiles/nixos-pc/waybar-sway.nix
 

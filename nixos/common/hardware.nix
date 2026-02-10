@@ -7,11 +7,11 @@
 {
 
   hardware.enableRedistributableFirmware = true; # For some unfree drivers
-  hardware.cpu.amd.updateMicrocode = true;
   hardware.cpu.intel.updateMicrocode = true;
   services.xserver.enable = false;
   services.xserver.videoDriver = [ "modesetting" ];
   services.upower.enable = true;
+  services.irqbalance.enable = true;
 
   hardware.graphics = {
     enable = true;
@@ -39,45 +39,55 @@
     enable = true;
     cpuFreqGovernor = "performance";
   };
+  
 
+  # 2. Основная настройка NUT
   power.ups = {
     enable = true;
     mode = "standalone";
 
-    # Здесь объявляем сам UPS (имя "ups")
-    ups = {
-      ups = {
-        driver = "blazer_ser";
-        port = "/dev/ttyUSB0";
-        description = "Ippon BackUp Black 2200";
-        maxStartDelay = 60;
-        directives = ["protocol = megatec"];
-      };
+    # Определение самого ИБП (Серверная часть - upsd)
+    ups.ups = {
+      # ВАЖНО: Твои тесты показали, что работает именно этот драйвер!
+      driver = "nutdrv_qx"; 
+      port = "/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0"; # Используем симлинк из Udev
+      description = "Ippon BackUp Black 2200";
+      
+      # Настройки, полученные опытным путем
+      directives = [
+        "protocol = megatec"
+        "pollinterval = 2"
+        # "default.battery.voltage.high = 27.40" # Раскомментируй для калибровки 100%
+        # "default.battery.voltage.low = 20.40"  # Раскомментируй для калибровки 0%
+      ];
     };
 
-
-
-    # Пользователи upsd/upsmon (рекомендую passwordFile вместо inline password)
-    users = {
-      monuser = {
-        upsmon = "primary";
-        passwordFile = "../../upspass";
-      };
+    # Пользователь для мониторинга (API User)
+    users.monuser = {
+      passwordFile = "${pkgs.writeText "ups-pass" "123123"}";
+      upsmon = "primary"; # Права на управление (выключение системы)
     };
 
-    # upsmon конфиг — ВАЖНО: это attribute set, не список
+    # Клиент мониторинга (upsmon), который следит за батареей и гасит ПК
     upsmon = {
       enable = true;
-
       monitor = {
-        ups = {                         # <- имя записи (может совпадать с именем UPS выше)
-          system = "ups@localhost";     # <upsname>@<host> — должен совпадать с именем в power.ups.ups
-          powerValue = 1;               # обычно 1
+        # Имя 'ups' должно совпадать с именем в ups.ups
+        "ups" = {
+          system = "ups@localhost";
           user = "monuser";
-          passwordFile = "../../upspass";
+          passwordFile = "${pkgs.writeText "ups-pass" "123123"}";
+          powerValue = 1;
+          type = "primary";
         };
       };
     };
   };
+  
+  # 3. Фикс для сокета (если вдруг ошибка создания папки вернется)
+  systemd.tmpfiles.rules = [
+    "d /var/state/ups 0770 nut nut -"
+    "d /var/lib/nut   0770 nut nut -"
+  ];
 
 }

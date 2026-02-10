@@ -19,12 +19,12 @@
     ../../common/fonts.nix
     ../../common/default.nix
     ../../common/polkit.nix
-    ../../common/greetd.nix
     ../../common/audio.nix
     ../../common/filesystem.nix
     ../../common/yubikey.nix
-    # ../../common/niri.nix
+    ../../common/dms-greeter.nix
     ../../common/services.sunshine.nix
+    ../../common/plymouth.nix
 
 
   ];

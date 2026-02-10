@@ -69,7 +69,7 @@
   hardware.amdgpu.initrd.enable = true;
   hardware.amdgpu.overdrive.enable = true;
 
-  boot.kernelPackages = with pkgs; linuxPackages;
+  boot.kernelPackages = with pkgs; linuxPackages_xanmod_latest;
   # chaotic.mesa-git.enable = true;
   # services.scx.enable = true;
   # services.scx.scheduler = "scx_lavd";
@@ -99,12 +99,12 @@
 
   ### Boot Kernel
   boot = {
+    initrd.systemd.enable = true;
     loader = {
       systemd-boot.enable = true;
-      # systemd-boot.memtest86.enable = true;
       efi.canTouchEfiVariables = true;
-      systemd-boot.consoleMode = "auto";
-      timeout = 30;
+      systemd-boot.consoleMode = "max";
+      timeout = 0;
       systemd-boot.extraFiles = {
         "efi/memtest86/memtest.efi" = "${pkgs.memtest86-efi}/BOOTX64.efi";
       };
@@ -131,24 +131,15 @@
 
     kernelParams = [
       "quiet"
-      # "amdgpu.ppfeaturemask=0xfffd7fff"
-      "fsck.mode=force"
       "mitigations=off"
       "amdgpu.dcdebugmask=0x10"
       "nowatchdog"
       "nmi_watchdog=0"
-      # "nohz_full=2-23,26-47"
-      # "rcu_nocbs=0-1,24-25"
-      # "rcutree.kthread_prio=1"
-      # "skew_tick=1"
-      # "nmi_watchdog=0"
       "intel_pstate=passive"
       "cpufreq.default_governor=schedutil"
-      # "nvme_core.default_ps_max_latency_us=5500"
-      # "amdgpu.virtual_display=0000:05:00.0,1"
-      "video=DP-2:1920x1080@144"
-      "video=DP-3:3840x2160@61,rotate:panel_orientation=right_side_up"
-      "video=DP-1:2560x1440@180"
+      "video=HDMI-A-1:1920x1080@120"
+      "video=DP-3:3840x2160@60"
+      "video=DP-1:2560x1440@165"
 
     ];
 

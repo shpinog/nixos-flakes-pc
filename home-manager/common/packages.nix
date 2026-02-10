@@ -20,9 +20,5 @@
     telegram-desktop
     dust
     duf
-    xfce.thunar
-    xfce.thunar-volman
-    xfce.thunar-archive-plugin
-    xfce.thunar-media-tags-plugin
   ];
 }
