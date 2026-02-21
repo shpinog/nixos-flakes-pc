@@ -45,7 +45,7 @@
     experimental-features = [ "nix-command flakes" ];
     auto-optimise-store = true;
     cores = 24;
-    max-jobs = 1;
+    max-jobs = "auto";
   };
 
   users.groups.i2c = { };

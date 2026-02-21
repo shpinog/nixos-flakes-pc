@@ -4,14 +4,16 @@
   flake.nixosConfigurations = {
     nixos-pc = inputs.nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      specialArgs = { inherit inputs; };
-
+ 
       modules = [
+        { _module.args.inputs = inputs; }
+
         inputs.home-manager.nixosModules.home-manager
         inputs.chaotic.nixosModules.nyx-cache
         inputs.chaotic.nixosModules.nyx-overlay
         inputs.chaotic.nixosModules.nyx-registry
         inputs.stylix.nixosModules.stylix
+        inputs.dms.nixosModules.greeter
 
         ({ config, pkgs,... }: {
           nixpkgs.overlays = [ inputs.nur.overlays.default ];
@@ -27,7 +29,7 @@
             useUserPackages = true;
             extraSpecialArgs = { inherit inputs; }; # Для HM это пока нормально
             backupFileExtension = "backup";
-            users.shpinog = import ../hosts/nixos-pc/home.nix;
+            users.shpinog = ../hosts/nixos-pc/home.nix;
           };
         }
       ];

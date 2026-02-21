@@ -20,22 +20,28 @@
       url = "github:josh/lazy-nvim-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    dgop = {
-      url = "github:AvengeMedia/dgop";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+  
     dms = {
       url = "github:AvengeMedia/DankMaterialShell";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.dgop.follows = "dgop";
+    };
+    
+    niri-stack-to-n = {
+      url = "github:FarokhRaad/niri-stack-to-n";
+      flake = false; 
     };
   };
 
   outputs = inputs@{ flake-parts,... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [ "x86_64-linux" ];
+
       imports = [
        ./flake/nixos.nix
       ];
+      perSystem = { config, pkgs, ... }: {
+        
+        formatter = pkgs.nixpkgs-fmt; 
+      };
     };
 }

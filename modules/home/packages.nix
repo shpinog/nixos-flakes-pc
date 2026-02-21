@@ -6,7 +6,7 @@
     jellyfin-ffmpeg
     zathura
     vipsdisp
-    xorg.xrandr
+    xrandr
     wlr-randr
     zed-editor
     pavucontrol

@@ -1,5 +1,10 @@
 { inputs, pkgs, config, lib, niri, ... }:
-
+let
+  # Создаем обертку: она берет python3 из nix store и кормит ему скрипт из github
+  niri-stack-pkg = pkgs.writeShellScriptBin "niri-stack-to-n" ''
+    exec ${pkgs.python3}/bin/python3 ${inputs.niri-stack-to-n}/niri_stack_to_n.py
+  '';
+in
 {
   imports = [
     inputs.niri.homeModules.niri
@@ -31,7 +36,7 @@
 
   programs.niri = {
     enable = true;
-    package = inputs.niri.packages.${pkgs.system}.niri-unstable; # Используем стабильный пакет из nixpkgs, или inputs.niri.packages.${pkgs.system}.niri-stable
+    package = inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri-unstable;
 
     settings = {
       prefer-no-csd = true;
@@ -49,6 +54,7 @@
       # --- Автозапуск ---
       # Важно: используем { command = [...]; } для каждой команды
       spawn-at-startup = [
+        { command = ["${pkgs.bash}/bin/bash" "-c" "sleep 3 && ${niri-stack-pkg}/bin/niri-stack-to-n"]; }
       ];
 
       # --- Ввод ---

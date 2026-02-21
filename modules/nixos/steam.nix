@@ -3,7 +3,7 @@
   programs.steam = {
     enable = true;
     package = pkgs.steam.override {
-    extraPkgs = pkgs: with pkgs; [ libgdiplus keyutils libkrb5 libpng libpulseaudio libvorbis stdenv.cc.cc.lib xorg.libXcursor xorg.libXi xorg.libXinerama xorg.libXScrnSaver /* и остальные пакеты */ ];
+    extraPkgs = pkgs: with pkgs; [ libgdiplus keyutils libkrb5 libpng libpulseaudio libvorbis stdenv.cc.cc.lib libXcursor libXi libXinerama libXScrnSaver /* и остальные пакеты */ ];
     };
     remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
     dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
