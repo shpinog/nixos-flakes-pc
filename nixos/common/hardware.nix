@@ -11,8 +11,6 @@
   services.xserver.enable = false;
   services.xserver.videoDriver = [ "modesetting" ];
   services.upower.enable = true;
-  services.irqbalance.enable = true;
-
   hardware.graphics = {
     enable = true;
     enable32Bit = true;

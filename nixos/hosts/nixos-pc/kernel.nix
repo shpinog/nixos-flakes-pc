@@ -69,10 +69,11 @@
   hardware.amdgpu.initrd.enable = true;
   hardware.amdgpu.overdrive.enable = true;
 
+
   boot.kernelPackages = with pkgs; linuxPackages_xanmod_latest;
-  # chaotic.mesa-git.enable = true;
-  # services.scx.enable = true;
-  # services.scx.scheduler = "scx_lavd";
+  services.scx.enable = true;
+  services.scx.scheduler = "scx_bpfland";
+  services.bpftune.enable = true;
 
   #Need fo CamDroid
   boot.extraModprobeConfig = ''
@@ -91,14 +92,26 @@
   ];
 
   zramSwap = {
-    enable = false;
+    enable = true;
     algorithm = "zstd";
-    memoryPercent = 50;
-    priority = 10;
+    memoryPercent = 10;
+    priority = 100;
   };
+
+  systemd.services.enable-c6 = {
+  description = "Enable C6 sleep state for all CPUs";
+  wantedBy = [ "multi-user.target" ];
+  serviceConfig = {
+    Type = "oneshot";
+    ExecStart = "${pkgs.bash}/bin/bash -c 'for d in /sys/devices/system/cpu/cpu*/cpuidle/state3/disable; do echo 0 > \"$d\"; done'";
+    RemainAfterExit = true;
+  };
+};
 
   ### Boot Kernel
   boot = {
+    tmp.useTmpfs = true;
+    tmp.tmpfsSize = "40G";
     initrd.systemd.enable = true;
     loader = {
       systemd-boot.enable = true;
@@ -135,20 +148,27 @@
       "amdgpu.dcdebugmask=0x10"
       "nowatchdog"
       "nmi_watchdog=0"
-      "intel_pstate=passive"
-      "cpufreq.default_governor=schedutil"
+      "intel_pstate=active"
       "video=HDMI-A-1:1920x1080@120"
       "video=DP-3:3840x2160@60"
       "video=DP-1:2560x1440@165"
+      "intel_idle.max_cstate=4"
+      "processor.max_cstate=4"
 
     ];
 
-    kernel.sysctl."vm.swappiness" = 10;
-    kernel.sysctl."vm.watermark_scale_factor" = 500;
-    kernel.sysctl."vm.compaction_proactiveness" = 0;
-    kernel.sysctl."vm.watermark_boost_factor" = 1;
-    kernel.sysctl."vm.min_free_kbytes" = 5048576;
-    kernel.sysctl."vm.zone_reclaim_mode" = 0;
+    kernel.sysctl = {
+      "kernel.sched_latency_ns" = 4000000;
+      "kernel.sched_min_granularity_ns" = 400000;
+      "kernel.sched_wakeup_granularity_ns" = 500000;
+      "kernel.numa_balancing" = 1;
+      "vm.zone_reclaim_mode" = 1;
+      "vm.swappiness" = 10;
+      "vm.watermark_scale_factor" = 500;
+      "vm.compaction_proactiveness" = 0;
+      "vm.watermark_boost_factor" = 1;
+      "vm.min_free_kbytes" = 5048576;
+    };
 
   };
 

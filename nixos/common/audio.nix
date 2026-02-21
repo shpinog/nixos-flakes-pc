@@ -68,10 +68,6 @@
     enable = false;
     package = pkgs.pulseaudioFull;
   };
-  environment.systemPackages = [
-    pkgs.deepfilternet
-    pkgs.easyeffects
-  ];
 
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;

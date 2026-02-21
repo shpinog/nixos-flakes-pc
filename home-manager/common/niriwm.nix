@@ -35,6 +35,10 @@
 
     settings = {
       prefer-no-csd = true;
+      hotkey-overlay = {
+        skip-at-startup = true;
+        hide-not-bound = true;
+        };
       # --- Окружение ---
       environment = {
         DISPLAY = ":0";
@@ -73,7 +77,7 @@
 
       # --- Мониторы ---
       outputs = {
-        "DP-1" = {
+        "DP-2" = {
           mode = { width = 2560; height = 1440; refresh = 165.0; };
           position = { x = 0; y = 0; };
           scale = 1.0;
@@ -99,7 +103,10 @@
       # --- Внешний вид (Layout) ---
       layout = {
         gaps = 4;
-        center-focused-column = "never";
+        center-focused-column = "on-overflow";
+        always-center-single-column = true;
+        empty-workspace-above-first = true;
+
 
         preset-column-widths = [
           { proportion = 0.33333; }
@@ -154,7 +161,12 @@
         {
           matches = [{ app-id = "firefox"; }];
           open-maximized = true;
-          open-on-output = "DP-1";
+          open-on-output = "DP-2";
+        }
+        {
+          matches = [{ app-id = "librewolf"; }];
+          open-maximized = true;
+          open-on-output = "DP-2";
         }
         {
           matches = [
@@ -178,9 +190,9 @@
         "Mod+F".action.fullscreen-window = {};
         "Mod+Shift+F".action.maximize-column = {};
         "Mod+Shift+Space".action.toggle-window-floating = {};
-        
+        "Mod+E".action.toggle-overview = {};
         "Mod+Return".action.spawn = "alacritty";
-        "Mod+Q".action.spawn = "firefox";
+        "Mod+Q".action.spawn = "librewolf";
         "Mod+Shift+Q".action.spawn = "firefox";
         "Mod+KP_Left".action.spawn = "thunar";
         "Mod+KP_Home".action.spawn = "telegram-desktop";

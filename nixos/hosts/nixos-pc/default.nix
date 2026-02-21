@@ -29,6 +29,24 @@
 
   ];
 
+  #
+  programs.nh = {
+    enable = true;
+    clean.enable = true;
+    clean.extraArgs = "--keep-since 4d --keep 3";
+    flake = "/home/shpinog/nixos-flakes-pc/"; # sets NH_OS_FLAKE variable for you
+  };
+  environment.systemPackages = with pkgs; [
+    nix-output-monitor
+    nvd
+  ];
+  environment.variables = {
+  FLAKE = "/home/shpinog/nixos-flakes-pc";
+  };
+  #
+  
+  networking.hostName = "nixos-pc";
+
   nix = {
     settings = {
       trusted-users = [
