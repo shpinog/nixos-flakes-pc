@@ -2,9 +2,9 @@
 
 {
   imports = [
+   ./hardware-configuration.nix
    ./kernel.nix
    ./programs.nix
-   ./kde.nix
     
    ../../modules/nixos/hardware.nix
    ../../modules/nixos/nfs.nix

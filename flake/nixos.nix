@@ -4,11 +4,9 @@
   flake.nixosConfigurations = {
     nixos-pc = inputs.nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      # УДАЛЕНО: specialArgs = { inherit inputs; };
-      modules = [
-        # ПРАВИЛЬНЫЙ ПРОБРОС: Ленивая оценка через _module.args
-        { _module.args.inputs = inputs; }
+      specialArgs = { inherit inputs; };
 
+      modules = [
         inputs.home-manager.nixosModules.home-manager
         inputs.chaotic.nixosModules.nyx-cache
         inputs.chaotic.nixosModules.nyx-overlay
@@ -22,7 +20,6 @@
         })
 
       ../hosts/nixos-pc/configuration.nix
-      ../hosts/nixos-pc/hardware-configuration.nix
 
         {
           home-manager = {
@@ -30,7 +27,7 @@
             useUserPackages = true;
             extraSpecialArgs = { inherit inputs; }; # Для HM это пока нормально
             backupFileExtension = "backup";
-            users.shpinog = import../hosts/nixos-pc/home.nix;
+            users.shpinog = import ../hosts/nixos-pc/home.nix;
           };
         }
       ];

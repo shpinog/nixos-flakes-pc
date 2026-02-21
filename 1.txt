@@ -1,3 +1,235 @@
+#### ./hosts/nixos-pc/kernel.nix
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+{
+
+  #Gaming response-time
+  systemd.tmpfiles.settings = {
+    "consistent-response-time-for-gaming" = {
+      # "/proc/sys/vm/compaction_proactiveness" = {w = { argument = "0"; }; };
+      # "/proc/sys/vm/watermark_boost_factor" = {w = { argument = "1"; }; };
+      # "/proc/sys/vm/min_free_kbytes" = {w = { argument = "1048576"; }; };
+      # "/sys/vm/watermark_scale_factor" = {w = { argument = "500"; }; };
+      "/sys/kernel/mm/lru_gen/enabled" = {
+        w = {
+          argument = "5";
+        };
+      };
+      # "/proc/sys/vm/zone_reclaim_mode" = {w = { argument = "0"; }; };
+      "/sys/kernel/mm/transparent_hugepage/enabled" = {
+        w = {
+          argument = "always";
+        };
+      };
+      "/sys/kernel/mm/transparent_hugepage/shmem_enabled" = {
+        w = {
+          argument = "advise";
+        };
+      };
+
+      "/sys/kernel/mm/transparent_hugepage/defrag" = {
+        w = {
+          argument = "defer+madvise";
+        };
+      };
+      "/sys/kernel/mm/transparent_hugepage/khugepaged/max_ptes_none" = {
+        w = {
+          argument = "0";
+        };
+      };
+      "/proc/sys/vm/page_lock_unfairness" = {
+        w = {
+          argument = "1";
+        };
+      };
+      "/sys/kernel/debug/sched/nr_migrate" = {
+        w = {
+          argument = "1";
+        };
+      };
+      "kernel.numa_balancing" = {
+        w = {
+          argument = "1";
+        };
+      };
+
+    };
+  };
+
+  services.lact = {
+    enable = true;
+    # gpuOverclock = {
+    #   enable = true;
+    #   ppfeaturemask = "0xfffd7fff";
+    # };
+  };
+  hardware.amdgpu.initrd.enable = true;
+  hardware.amdgpu.overdrive.enable = true;
+
+
+  boot.kernelPackages = with pkgs; linuxPackages_xanmod_latest;
+  services.scx.enable = true;
+  services.scx.scheduler = "scx_bpfland";
+  services.bpftune.enable = true;
+
+  #Need fo CamDroid
+  boot.extraModprobeConfig = ''
+    options v4l2loopback exclusive_caps=1 video_nr=9 Video-Loopback
+  '';
+
+  # Добавляем правило для устройств i2c
+  services.udev.extraRules = ''
+    KERNEL=="i2c-[0-9]*", GROUP="i2c", MODE="0660"
+  '';
+
+  boot.supportedFilesystems = [
+    "ntfs"
+    "exfat"
+    "f2fs"
+  ];
+
+  zramSwap = {
+    enable = true;
+    algorithm = "zstd";
+    memoryPercent = 10;
+    priority = 100;
+  };
+
+  systemd.services.enable-c6 = {
+  description = "Enable C6 sleep state for all CPUs";
+  wantedBy = [ "multi-user.target" ];
+  serviceConfig = {
+    Type = "oneshot";
+    ExecStart = "${pkgs.bash}/bin/bash -c 'for d in /sys/devices/system/cpu/cpu*/cpuidle/state3/disable; do echo 0 > \"$d\"; done'";
+    RemainAfterExit = true;
+  };
+};
+
+  ### Boot Kernel
+  boot = {
+    tmp.useTmpfs = true;
+    tmp.tmpfsSize = "40G";
+    initrd.systemd.enable = true;
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+      systemd-boot.consoleMode = "max";
+      timeout = 0;
+      systemd-boot.extraFiles = {
+        "efi/memtest86/memtest.efi" = "${pkgs.memtest86-efi}/BOOTX64.efi";
+      };
+      systemd-boot.extraEntries = {
+        "memtest86.conf" = ''
+          title Memtest86+
+            efi /efi/memtest86/memtest.efi
+            sort-key z_memtest
+        '';
+      };
+    };
+
+    blacklistedKernelModules = [
+      "nouveau"
+      "radeon"
+      "cdc_ncm"
+      "r8168"
+    ];
+
+    # kernel.sysctl = {
+    #   "abi.vsyscall32" = 0;
+    #   "kernel/sysrq" = 1;
+    # };
+
+    kernelParams = [
+      "quiet"
+      "mitigations=off"
+      "amdgpu.dcdebugmask=0x10"
+      "nowatchdog"
+      "nmi_watchdog=0"
+      "intel_pstate=active"
+      "video=HDMI-A-1:1920x1080@120"
+      "video=DP-3:3840x2160@60"
+      "video=DP-1:2560x1440@165"
+      "intel_idle.max_cstate=4"
+      "processor.max_cstate=4"
+
+    ];
+
+    kernel.sysctl = {
+      "kernel.sched_latency_ns" = 4000000;
+      "kernel.sched_min_granularity_ns" = 400000;
+      "kernel.sched_wakeup_granularity_ns" = 500000;
+      "kernel.numa_balancing" = 1;
+      "vm.zone_reclaim_mode" = 1;
+      "vm.swappiness" = 10;
+      "vm.watermark_scale_factor" = 500;
+      "vm.compaction_proactiveness" = 0;
+      "vm.watermark_boost_factor" = 1;
+      "vm.min_free_kbytes" = 5048576;
+    };
+
+  };
+
+}
+
+
+#### ./hosts/nixos-pc/programs.nix
+{
+  config,
+  pkgs,
+  system,
+  ...
+}:
+{
+
+  services.flatpak.enable = true;
+
+  programs.appimage = {
+    enable = true;
+    binfmt = true;
+
+  };
+  programs.appimage.package = pkgs.appimage-run.override { extraPkgs = pkgs: [
+    pkgs.icu
+      pkgs.libxcrypt-legacy
+      pkgs.python312
+      pkgs.python312Packages.torch
+  ]; };
+
+
+  programs = {
+
+    weylus = {
+      enable = true;
+      users = [ "shpinog" ];
+      openFirewall = true;
+    };
+
+    thunar = {
+      enable = true;
+      plugins = with pkgs; [
+          thunar-archive-plugin
+          thunar-volman
+          thunar-media-tags-plugin
+    ];
+    };
+
+
+    dconf = {
+      enable = true;
+    };
+
+    droidcam = {
+      enable = true;
+    };
+
+  };
+}
+
+
 #### ./hosts/nixos-pc/home.nix
 { inputs, lib, config, pkgs,... }:
 
@@ -72,7 +304,6 @@
   imports = [
    ./kernel.nix
    ./programs.nix
-   ./kde.nix
     
    ../../modules/nixos/hardware.nix
    ../../modules/nixos/nfs.nix
@@ -136,32 +367,31 @@
   flake.nixosConfigurations = {
     nixos-pc = inputs.nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      specialArgs = { inherit inputs; };
+      # УДАЛЕНО: specialArgs = { inherit inputs; };
       modules = [
-        # Внешние модули
+        # ПРАВИЛЬНЫЙ ПРОБРОС: Ленивая оценка через _module.args
+        { _module.args.inputs = inputs; }
+
         inputs.home-manager.nixosModules.home-manager
         inputs.chaotic.nixosModules.nyx-cache
         inputs.chaotic.nixosModules.nyx-overlay
         inputs.chaotic.nixosModules.nyx-registry
         inputs.stylix.nixosModules.stylix
 
-        # Глобальные настройки пакетов (перенесено из старого flake.nix)
         ({ config, pkgs,... }: {
           nixpkgs.overlays = [ inputs.nur.overlays.default ];
           nixpkgs.config.allowUnfree = true;
           programs.neovim.finalPackage = inputs.lazy-nvim-nix.packages.x86_64-linux.default;
         })
 
-        # Конфигурация конкретного хоста
-       ../hosts/nixos-pc/configuration.nix
-       ../hosts/nixos-pc/hardware-configuration.nix
+      ../hosts/nixos-pc/configuration.nix
+      ../hosts/nixos-pc/hardware-configuration.nix
 
-        # Интеграция Home-Manager
         {
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
-            extraSpecialArgs = { inherit inputs; };
+            extraSpecialArgs = { inherit inputs; }; # Для HM это пока нормально
             backupFileExtension = "backup";
             users.shpinog = import../hosts/nixos-pc/home.nix;
           };
@@ -197,158 +427,41 @@
   xdg.configFile."mimeapps.list".force = true;
   xdg.mimeApps = {
     enable = true;
-    defaultApplications = {
-      # --- Папки ---
-      "inode/directory" = [ "org.gnome.Nautilus.desktop" ];
+    xdg.mimeApps = {
+    enable = true;
+    defaultApplications = let
+      browser = [ "librewolf.desktop" ]; # ИСПРАВЛЕНО: теперь ссылки открываются в LibreWolf
+      mpv = [ "mpv.desktop" ];
+      eog = [ "org.gnome.eog.desktop" ];
+      fileRoller =;
+      writer = [ "libreoffice-writer.desktop" ];
 
-      # --- Веб ---
-      "text/uri-list" = [ "firefox.desktop" ];
-      "text/x-uri" = [ "firefox.desktop" ];
-      "x-scheme-handler/http" = [ "firefox.desktop" ];
-      "x-scheme-handler/https" = [ "firefox.desktop" ];
-      "x-scheme-handler/chrome" = [ "firefox.desktop" ];
-
-      # --- HTML ---
-      "application/x-extension-htm" = [ "vivaldi-stable.desktop" ];
-      "application/x-extension-html" = [ "vivaldi-stable.desktop" ];
-      "application/xhtml+xml" = [ "vivaldi-stable.desktop" ];
-      "application/x-extension-xhtml" = [ "vivaldi-stable.desktop" ];
-
-      # --- Видео ---
-      "video/x-matroska" = [ "mpv.desktop" ]; # .mkv
-      "video/mp4" = [ "mpv.desktop" ]; # .mp4
-      "video/webm" = [ "mpv.desktop" ]; # .webm
-      "video/quicktime" = [ "mpv.desktop" ]; # .mov
-      "video/x-msvideo" = [ "mpv.desktop" ]; # .avi
-      "video/x-flv" = [ "mpv.desktop" ]; # .flv
-      "video/x-ms-wmv" = [ "mpv.desktop" ]; # .wmv
-      "video/mpeg" = [ "mpv.desktop" ]; # .mpeg, .mpg
-      "video/x-m4v" = [ "mpv.desktop" ]; # .m4v
-      "video/3gpp" = [ "mpv.desktop" ]; # .3gp
-      "video/x-matroska-3d" = [ "mpv.desktop" ]; # .mk3d
-      "video/x-ogm" = [ "mpv.desktop" ]; # .ogm
-      "video/dv" = [ "mpv.desktop" ]; # .dv
-      "video/x-theora" = [ "mpv.desktop" ]; # .ogv
-
-      # --- Аудио ---
-      "audio/ogg" = [ "mpv.desktop" ]; # .ogg
-      "audio/mpeg" = [ "mpv.desktop" ]; # .mp3
-      "audio/x-wav" = [ "mpv.desktop" ]; # .wav
-      "audio/x-aiff" = [ "mpv.desktop" ]; # .aiff, .aif
-      "audio/x-flac" = [ "mpv.desktop" ]; # .flac
-      "audio/x-vorbis+ogg" = [ "mpv.desktop" ]; # .oga
-      "audio/x-opus+ogg" = [ "mpv.desktop" ]; # .opus
-      "audio/x-m4a" = [ "mpv.desktop" ]; # .m4a
-      "audio/x-ms-wma" = [ "mpv.desktop" ]; # .wma
-      "audio/ac3" = [ "mpv.desktop" ]; # .ac3
-      "audio/x-aac" = [ "mpv.desktop" ]; # .aac
-      "audio/midi" = [ "mpv.desktop" ]; # .mid, .midi
-      "audio/x-mod" = [ "mpv.desktop" ]; # .mod
-      "audio/x-mpegurl" = [ "mpv.desktop" ]; # .m3u, .m3u8
-      "audio/x-scpls" = [ "mpv.desktop" ]; # .pls
-      "audio/x-ape" = [ "mpv.desktop" ]; # .ape
-      "audio/x-wavpack" = [ "mpv.desktop" ]; # .wv
-      "audio/x-shorten" = [ "mpv.desktop" ]; # .shn
-      "audio/x-speex" = [ "mpv.desktop" ]; # .spx
-      "audio/x-voc" = [ "mpv.desktop" ]; # .voc
-      "audio/x-tta" = [ "mpv.desktop" ]; # .tta
-
-      # --- PDF / Офис ---
-      "application/pdf" = [ "org.pwmt.zathura.desktop" ];
-      "application/vnd.oasis.opendocument.text" = [ "libreoffice-writer.desktop" ]; # .odt
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = [
-        "libreoffice-writer.desktop"
-      ]; # .docx
-      "application/msword" = [ "libreoffice-writer.desktop" ]; # .doc
-      "application/vnd.oasis.opendocument.spreadsheet" = [ "libreoffice-writer.desktop" ]; # .ods
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" = [
-        "libreoffice-writer.desktop"
-      ]; # .xlsx
-      "application/vnd.ms-excel" = [ "libreoffice-writer.desktop" ]; # .xls
-      "application/vnd.oasis.opendocument.presentation" = [ "libreoffice-writer.desktop" ]; # .odp
-      "application/vnd.openxmlformats-officedocument.presentationml.presentation" = [
-        "libreoffice-writer.desktop"
-      ]; # .pptx
-      "application/vnd.ms-powerpoint" = [ "libreoffice-writer.desktop" ]; # .ppt
-      "application/rtf" = [ "libreoffice-writer.desktop" ]; # .rtf
-      "text/plain" = [ "libreoffice-writer.desktop" ]; # .txt
-
-      # --- Изображения ---
-      "image/jpeg" = [ "org.gnome.eog.desktop" ]; # .jpg, .jpeg
-      "image/png" = [ "org.gnome.eog.desktop" ]; # .png
-      "image/svg+xml" = [ "org.gnome.eog.desktop" ]; # .svg
-      "image/gif" = [ "org.gnome.eog.desktop" ]; # .gif
-      "image/tiff" = [ "org.gnome.eog.desktop" ]; # .tiff, .tif
-      "image/x-eps" = [ "org.gnome.eog.desktop" ]; # .eps
-      "image/x-psd" = [ "org.gnome.eog.desktop" ]; # .psd
-      "image/bmp" = [ "org.gnome.eog.desktop" ]; # .bmp
-      "image/x-icon" = [ "org.gnome.eog.desktop" ]; # .ico
-      "image/webp" = [ "org.gnome.eog.desktop" ]; # .webp
-      "image/x-xcf" = [ "org.gnome.eog.desktop" ]; # .xcf (GIMP)
-      "image/x-portable-pixmap" = [ "org.gnome.eog.desktop" ]; # .ppm
-      "image/x-portable-graymap" = [ "org.gnome.eog.desktop" ]; # .pgm
-      "image/x-portable-bitmap" = [ "org.gnome.eog.desktop" ]; # .pbm
-      "image/x-portable-anymap" = [ "org.gnome.eog.desktop" ]; # .pnm
-      "image/x-canon-cr2" = [ "org.gnome.eog.desktop" ]; # .cr2 (RAW)
-      "image/x-nikon-nef" = [ "org.gnome.eog.desktop" ]; # .nef (RAW)
-      "image/x-sony-arw" = [ "org.gnome.eog.desktop" ]; # .arw (RAW)
-      "image/x-adobe-dng" = [ "org.gnome.eog.desktop" ]; # .dng (RAW)
-      "image/x-fuji-raf" = [ "org.gnome.eog.desktop" ]; # .raf (RAW)
-      "image/x-panasonic-rw2" = [ "org.gnome.eog.desktop" ]; # .rw2 (RAW)
-      "image/x-olympus-orf" = [ "org.gnome.eog.desktop" ]; # .orf (RAW)
-
-      # --- Архивы ---
-      "application/zip" = [ "org.gnome.FileRoller.desktop" ]; # .zip
-      "application/x-gzip" = [ "org.gnome.FileRoller.desktop" ]; # .gz
-      "application/x-bzip" = [ "org.gnome.FileRoller.desktop" ]; # .bz
-      "application/x-bzip2" = [ "org.gnome.FileRoller.desktop" ]; # .bz2
-      "application/x-tar" = [ "org.gnome.FileRoller.desktop" ]; # .tar
-      "application/x-xz" = [ "org.gnome.FileRoller.desktop" ]; # .xz
-      "application/x-lzma" = [ "org.gnome.FileRoller.desktop" ]; # .lzma
-      "application/x-lzip" = [ "org.gnome.FileRoller.desktop" ]; # .lz
-      "application/x-7z-compressed" = [ "org.gnome.FileRoller.desktop" ]; # .7z
-      "application/x-rar" = [ "org.gnome.FileRoller.desktop" ]; # .rar
-      "application/x-rar-compressed" = [ "org.gnome.FileRoller.desktop" ]; # .rar
-      "application/x-ms-dos-executable" = [ "org.gnome.FileRoller.desktop" ]; # .exe (если как архив)
-      "application/x-msi" = [ "org.gnome.FileRoller.desktop" ]; # .msi (если как архив)
-      "application/x-deb" = [ "org.gnome.FileRoller.desktop" ]; # .deb
-      "application/x-rpm" = [ "org.gnome.FileRoller.desktop" ]; # .rpm
-      "application/x-iso9660-image" = [ "org.gnome.FileRoller.desktop" ]; # .iso
-      "application/vnd.android.package-archive" = [ "org.gnome.FileRoller.desktop" ]; # .apk
-      "application/x-apple-diskimage" = [ "org.gnome.FileRoller.desktop" ]; # .dmg
-
-      # --- Текст / Код ---
-      "text/x-shellscript" = [ "libreoffice-writer.desktop" ]; # .sh
-      "text/x-python" = [ "libreoffice-writer.desktop" ]; # .py
-      "text/x-c" = [ "libreoffice-writer.desktop" ]; # .c
-      "text/x-c++" = [ "libreoffice-writer.desktop" ]; # .cpp, .cxx
-      "text/x-chdr" = [ "libreoffice-writer.desktop" ]; # .h
-      "text/x-c++hdr" = [ "libreoffice-writer.desktop" ]; # .hpp
-      "text/x-java" = [ "libreoffice-writer.desktop" ]; # .java
-      "text/x-makefile" = [ "libreoffice-writer.desktop" ]; # Makefile
-      "text/x-perl" = [ "libreoffice-writer.desktop" ]; # .pl
-      "text/x-ruby" = [ "libreoffice-writer.desktop" ]; # .rb
-      "text/x-sql" = [ "libreoffice-writer.desktop" ]; # .sql
-      "text/x-tex" = [ "libreoffice-writer.desktop" ]; # .tex
-      "text/xml" = [ "libreoffice-writer.desktop" ]; # .xml
-      "text/html" = [ "libreoffice-writer.desktop" ]; # .html
-      "text/css" = [ "libreoffice-writer.desktop" ]; # .css
-      "text/javascript" = [ "libreoffice-writer.desktop" ]; # .js
-      "application/json" = [ "libreoffice-writer.desktop" ]; # .json
-      "text/x-markdown" = [ "libreoffice-writer.desktop" ]; # .md
-      "text/x-yaml" = [ "libreoffice-writer.desktop" ]; # .yaml, .yml
-    };
+      videoFormats = [ "video/x-matroska" "video/mp4" "video/webm" "video/quicktime" "video/x-msvideo" "video/x-flv" "video/x-ms-wmv" "video/mpeg" "video/x-m4v" "video/3gpp" "video/x-matroska-3d" "video/x-ogm" "video/dv" "video/x-theora" ];
+      audioFormats = [ "audio/ogg" "audio/mpeg" "audio/x-wav" "audio/x-aiff" "audio/x-flac" "audio/x-vorbis+ogg" "audio/x-opus+ogg" "audio/x-m4a" "audio/x-ms-wma" "audio/ac3" "audio/x-aac" "audio/midi" "audio/x-mod" "audio/x-mpegurl" "audio/x-scpls" "audio/x-ape" "audio/x-wavpack" "audio/x-shorten" "audio/x-speex" "audio/x-voc" "audio/x-tta" ];
+      imageFormats = [ "image/jpeg" "image/png" "image/svg+xml" "image/gif" "image/tiff" "image/x-eps" "image/x-psd" "image/bmp" "image/x-icon" "image/webp" "image/x-xcf" "image/x-portable-pixmap" "image/x-portable-graymap" "image/x-portable-bitmap" "image/x-portable-anymap" "image/x-canon-cr2" "image/x-nikon-nef" "image/x-sony-arw" "image/x-adobe-dng" "image/x-fuji-raf" "image/x-panasonic-rw2" "image/x-olympus-orf" ];
+      archiveFormats = [ "application/zip" "application/x-gzip" "application/x-bzip" "application/x-bzip2" "application/x-tar" "application/x-xz" "application/x-lzma" "application/x-lzip" "application/x-7z-compressed" "application/x-rar" "application/x-rar-compressed" "application/x-ms-dos-executable" "application/x-msi" "application/x-deb" "application/x-rpm" "application/x-iso9660-image" "application/vnd.android.package-archive" "application/x-apple-diskimage" ];
+      officeFormats = [ "application/vnd.oasis.opendocument.text" "application/vnd.openxmlformats-officedocument.wordprocessingml.document" "application/msword" "application/vnd.oasis.opendocument.spreadsheet" "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" "application/vnd.ms-excel" "application/vnd.oasis.opendocument.presentation" "application/vnd.openxmlformats-officedocument.presentationml.presentation" "application/vnd.ms-powerpoint" "application/rtf" "text/plain" "text/x-shellscript" "text/x-python" "text/x-c" "text/x-c++" "text/x-chdr" "text/x-c++hdr" "text/x-java" "text/x-makefile" "text/x-perl" "text/x-ruby" "text/x-sql" "text/x-tex" "text/xml" "text/html" "text/css" "text/javascript" "application/json" "text/x-markdown" "text/x-yaml" ];
+    in
+      (pkgs.lib.genAttrs videoFormats (_: mpv)) //
+      (pkgs.lib.genAttrs audioFormats (_: mpv)) //
+      (pkgs.lib.genAttrs imageFormats (_: eog)) //
+      (pkgs.lib.genAttrs archiveFormats (_: fileRoller)) //
+      (pkgs.lib.genAttrs officeFormats (_: writer)) //
+      {
+        "inode/directory" = [ "org.gnome.Nautilus.desktop" ];
+        "text/uri-list" = browser;
+        "text/x-uri" = browser;
+        "x-scheme-handler/http" = browser;
+        "x-scheme-handler/https" = browser;
+        "x-scheme-handler/chrome" = browser;
+        "application/x-extension-htm" = [ "vivaldi-stable.desktop" ];
+        "application/x-extension-html" = [ "vivaldi-stable.desktop" ];
+        "application/xhtml+xml" = [ "vivaldi-stable.desktop" ];
+        "application/x-extension-xhtml" = [ "vivaldi-stable.desktop" ];
+        "application/pdf" = [ "org.pwmt.zathura.desktop" ];
+      };
   };
-
-  # # Автоматическое обновление MIME-кэша
-  # systemd.user.services.update-desktop-db = {
-  #   Unit.Description = "Update desktop database";
-  #   Service = {
-  #     ExecStart = "${pkgs.buildPackages.desktop-file-utils}/bin/update-desktop-database %h/.local/share/applications";
-  #     Type = "oneshot";
-  #   };
-  #   Install.WantedBy = [ "default.target" ];
-  # };
+  };
 }
 
 
@@ -1249,13 +1362,6 @@ in
   services.joycond.enable = true;
   security.rtkit.enable = true;
   services.dbus.enable = true;
-  services.libinput = {
-    enable = true;
-    mouse = {
-      accelProfile = "flat";
-      accelSpeed = "0";
-    };
-  };
 
   hardware.xpadneo.enable = true;
 
