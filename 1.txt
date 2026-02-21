@@ -1,0 +1,1879 @@
+#### ./hosts/nixos-pc/home.nix
+{ inputs, lib, config, pkgs,... }:
+
+{
+  imports = [
+   ../../modules/home/environment.nix
+   ../../modules/home/nvim.nix
+   ../../modules/home/firefox.nix
+   ../../modules/home/foot.nix
+   ../../modules/home/fish.nix
+   ../../modules/home/gtk.nix
+   ../../modules/home/mpv.nix
+   ../../modules/home/xdg.nix
+   ../../modules/home/packages.nix
+   ../../modules/home/base.nix
+   ../../modules/home/psd.nix
+   ../../modules/home/nautilus.nix
+   ../../modules/home/stylix.nix
+   ../../modules/home/niriwm.nix
+    # Закомментированные вами модули (hyprland/sway) безопасно удалены или лежат в папке
+  ];
+
+  home = {
+    username = "shpinog";
+    homeDirectory = "/home/shpinog";
+    stateVersion = "23.05";
+  };
+
+  home.packages = with pkgs; [
+    google-chrome
+  ];
+
+  programs.home-manager.enable = true;
+
+  services.gpg-agent = {
+    enable = true;
+    enableSshSupport = true;
+    verbose = true;
+  };
+
+  programs = {
+    gpg = {
+      enable = true;
+      mutableKeys = false;
+      mutableTrust = true;
+      scdaemonSettings.disable-ccid = true;
+    };
+    git = {
+      enable = true;
+      settings = {
+        user.Name = "Shpinog";
+        user.Email = "shpinog@gmail.com";
+      };
+    };
+    bat = {
+      enable = true;
+      config.paging = "never";
+    };
+    fzf = {
+      enable = true;
+      enableFishIntegration = true;
+    };
+  };
+
+  systemd.user.startServices = "sd-switch";
+}
+
+#### ./hosts/nixos-pc/configuration.nix
+{ inputs, lib, config, pkgs,... }:
+
+{
+  imports = [
+   ./kernel.nix
+   ./programs.nix
+   ./kde.nix
+    
+   ../../modules/nixos/hardware.nix
+   ../../modules/nixos/nfs.nix
+   ../../modules/nixos/stylix.nix
+   ../../modules/nixos/network.nix
+   ../../modules/nixos/steam.nix
+   ../../modules/nixos/fonts.nix
+   ../../modules/nixos/default.nix
+   ../../modules/nixos/polkit.nix
+   ../../modules/nixos/audio.nix
+   ../../modules/nixos/yubikey.nix
+   ../../modules/nixos/dms-greeter.nix
+   ../../modules/nixos/services.sunshine.nix
+   ../../modules/nixos/plymouth.nix
+  ];
+
+  programs.nh = {
+    enable = true;
+    clean.enable = true;
+    clean.extraArgs = "--keep-since 4d --keep 3";
+    flake = "/home/shpinog/nixos-flakes-pc/";
+  };
+
+  environment.systemPackages = with pkgs; [
+    nix-output-monitor
+    nvd
+  ];
+
+  environment.variables = {
+    FLAKE = "/home/shpinog/nixos-flakes-pc";
+  };
+
+  networking.hostName = "nixos-pc";
+
+  nix.settings = {
+    trusted-users = [ "shpinog" "root" ];
+    system-features = [ "big-parallel" "gccarch-x86-64-v4" ];
+    experimental-features = [ "nix-command flakes" ];
+    auto-optimise-store = true;
+    cores = 24;
+    max-jobs = 1;
+  };
+
+  users.groups.i2c = { };
+  users.users.shpinog = {
+    isNormalUser = true;
+    extraGroups = [
+      "wheel" "networkmanager" "storage" "media" "lp" 
+      "video" "input" "i2c" "vboxusers" "podman"
+    ];
+    hashedPassword = "$6$nBo/qjuyUFF2nzWL$MdmWyGhfbardBXoI9mT2p/kSvHCCCbdhD/kgt/VW/vTV.t9k5Lq04hPpg7jKQ5aEMzDHGDtXh.9uSBvvHQOcC0";
+  };
+
+  system.stateVersion = "22.11";
+}
+
+#### ./flake/nixos.nix
+{ inputs,... }:
+
+{
+  flake.nixosConfigurations = {
+    nixos-pc = inputs.nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = { inherit inputs; };
+      modules = [
+        # Внешние модули
+        inputs.home-manager.nixosModules.home-manager
+        inputs.chaotic.nixosModules.nyx-cache
+        inputs.chaotic.nixosModules.nyx-overlay
+        inputs.chaotic.nixosModules.nyx-registry
+        inputs.stylix.nixosModules.stylix
+
+        # Глобальные настройки пакетов (перенесено из старого flake.nix)
+        ({ config, pkgs,... }: {
+          nixpkgs.overlays = [ inputs.nur.overlays.default ];
+          nixpkgs.config.allowUnfree = true;
+          programs.neovim.finalPackage = inputs.lazy-nvim-nix.packages.x86_64-linux.default;
+        })
+
+        # Конфигурация конкретного хоста
+       ../hosts/nixos-pc/configuration.nix
+       ../hosts/nixos-pc/hardware-configuration.nix
+
+        # Интеграция Home-Manager
+        {
+          home-manager = {
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            extraSpecialArgs = { inherit inputs; };
+            backupFileExtension = "backup";
+            users.shpinog = import../hosts/nixos-pc/home.nix;
+          };
+        }
+      ];
+    };
+  };
+}
+
+#### ./modules/home/stylix.nix
+{
+  inputs,
+  pkgs,
+  config,
+  lib,
+  stylix,
+  ...
+}:
+{
+  stylix.targets.sway.enable = false;
+  stylix.targets.waybar.enable = true;
+  stylix.targets.neovim.enable = false;
+  stylix.targets.firefox.profileNames = [ "shpinog" ];
+
+}
+
+
+#### ./modules/home/xdg.nix
+{ config, pkgs, ... }:
+
+{
+
+  xdg.configFile."mimeapps.list".force = true;
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      # --- Папки ---
+      "inode/directory" = [ "org.gnome.Nautilus.desktop" ];
+
+      # --- Веб ---
+      "text/uri-list" = [ "firefox.desktop" ];
+      "text/x-uri" = [ "firefox.desktop" ];
+      "x-scheme-handler/http" = [ "firefox.desktop" ];
+      "x-scheme-handler/https" = [ "firefox.desktop" ];
+      "x-scheme-handler/chrome" = [ "firefox.desktop" ];
+
+      # --- HTML ---
+      "application/x-extension-htm" = [ "vivaldi-stable.desktop" ];
+      "application/x-extension-html" = [ "vivaldi-stable.desktop" ];
+      "application/xhtml+xml" = [ "vivaldi-stable.desktop" ];
+      "application/x-extension-xhtml" = [ "vivaldi-stable.desktop" ];
+
+      # --- Видео ---
+      "video/x-matroska" = [ "mpv.desktop" ]; # .mkv
+      "video/mp4" = [ "mpv.desktop" ]; # .mp4
+      "video/webm" = [ "mpv.desktop" ]; # .webm
+      "video/quicktime" = [ "mpv.desktop" ]; # .mov
+      "video/x-msvideo" = [ "mpv.desktop" ]; # .avi
+      "video/x-flv" = [ "mpv.desktop" ]; # .flv
+      "video/x-ms-wmv" = [ "mpv.desktop" ]; # .wmv
+      "video/mpeg" = [ "mpv.desktop" ]; # .mpeg, .mpg
+      "video/x-m4v" = [ "mpv.desktop" ]; # .m4v
+      "video/3gpp" = [ "mpv.desktop" ]; # .3gp
+      "video/x-matroska-3d" = [ "mpv.desktop" ]; # .mk3d
+      "video/x-ogm" = [ "mpv.desktop" ]; # .ogm
+      "video/dv" = [ "mpv.desktop" ]; # .dv
+      "video/x-theora" = [ "mpv.desktop" ]; # .ogv
+
+      # --- Аудио ---
+      "audio/ogg" = [ "mpv.desktop" ]; # .ogg
+      "audio/mpeg" = [ "mpv.desktop" ]; # .mp3
+      "audio/x-wav" = [ "mpv.desktop" ]; # .wav
+      "audio/x-aiff" = [ "mpv.desktop" ]; # .aiff, .aif
+      "audio/x-flac" = [ "mpv.desktop" ]; # .flac
+      "audio/x-vorbis+ogg" = [ "mpv.desktop" ]; # .oga
+      "audio/x-opus+ogg" = [ "mpv.desktop" ]; # .opus
+      "audio/x-m4a" = [ "mpv.desktop" ]; # .m4a
+      "audio/x-ms-wma" = [ "mpv.desktop" ]; # .wma
+      "audio/ac3" = [ "mpv.desktop" ]; # .ac3
+      "audio/x-aac" = [ "mpv.desktop" ]; # .aac
+      "audio/midi" = [ "mpv.desktop" ]; # .mid, .midi
+      "audio/x-mod" = [ "mpv.desktop" ]; # .mod
+      "audio/x-mpegurl" = [ "mpv.desktop" ]; # .m3u, .m3u8
+      "audio/x-scpls" = [ "mpv.desktop" ]; # .pls
+      "audio/x-ape" = [ "mpv.desktop" ]; # .ape
+      "audio/x-wavpack" = [ "mpv.desktop" ]; # .wv
+      "audio/x-shorten" = [ "mpv.desktop" ]; # .shn
+      "audio/x-speex" = [ "mpv.desktop" ]; # .spx
+      "audio/x-voc" = [ "mpv.desktop" ]; # .voc
+      "audio/x-tta" = [ "mpv.desktop" ]; # .tta
+
+      # --- PDF / Офис ---
+      "application/pdf" = [ "org.pwmt.zathura.desktop" ];
+      "application/vnd.oasis.opendocument.text" = [ "libreoffice-writer.desktop" ]; # .odt
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = [
+        "libreoffice-writer.desktop"
+      ]; # .docx
+      "application/msword" = [ "libreoffice-writer.desktop" ]; # .doc
+      "application/vnd.oasis.opendocument.spreadsheet" = [ "libreoffice-writer.desktop" ]; # .ods
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" = [
+        "libreoffice-writer.desktop"
+      ]; # .xlsx
+      "application/vnd.ms-excel" = [ "libreoffice-writer.desktop" ]; # .xls
+      "application/vnd.oasis.opendocument.presentation" = [ "libreoffice-writer.desktop" ]; # .odp
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation" = [
+        "libreoffice-writer.desktop"
+      ]; # .pptx
+      "application/vnd.ms-powerpoint" = [ "libreoffice-writer.desktop" ]; # .ppt
+      "application/rtf" = [ "libreoffice-writer.desktop" ]; # .rtf
+      "text/plain" = [ "libreoffice-writer.desktop" ]; # .txt
+
+      # --- Изображения ---
+      "image/jpeg" = [ "org.gnome.eog.desktop" ]; # .jpg, .jpeg
+      "image/png" = [ "org.gnome.eog.desktop" ]; # .png
+      "image/svg+xml" = [ "org.gnome.eog.desktop" ]; # .svg
+      "image/gif" = [ "org.gnome.eog.desktop" ]; # .gif
+      "image/tiff" = [ "org.gnome.eog.desktop" ]; # .tiff, .tif
+      "image/x-eps" = [ "org.gnome.eog.desktop" ]; # .eps
+      "image/x-psd" = [ "org.gnome.eog.desktop" ]; # .psd
+      "image/bmp" = [ "org.gnome.eog.desktop" ]; # .bmp
+      "image/x-icon" = [ "org.gnome.eog.desktop" ]; # .ico
+      "image/webp" = [ "org.gnome.eog.desktop" ]; # .webp
+      "image/x-xcf" = [ "org.gnome.eog.desktop" ]; # .xcf (GIMP)
+      "image/x-portable-pixmap" = [ "org.gnome.eog.desktop" ]; # .ppm
+      "image/x-portable-graymap" = [ "org.gnome.eog.desktop" ]; # .pgm
+      "image/x-portable-bitmap" = [ "org.gnome.eog.desktop" ]; # .pbm
+      "image/x-portable-anymap" = [ "org.gnome.eog.desktop" ]; # .pnm
+      "image/x-canon-cr2" = [ "org.gnome.eog.desktop" ]; # .cr2 (RAW)
+      "image/x-nikon-nef" = [ "org.gnome.eog.desktop" ]; # .nef (RAW)
+      "image/x-sony-arw" = [ "org.gnome.eog.desktop" ]; # .arw (RAW)
+      "image/x-adobe-dng" = [ "org.gnome.eog.desktop" ]; # .dng (RAW)
+      "image/x-fuji-raf" = [ "org.gnome.eog.desktop" ]; # .raf (RAW)
+      "image/x-panasonic-rw2" = [ "org.gnome.eog.desktop" ]; # .rw2 (RAW)
+      "image/x-olympus-orf" = [ "org.gnome.eog.desktop" ]; # .orf (RAW)
+
+      # --- Архивы ---
+      "application/zip" = [ "org.gnome.FileRoller.desktop" ]; # .zip
+      "application/x-gzip" = [ "org.gnome.FileRoller.desktop" ]; # .gz
+      "application/x-bzip" = [ "org.gnome.FileRoller.desktop" ]; # .bz
+      "application/x-bzip2" = [ "org.gnome.FileRoller.desktop" ]; # .bz2
+      "application/x-tar" = [ "org.gnome.FileRoller.desktop" ]; # .tar
+      "application/x-xz" = [ "org.gnome.FileRoller.desktop" ]; # .xz
+      "application/x-lzma" = [ "org.gnome.FileRoller.desktop" ]; # .lzma
+      "application/x-lzip" = [ "org.gnome.FileRoller.desktop" ]; # .lz
+      "application/x-7z-compressed" = [ "org.gnome.FileRoller.desktop" ]; # .7z
+      "application/x-rar" = [ "org.gnome.FileRoller.desktop" ]; # .rar
+      "application/x-rar-compressed" = [ "org.gnome.FileRoller.desktop" ]; # .rar
+      "application/x-ms-dos-executable" = [ "org.gnome.FileRoller.desktop" ]; # .exe (если как архив)
+      "application/x-msi" = [ "org.gnome.FileRoller.desktop" ]; # .msi (если как архив)
+      "application/x-deb" = [ "org.gnome.FileRoller.desktop" ]; # .deb
+      "application/x-rpm" = [ "org.gnome.FileRoller.desktop" ]; # .rpm
+      "application/x-iso9660-image" = [ "org.gnome.FileRoller.desktop" ]; # .iso
+      "application/vnd.android.package-archive" = [ "org.gnome.FileRoller.desktop" ]; # .apk
+      "application/x-apple-diskimage" = [ "org.gnome.FileRoller.desktop" ]; # .dmg
+
+      # --- Текст / Код ---
+      "text/x-shellscript" = [ "libreoffice-writer.desktop" ]; # .sh
+      "text/x-python" = [ "libreoffice-writer.desktop" ]; # .py
+      "text/x-c" = [ "libreoffice-writer.desktop" ]; # .c
+      "text/x-c++" = [ "libreoffice-writer.desktop" ]; # .cpp, .cxx
+      "text/x-chdr" = [ "libreoffice-writer.desktop" ]; # .h
+      "text/x-c++hdr" = [ "libreoffice-writer.desktop" ]; # .hpp
+      "text/x-java" = [ "libreoffice-writer.desktop" ]; # .java
+      "text/x-makefile" = [ "libreoffice-writer.desktop" ]; # Makefile
+      "text/x-perl" = [ "libreoffice-writer.desktop" ]; # .pl
+      "text/x-ruby" = [ "libreoffice-writer.desktop" ]; # .rb
+      "text/x-sql" = [ "libreoffice-writer.desktop" ]; # .sql
+      "text/x-tex" = [ "libreoffice-writer.desktop" ]; # .tex
+      "text/xml" = [ "libreoffice-writer.desktop" ]; # .xml
+      "text/html" = [ "libreoffice-writer.desktop" ]; # .html
+      "text/css" = [ "libreoffice-writer.desktop" ]; # .css
+      "text/javascript" = [ "libreoffice-writer.desktop" ]; # .js
+      "application/json" = [ "libreoffice-writer.desktop" ]; # .json
+      "text/x-markdown" = [ "libreoffice-writer.desktop" ]; # .md
+      "text/x-yaml" = [ "libreoffice-writer.desktop" ]; # .yaml, .yml
+    };
+  };
+
+  # # Автоматическое обновление MIME-кэша
+  # systemd.user.services.update-desktop-db = {
+  #   Unit.Description = "Update desktop database";
+  #   Service = {
+  #     ExecStart = "${pkgs.buildPackages.desktop-file-utils}/bin/update-desktop-database %h/.local/share/applications";
+  #     Type = "oneshot";
+  #   };
+  #   Install.WantedBy = [ "default.target" ];
+  # };
+}
+
+
+#### ./modules/home/chromium.nix
+{ config, pkgs, inputs, lib, ... }: 
+
+let
+  vivaldi-custom = pkgs.writeShellScriptBin "vivaldi-custom" ''
+vivaldi \
+      --enable-gpu-compositing \
+      --enable-accelerated-2d-canvas \
+      --enable-zero-copy \
+      --enable-accelerated-video-decode \
+      --enable-accelerated-video-encode \
+      --ignore-gpu-blocklist \
+      --enable-features=VaapiVideoDecoder,VaapiVideoEncoder,VaapiIgnoreDriverChecks,UseOzonePlatform,BackForwardCache \
+      --ozone-platform=wayland \
+      --enable-native-gpu-memory-buffers \
+      --enable-gpu-rasterization \
+      --force-gpu-rasterization \
+      --enable-raw-draw \
+      --disable-gpu-driver-bug-workarounds \
+      --disable-features=UseChromeOSDirectVideoDecoder \
+      --enable-webgl \
+      --enable-webgl2-compute-context \
+      --enable-vulkan \
+      --enable-zero-copy-dxgi-video \
+      --process-per-site \
+      --enable-parallel-downloading \
+      --disk-cache-size=104857600 \
+    "$@"
+  '';
+in
+{
+  home.packages = with pkgs; [
+    vivaldi-custom
+  ];
+
+  programs.chromium = {
+    enable = true;
+    package = pkgs.vivaldi;
+    extensions = [
+      { id = "nngceckbapebfimnlniiiahkandclblb"; } # Bitwarden
+      { id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"; } # uBlock Origin
+    ];
+    commandLineArgs = [
+      "--enable-features=UseOzonePlatform"
+      "--ozone-platform=wayland"
+      "--enable-hardware-overlays"
+    ];
+  };
+
+  # Дополнительные настройки окружения
+  home.sessionVariables = {
+    ENABLE_WEBGL = "1";
+    ENABLE_ACCELERATED_VIDEO_DECODE = "1";
+  };
+}
+
+
+#### ./modules/home/nautilus.nix
+{ config, pkgs, ... }:
+
+{
+  # Включение Nautilus и необходимых компонентов
+  home.packages = with pkgs; [
+    pkgs.nautilus # Основной пакет Nautilus
+
+    # Дополнительные функции (эскизы, интеграция):
+    pkgs.nautilus-python # Поддержка скриптов Python
+    ffmpegthumbnailer # Эскизы для видео
+    evince # Просмотр PDF (для эскизов)
+    poppler-utils # Дополнительные инструменты для PDF
+    pkgs.file-roller # Архиватор (интеграция с Nautilus)
+  ];
+
+  # Настройка dconf (если используете GNOME)
+  dconf.settings = {
+    "org/gnome/nautilus/preferences" = {
+      default-folder-viewer = "icon-view"; # или "list-view"
+      search-filter-time-type = "last_modified"; # Пример настройки
+      show-create-link = true;
+      show-delete-permanently = true;
+    };
+    "org/gnome/nautilus/icon-view" = {
+      thumbnail-size = "large"; # Размер эскизов
+    };
+  };
+
+  # Автозапуск Nautilus (опционально)
+  services.gnome-keyring.enable = true; # Для работы с паролями
+}
+
+
+#### ./modules/home/nvim.nix
+{
+  inputs,
+  pkgs,
+  config,
+  lib,
+  stylix,
+  ...
+}:
+{
+
+
+  home.packages = [
+    (inputs.lazy-nvim-nix.packages.x86_64-linux.LazyVim.override {
+    })
+  ];
+
+  # programs.neovim = {
+  #   enable = true;
+  #   defaultEditor = true;
+  #   vimAlias = true;
+  # };
+}
+
+
+#### ./modules/home/packages.nix
+{ config, pkgs, ... }:
+{
+
+  home.packages = with pkgs; [
+    eog
+    jellyfin-ffmpeg
+    zathura
+    vipsdisp
+    xorg.xrandr
+    wlr-randr
+    zed-editor
+    pavucontrol
+    libreoffice-fresh
+    swaybg
+    nixpkgs-fmt
+    qbittorrent
+    networkmanagerapplet
+    peek
+    udiskie
+    telegram-desktop
+    dust
+    duf
+  ];
+}
+
+
+#### ./modules/home/base.nix
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
+{
+
+  home.activation.createMesaShaderCache = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    mkdir -p "$HOME/.mesa_shader_cache"
+  '';
+
+  home.sessionVariables = {
+    MESA_SHADER_CACHE_DIR = "$HOME/.mesa_shader_cache";
+  };
+
+  dconf = {
+    enable = true;
+  };
+
+  services = {
+    udiskie = {
+      enable = true;
+      tray = "always";
+      settings = {
+        program_options = {
+          udisks_version = 2;
+          tray = true;
+        };
+        icon_names.media = [ "media-optical" ];
+      };
+
+    };
+    kdeconnect = {
+      enable = false;
+      indicator = false;
+    };
+  };
+
+  programs = {
+    
+    vscode = {
+        enable = true;
+        package = pkgs.vscodium;
+      };
+
+    swappy = {
+      enable = true;
+    };
+
+    bat = {
+      enable = true;
+      config = {
+        paging = "never";
+      };
+    };
+
+    fzf = {
+      enable = true;
+      enableFishIntegration = true;
+    };
+
+    lsd = {
+      enable = true;
+    };
+
+    alacritty = {
+      enable = true;
+      settings = {
+        terminal.shell = {
+          program = "fish";
+        };
+      };
+
+    };
+
+    bottom = {
+      enable = true;
+      settings = {
+        flags = {
+          basic = true;
+          tree = true;
+          mem_as_value = true;
+        };
+      };
+    };
+
+  };
+  home.packages = with pkgs; [
+    shotwell    
+  ];
+
+}
+
+
+#### ./modules/home/mpv.nix
+{ config, pkgs, ... }: {
+  programs.mpv = {
+    enable = true;
+    scripts = [
+    pkgs.mpvScripts.webtorrent-mpv-hook
+    ];
+    bindings = {
+      "ctrl+r" = ''cycle_values video-rotate "90" "180" "270" "0" '';
+      "CTRL+1 " = ''no-osd change-list glsl-shaders set "~~/shaders/FSR.glsl"; show-text "FSR" '';
+    };
+    config =
+      {
+        # keepaspect = "yes";
+        # deband = "no";
+        #      force-window = true;
+        # cache = "yes";
+        # cache-pause-initial = "yes";
+        # cache-pause-wait = "10";
+        # interpolation = "yes";
+        # hwdec = "auto-safe";
+        # vo = "gpu";
+        # gpu-context = "wayland";
+        # hwdec-codecs = "all";
+        # audio-channels = "stereo";
+        #      gpu-context = "x11vk";
+      };
+  };
+}
+
+
+#### ./modules/home/alacritty.nix
+{ config, pkgs, ... }: {
+
+  programs.alacritty = {
+    enable = true;
+    settings = {
+      env = {
+        TERM = "xterm-256color";
+        WINIT_X11_SCALE_FACTOR = "1.0";
+      };
+
+      terminal.shell = {
+        program = "fish";
+      };
+
+      window = {
+        dynamic_padding = true;
+      };
+      font = {
+        normal = {
+          family = "JetBrains Mono";
+        };
+        size = 14;
+
+      };
+    };
+
+  };
+
+}
+
+
+#### ./modules/home/foot.nix
+{ config, pkgs, ... }: {
+
+  programs.foot = {
+    enable = true;
+    server.enable = false;
+    settings = {
+      main = {
+        term = "foot";
+        login-shell = "yes";
+        shell = "${pkgs.fish}/bin/fish";
+      };
+      mouse = {
+        hide-when-typing = "yes";
+      };
+    };
+  };
+
+
+}
+
+
+#### ./modules/home/tmux.nix
+{ config, pkgs, ... }:{
+
+  programs.tmux.enable = true;
+
+  xdg.configFile."tmux" = {
+    recursive = false;
+    source = "${../configFiles/tmux}";
+  };
+}
+  
+
+
+#### ./modules/home/hyprland.nix
+{
+  inputs,
+  config,
+  pkgs,
+  ...
+}:
+{
+  # imports = [
+  #   inputs.dms.homeModules.dankMaterialShell.default
+  # ];
+  programs.dankMaterialShell.enable = true;
+
+  xdg.configFile."hypr/config" = {
+    recursive = false;
+    source = "${./dotfiles/default/hypr}";
+  };
+
+  wayland.windowManager.hyprland = {
+    enable = true;
+    # package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+    extraConfig = ''
+      source=~/.config/hypr/config/default.cfg
+    '';
+  };
+
+  home.packages = with pkgs; [
+    wl-clipboard
+    hyprshot
+    hypridle
+    clipse
+  ];
+
+}
+
+
+#### ./modules/home/fish.nix
+{ config, pkgs, ... }: {
+  programs.fish = {
+    enable = true;
+    package = pkgs.fish;
+    
+    shellAbbrs = {
+    };
+    
+    shellAliases = {
+        dff = "duf";
+        duu = "dust -Hr";
+        htop = "btm";
+        WakeServ = "wakeonlan -i  192.168.4.255 6c:0b:84:ff:82:fd";
+        vim = "nvim";
+      };
+    
+    plugins = [
+    ]; 
+    
+    functions = {
+      fish_greeting =""; 
+    };
+  
+  };
+      
+  home.packages = with pkgs; [
+    fasd
+  ];
+}
+
+
+#### ./modules/home/psd.nix
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
+{
+  services.psd = {
+    enable = false;
+    resyncTimer = "15m";
+  };
+
+}
+
+
+#### ./modules/home/gtk.nix
+{ config, pkgs, ... }: {
+
+  home.pointerCursor = {
+    gtk.enable = true;
+    x11.enable = true;
+    package = pkgs.quintom-cursor-theme;
+    name = "Quintom_Ink";
+    size = 32;
+  };
+  
+  gtk = {
+    enable = true;
+    };
+
+}
+
+
+#### ./modules/home/firefox.nix
+{
+  config,
+  pkgs,
+  inputs,
+  lib,
+  ...
+}:
+{
+
+  programs.librewolf = {
+  enable = true;
+    profiles = {
+      shpinog = {
+        isDefault = true;
+        extensions.packages = with pkgs.nur.repos.rycee.firefox-addons; [
+          bitwarden
+          ublock-origin
+          violentmonkey
+          translate-web-pages
+          languagetool
+        ];
+        settings = {
+          "browser.startup.homepage" = "https://nixos.org";
+          "browser.search.region" = "RU";
+          "browser.search.isUS" = false;
+          "distribution.searchplugins.defaultLocale" = "ru-RU";
+          "general.useragent.locale" = "ru-RU";
+    "webgl.disabled" = false; # Если нужны 3D карты или игры в браузере
+    "privacy.resistFingerprinting" = true;
+    "privacy.clearOnShutdown.history" = false; # Чтобы не входить в аккаунты каждый раз
+        };
+      };
+    };
+  };
+}
+
+
+#### ./modules/home/niriwm.nix
+{ inputs, pkgs, config, lib, niri, ... }:
+
+{
+  imports = [
+    inputs.niri.homeModules.niri
+    inputs.dms.homeModules.dank-material-shell
+    inputs.dms.homeModules.niri
+  ];
+
+  home.packages = with pkgs; [
+    xwayland-satellite # XWayland сервер
+    wl-clipboard       # Буфер обмена
+    libnotify          # Уведомления
+    jaq                # JSON процессор (полезно для скриптов)
+    wofi
+  ];
+
+  # --- Настройка DankMaterialShell ---
+  programs.dank-material-shell = {
+    enable = true;
+    niri = {
+    enableSpawn = true;      # Auto-start DMS with niri, if enabled
+    };
+    # Если нужно явно указать пакет (обычно не требуется, модуль сам выберет):
+    # package = inputs.dms.packages.${pkgs.system}.default;
+    #
+    niri.includes = {
+    enable = false;             # Enable config includes hack. Enabled by default.
+    };
+  };
+
+  programs.niri = {
+    enable = true;
+    package = inputs.niri.packages.${pkgs.system}.niri-unstable; # Используем стабильный пакет из nixpkgs, или inputs.niri.packages.${pkgs.system}.niri-stable
+
+    settings = {
+      prefer-no-csd = true;
+      hotkey-overlay = {
+        skip-at-startup = true;
+        hide-not-bound = true;
+        };
+      # --- Окружение ---
+      environment = {
+        DISPLAY = ":0";
+        QT_QPA_PLATFORM = "wayland";
+        NIXOS_OZONE_WL = "1";
+      };
+
+      # --- Автозапуск ---
+      # Важно: используем { command = [...]; } для каждой команды
+      spawn-at-startup = [
+      ];
+
+      # --- Ввод ---
+      input = {
+        keyboard.xkb = {
+          layout = "us,ru";
+          options = "grp:caps_toggle";
+        };
+
+        mouse = {
+         natural-scroll = false;
+         accel-speed = 0;
+         accel-profile = "flat";
+        };
+        
+        touchpad = {
+          tap = true;
+          natural-scroll = true;
+          dwt = true;
+        };
+
+        focus-follows-mouse.enable = true;
+      };
+
+      # --- Мониторы ---
+      outputs = {
+        "DP-2" = {
+          mode = { width = 2560; height = 1440; refresh = 165.0; };
+          position = { x = 0; y = 0; };
+          scale = 1.0;
+          variable-refresh-rate = "on-demand";
+        };
+
+        "HDMI-A-1" = {
+          mode = { width = 1920; height = 1080; refresh = 120.0; };
+          position = { x = 640; y = -1080; };
+          scale = 1.0;
+          variable-refresh-rate = "on-demand";
+        };
+
+        "DP-3" = {
+          mode = { width = 3840; height = 2160; refresh = 60.0; };
+          position = { x = 2560; y = -480; };
+          scale = 2.0;
+          transform.rotation = 90;
+          variable-refresh-rate = "on-demand";
+        };
+      };
+
+      # --- Внешний вид (Layout) ---
+      layout = {
+        gaps = 4;
+        center-focused-column = "on-overflow";
+        always-center-single-column = true;
+        empty-workspace-above-first = true;
+
+
+        preset-column-widths = [
+          { proportion = 0.33333; }
+          { proportion = 0.5; }
+          { proportion = 0.66667; }
+        ];
+
+        default-column-width = { proportion = 0.5; };
+
+        focus-ring = {
+          enable = true;
+          width = 2;
+          active.color = "#6a818f";
+          inactive.color = "#595959aa";
+        };
+        
+        border = { enable = false; };
+      };
+
+      # --- Правила окон ---
+      # Важно: window-rules (множественное число), список объектов
+      window-rules = [
+        {
+          geometry-corner-radius =
+            let
+            r = 8.0;
+            in
+          {
+            top-left = r;
+            top-right = r;
+            bottom-left = r;
+            bottom-right = r;
+          };
+
+          clip-to-geometry = true;
+        }
+        {
+          matches = [{ app-id = "^steam$"; }];
+          open-on-output = "HDMI-A-1"; 
+          default-column-width = { proportion = 1.0; };
+        }
+        {
+          matches = [{ app-id = "org.telegram.desktop"; }];
+          open-on-workspace = "3";
+        }
+        {
+          matches = [{ app-id = "Alacritty"; }];
+          open-on-output = "DP-3";
+          default-window-height = { proportion = 1. / 2.; };
+          default-column-width = { proportion = 1. / 1.; };
+        }
+        {
+          matches = [{ app-id = "firefox"; }];
+          open-maximized = true;
+          open-on-output = "DP-2";
+        }
+        {
+          matches = [{ app-id = "librewolf"; }];
+          open-maximized = true;
+          open-on-output = "DP-2";
+        }
+        {
+          matches = [
+            { app-id = "pavucontrol"; }
+            { app-id = ".blueman-manager-wrapped"; }
+            { app-id = "thunar"; title = "File Operation Progress"; }
+            { app-id = "mpv"; }
+            { title = "Media viewer"; }
+            { title = "^Picture-in-Picture$"; }
+          ];
+          open-floating = true;
+        }
+      ];
+
+      # --- Бинды ---
+      # Важно: используем структуру .action.<действие>
+      # Аргументы передаются строкой (если один) или списком (если несколько)
+      binds = {
+        "Mod+Shift+M".action.quit = { skip-confirmation = true; };
+        "Mod+C".action.close-window = {};
+        "Mod+F".action.fullscreen-window = {};
+        "Mod+Shift+F".action.maximize-column = {};
+        "Mod+Shift+Space".action.toggle-window-floating = {};
+        "Mod+E".action.toggle-overview = {};
+        "Mod+Return".action.spawn = "alacritty";
+        "Mod+Q".action.spawn = "librewolf";
+        "Mod+Shift+Q".action.spawn = "firefox";
+        "Mod+KP_Left".action.spawn = "thunar";
+        "Mod+KP_Home".action.spawn = "telegram-desktop";
+        "Mod+R".action.spawn = ["wofi" "--show" "drun"];
+        "Mod+Shift+L".action.spawn = ["dms" "ipc" "call" "lock" "lock"];
+
+        "Mod+Delete".action.screenshot = {};
+        "Shift+Print".action.screenshot-screen = {};
+        "Ctrl+Print".action.screenshot-window = {};
+
+        # "XF86AudioRaiseVolume".action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.05+"];
+        # "XF86AudioLowerVolume".action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.05-"];
+        # "XF86AudioMute".action.spawn = ["wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"];
+        # "XF86AudioMicMute".action.spawn = ["wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"];
+
+        "Mod+Left".action.focus-column-left = {};
+        "Mod+Right".action.focus-column-right = {};
+        "Mod+Up".action.focus-window-up = {};
+        "Mod+Down".action.focus-window-down = {};
+
+        "Mod+Shift+Left".action.move-column-left = {};
+        "Mod+Shift+Right".action.move-column-right = {};
+        "Mod+Shift+Up".action.move-window-up = {};
+        "Mod+Shift+Down".action.move-window-down = {};
+
+        "Mod+1".action.focus-workspace = 1;
+        "Mod+2".action.focus-workspace = 2;
+        "Mod+3".action.focus-workspace = 3;
+        "Mod+4".action.focus-workspace = 4;
+        "Mod+5".action.focus-workspace = 5;
+
+        "Mod+Shift+1".action.move-column-to-workspace = 1;
+        "Mod+Shift+2".action.move-column-to-workspace = 2;
+        "Mod+Shift+3".action.move-column-to-workspace = 3;
+        
+        "Mod+WheelScrollDown".action.focus-workspace-down = {};
+        "Mod+WheelScrollUp".action.focus-workspace-up = {};
+      };
+    };
+  };
+}
+
+
+#### ./modules/nixos/stylix.nix
+{
+  inputs,
+  pkgs,
+  config,
+  lib,
+  stylix,
+  ...
+}:
+{
+  stylix.enable = true;
+  stylix.targets.plymouth.enable = true;
+  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-soft.yaml";
+  stylix.fonts = {
+    serif = {
+      package = pkgs.dejavu_fonts;
+      name = "DejaVu Serif";
+    };
+
+    sansSerif = {
+      package = pkgs.dejavu_fonts;
+      name = "DejaVu Sans";
+    };
+
+    monospace = {
+      package = pkgs.dejavu_fonts;
+      name = "DejaVu Sans Mono";
+    };
+
+    emoji = {
+      package = pkgs.noto-fonts-color-emoji;
+      name = "Noto Color Emoji";
+    };
+  };
+}
+
+
+#### ./modules/nixos/services.sunshine.nix
+{ config, lib, pkgs, ... }:{
+  services.sunshine = {
+    enable = true;
+    capSysAdmin = true;
+
+
+  };
+}
+
+# Enable using:
+# services.sunshine.enable = true;
+# Get Service Status
+# systemctl --user status sunshine
+# get logs
+# journalctl --user -u sunshine --since "2 minutes ago"
+
+
+#### ./modules/nixos/modules.nix
+
+
+#### ./modules/nixos/audio.nix
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
+{
+
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    audio.enable = true;
+    wireplumber.enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    # wireplumber.extraConfig = {
+    #   "50-bluez" = {
+    #     "monitor.bluez.rules" = [
+    #       {
+    #         matches = [ { "device.name" = "~bluez_card.*"; } ];
+    #         actions = {
+    #           update-props = {
+    #             "bluez5.auto-connect" = [
+    #               "a2dp_sink"
+    #               "a2dp_source"
+    #             ];
+    #             "bluez5.hw-volume" = [
+    #               "a2dp_sink"
+    #               "a2dp_source"
+    #             ];
+    #           };
+    #         };
+    #       }
+    #     ];
+    #     "monitor.bluez.properties" = {
+    #       "bluez5.roles" = [
+    #         "a2dp_sink"
+    #         "a2dp_source"
+    #         "bap_sink"
+    #         "bap_source"
+    #       ];
+    #
+    #       "bluez5.codecs" = [
+    #         "sbc"
+    #         "ldac"
+    #         "aptx"
+    #         "aptx_ll_duplex"
+    #         "aptx_ll"
+    #         "aptx_hd"
+    #         "opus_05_pro"
+    #         "opus_05_71"
+    #         "opus_05_51"
+    #         "opus_05"
+    #         "opus_05_duplex"
+    #         "aac"
+    #         "sbc_xq"
+    #       ];
+    #
+    #     };
+    #   };
+    # };
+  };
+
+  programs.noisetorch.enable = true;
+
+  services.pulseaudio = {
+    enable = false;
+    package = pkgs.pulseaudioFull;
+  };
+
+  hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
+  hardware.bluetooth = {
+    settings = {
+      General = {
+        Enable = "Socket,Media,Sink,Source";
+        # MultiProfile = "multiple";
+        ControllerMode = "bredr";
+        Disable= "Input";
+        # FastConnectable = "true";
+        # Experimental = true;
+        # KernelExperimental = true;
+      };
+    };
+  };
+}
+
+
+#### ./modules/nixos/default.nix
+{
+  inputs,
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+{
+
+  i18n.defaultLocale = "ru_RU.UTF-8";
+  console = {
+    earlySetup = true;
+    font = "${pkgs.terminus_font}/share/consolefonts/ter-v16n.psf.gz";
+    packages = [ pkgs.terminus_font ];
+    keyMap = "us";
+  };
+
+  time.timeZone = "Europe/Moscow";
+  services.udisks2.enable = true;
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    config = {
+      common = {
+        default = "wlr";
+      };
+    };
+    wlr.enable = true;
+  };
+  services.joycond.enable = true;
+  security.rtkit.enable = true;
+  services.dbus.enable = true;
+  services.libinput = {
+    enable = true;
+    mouse = {
+      accelProfile = "flat";
+      accelSpeed = "0";
+    };
+  };
+
+  hardware.xpadneo.enable = true;
+
+  systemd.tmpfiles.rules = [
+    "d /mesa_shader_cache 1777 root root -"
+  ];
+
+  #Distobox
+  virtualisation.podman = {
+    enable = true;
+    dockerCompat = true;
+  };
+  users.users.shpinog = {
+    isNormalUser = true;
+    extraGroups = [ "podman" "i2c" ];
+  };
+
+  services.xserver.videoDrivers = [ "vmware" ];
+  virtualisation.vmware.guest.enable = true;
+  virtualisation.vmware.host.enable = true;
+
+  environment.systemPackages = with pkgs; [
+    amneziawg-tools
+    nmap
+    psutils
+    wakeonlan
+    libinput
+    distrobox # distrobox
+    gperftools
+    cachix
+    coreutils
+    lm_sensors
+    pciutils
+    btop
+    killall
+    ##Compile
+    gcc
+    pkg-config
+    binutils
+    lm_sensors
+    unzip
+    wget
+    iw
+    fd
+    sshfs
+    gptfdisk
+    util-linux
+    ddrescue
+    usbutils
+    mesa-demos
+    ripgrep
+  ];
+}
+
+
+#### ./modules/nixos/dms-greeter.nix
+
+{ inputs, pkgs, config, lib, niri, ... }:{
+
+  imports = [
+  inputs.dms.nixosModules.greeter
+  ];
+
+  systemd.services.greetd.serviceConfig = {
+    # "-" в начале означает: "попытайся выполнить, но если никого не нашел (ошибка), 
+    # то не останавливай запуск, иди дальше".
+    # Мы используем pkill -KILL (аналог -9), чтобы убить наверняка.
+    ExecStartPre = "-${pkgs.procps}/bin/pkill -KILL niri";
+    
+    # Можно также добавить это, чтобы systemd был более агрессивен при остановке
+    KillSignal = "SIGKILL";
+    KillMode = "control-group";
+  };
+
+  programs.niri = {
+    enable = true;
+    # Обязательно используй тот же пакет из flake, что и в HM
+    package = inputs.niri.packages.${pkgs.system}.niri-unstable;
+  };
+
+  programs.dank-material-shell.greeter = {
+  enable = true;
+  compositor = {
+    name = "niri"; # Required. Can be also "hyprland" or "sway"
+    customConfig = ''
+        cursor {
+            xcursor-theme "Adwaita"
+            xcursor-size 24
+        }
+        // Монитор 1: Центр
+        output "DP-1" {
+            mode "2560x1440@165"
+            position x=0 y=0
+        }
+
+        // Монитор 2: Верх
+        output "HDMI-A-1" {
+            mode "1920x1080@120"
+            position x=640 y=-1080
+        }
+
+        // Монитор 3: Правый (4K, повернуть на 90 градусов)
+        output "DP-3" {
+            mode "3840x2160@60"
+            position x=2560 y=-480
+            scale 2.0
+            transform "90"
+        }
+        
+        // Помогает избежать проблем с сессиями внутри греетера
+        spawn-at-startup "dbus-update-activation-environment" "--all"
+      '';
+  };
+
+  # Sync your user's DankMaterialShell theme with the greeter. You'll probably want this
+  # configHome = "/home/shpinog";
+
+  # Custom config files for non-standard config locations
+  # configFiles = [
+  #   "/home/shpinog/.config/DankMaterialShell/settings.json"
+  # ];
+
+  # Save the logs to a file
+  logs = {
+    save = true; 
+    path = "/tmp/dms-greeter.log";
+  };
+
+  # Custom Quickshell Package    
+  quickshell.package = pkgs.quickshell;
+};
+}
+
+
+#### ./modules/nixos/hardware.nix
+{ pkgs, config, lib,... }:
+{
+  #... (остальные ваши настройки firmware и графики остаются без изменений)...
+  
+  power.ups = {
+    enable = true;
+    mode = "standalone";
+    ups.ups = {
+      driver = "nutdrv_qx"; 
+      port = "/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0"; 
+      description = "Ippon BackUp Black 2200";
+      directives = [
+        "protocol = megatec"
+        "pollinterval = 2"
+      ];
+    };
+
+    users.monuser = {
+      # ИСПРАВЛЕНО: Создайте файл /etc/nut/ups-pass вручную и запишите туда пароль.
+      # Либо используйте sops-nix / agenix. writeText оставлял пароль в /nix/store!
+      passwordFile = "${pkgs.writeText "ups-pass" "123123"}"; 
+      upsmon = "primary"; 
+    };
+
+    upsmon = {
+      enable = true;
+      monitor."ups" = {
+        system = "ups@localhost";
+        user = "monuser";
+        passwordFile = "${pkgs.writeText "ups-pass" "123123"}";
+        powerValue = 1;
+        type = "primary";
+      };
+    };
+  };
+}
+
+#### ./modules/nixos/fonts.nix
+{ config, pkgs, ... }:
+{
+  fonts = {
+    # fontDir.enable = true;
+    # enableGhostscriptFonts = true;
+    enableDefaultPackages = true;
+    packages = with pkgs; [
+      jetbrains-mono
+      noto-fonts
+      noto-fonts-color-emoji
+      dejavu_fonts
+      liberation_ttf
+      hackgen-nf-font
+      ubuntu-classic
+      powerline-symbols
+    ];
+
+    fontconfig = {
+      enable = true;
+      antialias = true;
+      subpixel.lcdfilter = "default";
+      subpixel.rgba = "rgb";
+
+      hinting = {
+        enable = true;
+        autohint = true;
+
+      };
+
+      defaultFonts = {
+        serif = [ "Ubuntu" ];
+        sansSerif = [ "Ubuntu Sans" ];
+        monospace = [ "JetBrains Mono Regular" ];
+        emoji = [
+          "Noto Color Emoji"
+          "FiraCode Nerd Font"
+        ];
+
+      };
+    };
+  };
+
+}
+
+
+#### ./modules/nixos/gnome.nix
+
+{ pkgs, config, lib, ... }: {
+
+services.gnome.core-os-services.enable = true;
+services.gnome.gnome-user-share.enable = true;
+services.gnome.core-utilities.enable = true;
+environment.systemPackages = with pkgs; [
+  glib  
+];
+
+}
+
+
+#### ./modules/nixos/polkit.nix
+{ pkgs, config, lib, ... }: {
+
+  services.gnome.gnome-keyring.enable = true;
+  security.polkit.enable = true;
+
+  security.rtkit.enable = true;
+
+  security.pam.services.shpinog.startSession = true;
+  security.pam.loginLimits = [
+  { domain = "@users"; item = "rtprio"; type = "-"; value = 1; }
+];
+}
+
+
+#### ./modules/nixos/greetd.nix
+{
+  config,
+  pkgs,
+  inputs,
+  ...
+}:
+
+let
+  tuigreet = "${pkgs.tuigreet}/bin/tuigreet";
+  niri = "${pkgs.niri}/bin/niri-session";
+  # hyprland = "${pkgs.hyprland}/bin/start-hyprland";
+  # sway= "${pkgs.sway}/bin/sway";
+in
+{
+  environment.systemPackages = [
+    (pkgs.writeShellScriptBin "wayland-session" ''
+      exec ${niri}
+    '')
+  ];
+
+  services.greetd = {
+    enable = true;
+
+    settings = {
+      default_session = {
+        command = "${tuigreet} --time --time-format '%a, %d %b %Y • %T' --greeting '[Become \n          Visible]' --asterisks --remember --cmd wayland-session";
+        user = "greeter";
+      };
+    };
+  };
+}
+
+
+#### ./modules/nixos/hyprland.nix
+{ inputs, pkgs, config, lib, ... }: {
+
+  nix.settings = {
+    substituters = ["https://hyprland.cachix.org" "https://ai.cachix.org" ];
+    trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="  "ai.cachix.org-1:N9dzRK+alWwoKXQlnn0H6aUx0lU/mspIoz8hMvGvbbc="];
+  };
+
+
+
+  programs.hyprland = {
+      enable = true;
+      package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+      portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+  };  
+}
+
+
+
+#### ./modules/nixos/plymouth.nix
+{ pkgs, config, lib, ... }: {
+
+  boot = {
+
+    plymouth = {
+      enable = true;
+    };
+
+    # Enable "Silent boot"
+    consoleLogLevel = 0;
+    initrd.verbose = false;
+    kernelParams = [
+      "quiet"
+      "udev.log_level=3"
+      "systemd.show_status=false"
+      "vt.global_cursor_default=0"
+      "boot.shell_on_fail"
+      "loglevel=0"
+      "rd.systemd.show_status=false"
+      "rd.udev.log_level=3"
+      "udev.log_priority=3"
+
+    ];
+    # Hide the OS choice for bootloaders.
+    # It's still possible to open the bootloader list by pressing any key
+    # It will just not appear on screen unless a key is pressed
+    loader.timeout = 0;
+
+    };
+}
+
+
+#### ./modules/nixos/nfs.nix
+
+{
+  inputs,
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+{
+  services.samba = {
+  enable = true;
+  openFirewall = true;
+
+  # Используем новую, структурированную опцию settings
+  settings = {
+    # Секция [global] в smb.conf
+    global = {
+      # Эти две строки заменяют собой extraConfig
+      interfaces = "lo 192.168.4.0/24";
+      "bind interfaces only" = "yes";
+
+      # Дополнительные полезные настройки
+      "workgroup" = "WORKGROUP";
+      "server string" = "NixOS Samba Server";
+      "netbios name" = "nixos-pc"; # Можете изменить на имя вашего сервера
+      "security" = "user";
+      "map to guest" = "never";
+    };
+  };
+
+  # Раздел shares остается без изменений
+  settings = {
+    "files" = {
+      path = "/home/shpinog/Files";
+      "read only" = "no";
+      "guest ok" = "no";
+      "valid users" = "shpinog";
+      "force create mode" = "0660";
+      "force directory mode" = "0770";
+    };
+  };
+};
+}
+
+
+#### ./modules/nixos/steam.nix
+
+{ config, pkgs, system, ... }:{
+  programs.steam = {
+    enable = true;
+    package = pkgs.steam.override {
+    extraPkgs = pkgs: with pkgs; [ libgdiplus keyutils libkrb5 libpng libpulseaudio libvorbis stdenv.cc.cc.lib xorg.libXcursor xorg.libXi xorg.libXinerama xorg.libXScrnSaver /* и остальные пакеты */ ];
+    };
+    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+    };
+  programs.gamescope.enable = true;
+  programs.steam.gamescopeSession.enable = true;
+  
+
+  programs.gamemode = {
+    enable  = true;
+    enableRenice = true;
+    settings = {
+      general = {
+        renice = 10;
+        desiredgov = "performance";
+        defaultgov = "powersave";
+        softrealtime="auto";
+
+      };
+
+# Warning: GPU optimisations have the potential to damage hardware
+      gpu = {
+        apply_gpu_optimisations = "accept-responsibility";
+        gpu_device = 0;
+        amd_performance_level = "high";
+      };
+
+      custom = {
+        start = "${pkgs.libnotify}/bin/notify-send 'GameMode started'";
+        end = "${pkgs.libnotify}/bin/notify-send 'GameMode ended'";
+      };
+      };
+  };
+}
+
+
+#### ./modules/nixos/yubikey.nix
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
+{
+
+  # YubiKey
+  environment.systemPackages = with pkgs; [
+    yubikey-personalization # CLI tools for configuring YubiKey
+    yubioath-flutter
+    yubikey-agent
+    libfido2 # Support for FIDO2/WebAuthn
+    opensc # Smart card support
+    gnupg # If using GPG with YubiKey
+    pcsclite
+  ];
+
+  hardware.gpgSmartcards.enable = true;
+
+  services = {
+    udev.packages = with pkgs; [ yubikey-personalization ];
+    pcscd.enable = true;
+    yubikey-agent.enable = true;
+
+  };
+
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
+    pinentryPackage = pkgs.pinentry-curses;
+  };
+
+}
+
+
+#### ./modules/nixos/network.nix
+{
+  inputs,
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+{
+
+  networking.useDHCP = false;
+  networking.enableIPv6 = true;
+  networking.networkmanager.enable = true;
+  networking.networkmanager.plugins = with pkgs; [
+    networkmanager-fortisslvpn
+    networkmanager-iodine
+    networkmanager-l2tp
+    networkmanager-openconnect
+    networkmanager-openvpn
+    networkmanager-vpnc
+    networkmanager-sstp
+  ];
+  networking.nameservers = [
+    "192.168.1.1"
+    "8.8.8.8"
+  ]; # Основной DNS + резервный (Google)
+  networking.networkmanager.dns = "none"; # Отключаем DNS от NetworkManager
+
+  services.v2raya = {
+    enable = true;
+    cliPackage = pkgs.xray;
+  };
+
+  # networking.networkmanager.dns = "systemd-resolved";
+  networking.firewall = rec {
+    checkReversePath = false;
+    allowedTCPPorts = [
+      8080
+      8868
+      4662
+      4679
+      22
+      47984
+      47989
+      47990
+      48010
+      4801
+      3001
+      5001
+      3131
+    ];
+    allowedUDPPorts = [
+      8080
+      8868
+      4679
+      4672
+      69
+      47998
+      47999
+      48000
+      48010
+      3001
+      5001
+    ];
+    allowedTCPPortRanges = [
+      {
+        from = 1714;
+        to = 1764;
+      }
+    ];
+    allowedUDPPortRanges = allowedTCPPortRanges;
+  };
+
+  services.openssh = {
+    enable = true;
+    settings = {
+      PermitRootLogin = "no";
+      PasswordAuthentication = true;
+    };
+  };
+
+  # programs.nm-applet = {
+  #   enable = true;
+  #   indicator = true;
+  # };
+  #
+  environment.systemPackages = [
+    pkgs.autossh
+  ];
+
+  services.autossh.sessions = [
+    {
+      name = "rescue";
+      user = "root";
+
+      monitoringPort = 0;
+      extraArguments = "-N -R 2223:localhost:22 -i /root/.ssh/rescue_ed25519 -o IdentitiesOnly=yes -o BindAddress=0.0.0.0 -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -o ExitOnForwardFailure=yes -o StrictHostKeyChecking=yes root@95.81.115.246";
+    }
+  ];
+  systemd.services.autossh-rescue.serviceConfig = {
+    Restart = lib.mkForce "always";
+    RestartSec = "10s";
+
+    # 🔥 полностью отключаем start-limit
+    StartLimitIntervalSec = lib.mkForce 0;
+    StartLimitBurst = lib.mkForce 0;
+  };
+
+}
+
+
+#### ./modules/nixos/niri.nix
+{ pkgs, config, lib, ... }: {
+  # programs.niri.package = pkgs.niri-unstable;
+  # programs.niri.enable = true;
+}
+
+
+#### ./flake.nix
+{
+  description = "Shpinog's NixOS flake-parts configuration";
+
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+    nur.url = "github:nix-community/NUR";
+    stylix.url = "github:nix-community/stylix";
+    hyprland.url = "github:hyprwm/Hyprland";
+    niri.url = "github:sodiboo/niri-flake";
+    
+    lazy-nvim-nix = {
+      url = "github:josh/lazy-nvim-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    dgop = {
+      url = "github:AvengeMedia/dgop";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    dms = {
+      url = "github:AvengeMedia/DankMaterialShell";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.dgop.follows = "dgop";
+    };
+  };
+
+  outputs = inputs@{ flake-parts,... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [ "x86_64-linux" ];
+      imports = [
+       ./flake/nixos.nix
+      ];
+    };
+}
+
