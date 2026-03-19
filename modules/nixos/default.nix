@@ -4,14 +4,12 @@
   config,
   pkgs,
   ...
-}:
-{
-
+}: {
   i18n.defaultLocale = "ru_RU.UTF-8";
   console = {
     earlySetup = true;
     font = "${pkgs.terminus_font}/share/consolefonts/ter-v16n.psf.gz";
-    packages = [ pkgs.terminus_font ];
+    packages = [pkgs.terminus_font];
     keyMap = "us";
   };
 
@@ -19,10 +17,10 @@
   services.udisks2.enable = true;
   xdg.portal = {
     enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    extraPortals = [pkgs.xdg-desktop-portal-gtk];
     config = {
       common = {
-        default = "wlr";
+        default = [ "wlr" "gtk" ];
       };
     };
     wlr.enable = true;
@@ -42,12 +40,7 @@
     enable = true;
     dockerCompat = true;
   };
-  users.users.shpinog = {
-    isNormalUser = true;
-    extraGroups = [ "podman" "i2c" ];
-  };
-
-  services.xserver.videoDrivers = [ "vmware" ];
+  services.xserver.videoDrivers = ["vmware" "modesettings"];
   virtualisation.vmware.guest.enable = true;
   virtualisation.vmware.host.enable = true;
 

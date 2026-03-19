@@ -1,22 +1,28 @@
-{ inputs, lib, config, pkgs,... }:
-
 {
+  inputs,
+  lib,
+  config,
+  pkgs,
+  ...
+}: {
   imports = [
-   ../../modules/home/environment.nix
-   ../../modules/home/nvim.nix
-   ../../modules/home/firefox.nix
-   ../../modules/home/foot.nix
-   ../../modules/home/fish.nix
-   ../../modules/home/gtk.nix
-   ../../modules/home/mpv.nix
-   ../../modules/home/xdg.nix
-   ../../modules/home/packages.nix
-   ../../modules/home/base.nix
-   ../../modules/home/psd.nix
-   ../../modules/home/nautilus.nix
-   ../../modules/home/stylix.nix
-   ../../modules/home/niriwm.nix
-    # Закомментированные вами модули (hyprland/sway) безопасно удалены или лежат в папке
+    inputs.nix-flatpak.homeManagerModules.nix-flatpak
+    ../../modules/home/environment.nix
+    ../../modules/home/nvim.nix
+    ../../modules/home/firefox.nix
+    ../../modules/home/foot.nix
+    ../../modules/home/fish.nix
+    ../../modules/home/gtk.nix
+    ../../modules/home/mpv.nix
+    ../../modules/home/xdg.nix
+    ../../modules/home/packages.nix
+    ../../modules/home/base.nix
+    ../../modules/home/psd.nix
+    ../../modules/home/nautilus.nix
+    ../../modules/home/stylix.nix
+    ../../modules/home/niriwm.nix
+    ../../modules/home/flatpak.nix
+    ../../modules/home/rclone.nix
   ];
 
   home = {
@@ -27,6 +33,8 @@
 
   home.packages = with pkgs; [
     google-chrome
+    # inputs.antigravity-nix.packages.${pkgs.system}.google-antigravity-no-fhs
+    antigravity-fhs
   ];
 
   programs.home-manager.enable = true;

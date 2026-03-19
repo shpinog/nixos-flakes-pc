@@ -3,9 +3,7 @@
   config,
   lib,
   ...
-}:
-{
-
+}: {
   # YubiKey
   environment.systemPackages = with pkgs; [
     yubikey-personalization # CLI tools for configuring YubiKey
@@ -20,10 +18,9 @@
   hardware.gpgSmartcards.enable = true;
 
   services = {
-    udev.packages = with pkgs; [ yubikey-personalization ];
+    udev.packages = with pkgs; [yubikey-personalization];
     pcscd.enable = true;
     yubikey-agent.enable = true;
-
   };
 
   programs.gnupg.agent = {
@@ -31,5 +28,4 @@
     enableSSHSupport = true;
     pinentryPackage = pkgs.pinentry-curses;
   };
-
 }

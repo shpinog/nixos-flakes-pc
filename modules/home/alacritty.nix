@@ -1,5 +1,8 @@
-{ config, pkgs, ... }: {
-
+{
+  config,
+  pkgs,
+  ...
+}: {
   programs.alacritty = {
     enable = true;
     settings = {
@@ -20,10 +23,7 @@
           family = "JetBrains Mono";
         };
         size = 14;
-
       };
     };
-
   };
-
 }

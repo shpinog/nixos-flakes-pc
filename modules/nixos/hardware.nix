@@ -1,13 +1,18 @@
-{ pkgs, config, lib,... }:
 {
-  #... (остальные ваши настройки firmware и графики остаются без изменений)...
-  
+  pkgs,
+  config,
+  lib,
+  ...
+}: {
+  boot.extraModulePackages = with config.boot.kernelPackages; [
+    amneziawg
+  ];
   power.ups = {
     enable = true;
     mode = "standalone";
     ups.ups = {
-      driver = "nutdrv_qx"; 
-      port = "/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0"; 
+      driver = "nutdrv_qx";
+      port = "/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0";
       description = "Ippon BackUp Black 2200";
       directives = [
         "protocol = megatec"
@@ -18,8 +23,8 @@
     users.monuser = {
       # ИСПРАВЛЕНО: Создайте файл /etc/nut/ups-pass вручную и запишите туда пароль.
       # Либо используйте sops-nix / agenix. writeText оставлял пароль в /nix/store!
-      passwordFile = "${pkgs.writeText "ups-pass" "123123"}"; 
-      upsmon = "primary"; 
+      passwordFile = "${pkgs.writeText "ups-pass" "123123"}";
+      upsmon = "primary";
     };
 
     upsmon = {

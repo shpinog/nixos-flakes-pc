@@ -3,9 +3,7 @@
   pkgs,
   lib,
   ...
-}:
-{
-
+}: {
   #Gaming response-time
   systemd.tmpfiles.settings = {
     "consistent-response-time-for-gaming" = {
@@ -55,7 +53,6 @@
           argument = "1";
         };
       };
-
     };
   };
 
@@ -69,8 +66,7 @@
   hardware.amdgpu.initrd.enable = true;
   hardware.amdgpu.overdrive.enable = true;
 
-
-  boot.kernelPackages = with pkgs; linuxPackages_xanmod_latest;
+  boot.kernelPackages = with pkgs; linuxPackages_xanmod;
   services.scx.enable = true;
   services.scx.scheduler = "scx_bpfland";
   services.bpftune.enable = true;
@@ -99,19 +95,19 @@
   };
 
   systemd.services.enable-c6 = {
-  description = "Enable C6 sleep state for all CPUs";
-  wantedBy = [ "multi-user.target" ];
-  serviceConfig = {
-    Type = "oneshot";
-    ExecStart = "${pkgs.bash}/bin/bash -c 'for d in /sys/devices/system/cpu/cpu*/cpuidle/state3/disable; do echo 0 > \"$d\"; done'";
-    RemainAfterExit = true;
+    description = "Enable C6 sleep state for all CPUs";
+    wantedBy = ["multi-user.target"];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.bash}/bin/bash -c 'for d in /sys/devices/system/cpu/cpu*/cpuidle/state3/disable; do echo 0 > \"$d\"; done'";
+      RemainAfterExit = true;
+    };
   };
-};
 
   ### Boot Kernel
   boot = {
     tmp.useTmpfs = true;
-    tmp.tmpfsSize = "40G";
+    tmp.tmpfsSize = "20G";
     initrd.systemd.enable = true;
     loader = {
       systemd-boot.enable = true;
@@ -145,16 +141,15 @@
     kernelParams = [
       "quiet"
       "mitigations=off"
-      "amdgpu.dcdebugmask=0x10"
       "nowatchdog"
       "nmi_watchdog=0"
       "intel_pstate=active"
-      "video=HDMI-A-1:1920x1080@120"
-      "video=DP-3:3840x2160@60"
-      "video=DP-1:2560x1440@165"
+      # "video=HDMI-A-1:1920x1080@120"
+      # "video=DP-3:video=DP-3:2560x1440R@75"
+      # "video=DP-1:2560x1440@165"
       "intel_idle.max_cstate=4"
       "processor.max_cstate=4"
-
+      "amdgpu.gpu_recovery=1"
     ];
 
     kernel.sysctl = {
@@ -169,7 +164,5 @@
       "vm.watermark_boost_factor" = 1;
       "vm.min_free_kbytes" = 5048576;
     };
-
   };
-
 }

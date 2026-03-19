@@ -1,5 +1,8 @@
-{ config, pkgs, ... }: {
-
+{
+  config,
+  pkgs,
+  ...
+}: {
   home.pointerCursor = {
     gtk.enable = true;
     x11.enable = true;
@@ -7,9 +10,8 @@
     name = "Quintom_Ink";
     size = 32;
   };
-  
+
   gtk = {
     enable = true;
-    };
-
+  };
 }

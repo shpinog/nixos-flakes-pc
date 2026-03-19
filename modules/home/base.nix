@@ -4,10 +4,8 @@
   pkgs,
   inputs,
   ...
-}:
-{
-
-  home.activation.createMesaShaderCache = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+}: {
+  home.activation.createMesaShaderCache = lib.hm.dag.entryAfter ["writeBoundary"] ''
     mkdir -p "$HOME/.mesa_shader_cache"
   '';
 
@@ -28,9 +26,8 @@
           udisks_version = 2;
           tray = true;
         };
-        icon_names.media = [ "media-optical" ];
+        icon_names.media = ["media-optical"];
       };
-
     };
     kdeconnect = {
       enable = false;
@@ -39,11 +36,10 @@
   };
 
   programs = {
-    
     vscode = {
-        enable = true;
-        package = pkgs.vscodium;
-      };
+      enable = true;
+      package = pkgs.vscodium;
+    };
 
     swappy = {
       enable = true;
@@ -72,7 +68,6 @@
           program = "fish";
         };
       };
-
     };
 
     bottom = {
@@ -85,10 +80,8 @@
         };
       };
     };
-
   };
   home.packages = with pkgs; [
-    shotwell    
+    shotwell
   ];
-
 }

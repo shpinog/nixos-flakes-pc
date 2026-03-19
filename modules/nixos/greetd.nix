@@ -3,15 +3,12 @@
   pkgs,
   inputs,
   ...
-}:
-
-let
+}: let
   tuigreet = "${pkgs.tuigreet}/bin/tuigreet";
   niri = "${pkgs.niri}/bin/niri-session";
   # hyprland = "${pkgs.hyprland}/bin/start-hyprland";
   # sway= "${pkgs.sway}/bin/sway";
-in
-{
+in {
   environment.systemPackages = [
     (pkgs.writeShellScriptBin "wayland-session" ''
       exec ${niri}

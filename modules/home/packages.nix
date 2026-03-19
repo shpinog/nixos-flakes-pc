@@ -1,7 +1,10 @@
-{ config, pkgs, ... }:
 {
-
+  config,
+  pkgs,
+  ...
+}: {
   home.packages = with pkgs; [
+    rclone
     eog
     jellyfin-ffmpeg
     zathura

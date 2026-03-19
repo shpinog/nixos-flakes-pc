@@ -5,13 +5,9 @@
   lib,
   stylix,
   ...
-}:
-{
-
-
+}: {
   home.packages = [
-    (inputs.lazy-nvim-nix.packages.x86_64-linux.LazyVim.override {
-    })
+    (inputs.lazy-nvim-nix.packages.x86_64-linux.LazyVim.override {})
   ];
 
   # programs.neovim = {

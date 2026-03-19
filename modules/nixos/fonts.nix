@@ -1,5 +1,9 @@
-{ config, pkgs, ... }:
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   fonts = {
     # fontDir.enable = true;
     # enableGhostscriptFonts = true;
@@ -13,6 +17,7 @@
       hackgen-nf-font
       ubuntu-classic
       powerline-symbols
+      corefonts
     ];
 
     fontconfig = {
@@ -24,20 +29,17 @@
       hinting = {
         enable = true;
         autohint = true;
-
       };
 
       defaultFonts = {
-        serif = [ "Ubuntu" ];
-        sansSerif = [ "Ubuntu Sans" ];
-        monospace = [ "JetBrains Mono Regular" ];
+        serif = ["Ubuntu"];
+        sansSerif = ["Ubuntu Sans"];
+        monospace = ["JetBrains Mono Regular"];
         emoji = [
           "Noto Color Emoji"
           "FiraCode Nerd Font"
         ];
-
       };
     };
   };
-
 }

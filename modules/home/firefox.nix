@@ -4,11 +4,9 @@
   inputs,
   lib,
   ...
-}:
-{
-
+}: {
   programs.librewolf = {
-  enable = true;
+    enable = true;
     profiles = {
       shpinog = {
         isDefault = true;
@@ -25,9 +23,9 @@
           "browser.search.isUS" = false;
           "distribution.searchplugins.defaultLocale" = "ru-RU";
           "general.useragent.locale" = "ru-RU";
-    "webgl.disabled" = false; # Если нужны 3D карты или игры в браузере
-    "privacy.resistFingerprinting" = true;
-    "privacy.clearOnShutdown.history" = false; # Чтобы не входить в аккаунты каждый раз
+          "webgl.disabled" = false; # Если нужны 3D карты или игры в браузере
+          "privacy.resistFingerprinting" = true;
+          "privacy.clearOnShutdown.history" = false; # Чтобы не входить в аккаунты каждый раз
         };
       };
     };

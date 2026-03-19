@@ -1,28 +1,32 @@
-{ config, pkgs, ... }: {
+{
+  config,
+  pkgs,
+  ...
+}: {
   programs.fish = {
     enable = true;
     package = pkgs.fish;
-    
-    shellAbbrs = {
-    };
-    
+
+    shellAbbrs = {};
+
     shellAliases = {
-        dff = "duf";
-        duu = "dust -Hr";
-        htop = "btm";
-        WakeServ = "wakeonlan -i  192.168.4.255 6c:0b:84:ff:82:fd";
-        vim = "nvim";
-      };
-    
-    plugins = [
-    ]; 
-    
-    functions = {
-      fish_greeting =""; 
+      dff = "duf";
+      duu = "dust -Hr";
+      htop = "btm";
+      WakeServ = "wakeonlan -i  192.168.4.255 6c:0b:84:ff:82:fd";
+      vim = "nvim";
+      gdrive-up = "systemctl --user start rclone-gdrive";
+      gdrive-down = "systemctl --user stop rclone-gdrive";
     };
-  
+
+    plugins = [
+    ];
+
+    functions = {
+      fish_greeting = "";
+    };
   };
-      
+
   home.packages = with pkgs; [
     fasd
   ];

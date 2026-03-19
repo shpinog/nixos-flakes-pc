@@ -1,6 +1,8 @@
-{ config, pkgs, ... }:
-
 {
+  config,
+  pkgs,
+  ...
+}: {
   # Включение Nautilus и необходимых компонентов
   home.packages = with pkgs; [
     pkgs.nautilus # Основной пакет Nautilus

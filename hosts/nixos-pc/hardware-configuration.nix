@@ -7,9 +7,7 @@
   pkgs,
   modulesPath,
   ...
-}:
-
-{
+}: {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
@@ -23,16 +21,14 @@
     "sd_mod"
     "usb_storage"
   ];
-  boot.initrd.kernelModules = [ "amdgpu" ];
+  boot.initrd.kernelModules = ["amdgpu"];
   boot.kernelModules = [
     "amdgpu"
     "kvm-intel"
     "i2c-dev"
     "ccid"
-    "amneziawg"
   ];
   boot.extraModulePackages = with config.boot.kernelPackages; [
-    amneziawg
   ];
 
   fileSystems."/" = {
@@ -43,9 +39,10 @@
   fileSystems."/boot" = {
     device = "/dev/disk/by-uuid/12CE-A600";
     fsType = "vfat";
+    options = ["fmask=0077" "dmask=0077"];
   };
 
-  swapDevices = [ ];
+  swapDevices = [];
 
   fileSystems."/home/shpinog/Files" = {
     device = "/dev/disk/by-uuid/315fdacf-5d62-45a8-9d86-028afb2c83c9";

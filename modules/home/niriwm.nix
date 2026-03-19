@@ -1,49 +1,76 @@
-{ inputs, pkgs, config, lib, niri, ... }:
-let
+{
+  inputs,
+  pkgs,
+  config,
+  lib,
+  niri,
+  ...
+}: let
   # Создаем обертку: она берет python3 из nix store и кормит ему скрипт из github
   niri-stack-pkg = pkgs.writeShellScriptBin "niri-stack-to-n" ''
     exec ${pkgs.python3}/bin/python3 ${inputs.niri-stack-to-n}/niri_stack_to_n.py
   '';
-in
-{
+  cliphist-picker = pkgs.writeShellScriptBin "cliphist-picker" ''
+    ${pkgs.cliphist}/bin/cliphist list | ${pkgs.wofi}/bin/wofi --dmenu | ${pkgs.cliphist}/bin/cliphist decode | ${pkgs.wl-clipboard}/bin/wl-copy
+  '';
+in {
   imports = [
     inputs.niri.homeModules.niri
     inputs.dms.homeModules.dank-material-shell
     inputs.dms.homeModules.niri
   ];
 
+  systemd.user.services.cliphist-watcher = {
+    Unit = {
+      Description = "Cliphist Wayland watcher";
+      After = ["graphical-session.target"];
+    };
+
+    Service = {
+      ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.wl-clipboard}/bin/wl-paste --type text --watch ${pkgs.cliphist}/bin/cliphist store & ${pkgs.wl-clipboard}/bin/wl-paste --type image --watch ${pkgs.cliphist}/bin/cliphist store'";
+      Restart = "always";
+    };
+
+    Install = {
+      WantedBy = ["graphical-session.target"];
+    };
+  };
+
   home.packages = with pkgs; [
     xwayland-satellite # XWayland сервер
-    wl-clipboard       # Буфер обмена
-    libnotify          # Уведомления
-    jaq                # JSON процессор (полезно для скриптов)
+    wl-clipboard # Буфер обмена
+    libnotify # Уведомления
+    jaq # JSON процессор (полезно для скриптов)
     wofi
+    cliphist
+    cliphist-picker
   ];
 
   # --- Настройка DankMaterialShell ---
   programs.dank-material-shell = {
     enable = true;
     niri = {
-    enableSpawn = true;      # Auto-start DMS with niri, if enabled
+      enableSpawn = true; # Auto-start DMS with niri, if enabled
     };
     # Если нужно явно указать пакет (обычно не требуется, модуль сам выберет):
     # package = inputs.dms.packages.${pkgs.system}.default;
     #
     niri.includes = {
-    enable = false;             # Enable config includes hack. Enabled by default.
+      enable = false; # Enable config includes hack. Enabled by default.
     };
   };
 
   programs.niri = {
     enable = true;
-    package = inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri-unstable;
+    # package = inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri-stable;
+    package = pkgs.niri;
 
     settings = {
       prefer-no-csd = true;
       hotkey-overlay = {
         skip-at-startup = true;
         hide-not-bound = true;
-        };
+      };
       # --- Окружение ---
       environment = {
         DISPLAY = ":0";
@@ -54,7 +81,7 @@ in
       # --- Автозапуск ---
       # Важно: используем { command = [...]; } для каждой команды
       spawn-at-startup = [
-        { command = ["${pkgs.bash}/bin/bash" "-c" "sleep 3 && ${niri-stack-pkg}/bin/niri-stack-to-n"]; }
+        {command = ["${pkgs.bash}/bin/bash" "-c" "sleep 3 && ${niri-stack-pkg}/bin/niri-stack-to-n"];}
       ];
 
       # --- Ввод ---
@@ -65,11 +92,11 @@ in
         };
 
         mouse = {
-         natural-scroll = false;
-         accel-speed = 0;
-         accel-profile = "flat";
+          natural-scroll = false;
+          accel-speed = 0;
+          accel-profile = "flat";
         };
-        
+
         touchpad = {
           tap = true;
           natural-scroll = true;
@@ -82,22 +109,43 @@ in
       # --- Мониторы ---
       outputs = {
         "DP-2" = {
-          mode = { width = 2560; height = 1440; refresh = 165.0; };
-          position = { x = 0; y = 0; };
+          mode = {
+            width = 2560;
+            height = 1440;
+            refresh = 165.0;
+          };
+          position = {
+            x = 0;
+            y = 0;
+          };
           scale = 1.0;
           variable-refresh-rate = "on-demand";
         };
 
         "HDMI-A-1" = {
-          mode = { width = 1920; height = 1080; refresh = 120.0; };
-          position = { x = 640; y = -1080; };
+          mode = {
+            width = 1920;
+            height = 1080;
+            refresh = 144.0;
+          };
+          position = {
+            x = 640;
+            y = -1080;
+          };
           scale = 1.0;
-          variable-refresh-rate = "on-demand";
+          variable-refresh-rate = true;
         };
 
         "DP-3" = {
-          mode = { width = 3840; height = 2160; refresh = 60.0; };
-          position = { x = 2560; y = -480; };
+          mode = {
+            width = 3840;
+            height = 2160;
+            refresh = 60.0;
+          };
+          position = {
+            x = 2560;
+            y = -480;
+          };
           scale = 2.0;
           transform.rotation = 90;
           variable-refresh-rate = "on-demand";
@@ -107,18 +155,18 @@ in
       # --- Внешний вид (Layout) ---
       layout = {
         gaps = 4;
-        center-focused-column = "on-overflow";
+        center-focused-column = "always";
         always-center-single-column = true;
         empty-workspace-above-first = true;
 
-
         preset-column-widths = [
-          { proportion = 0.33333; }
-          { proportion = 0.5; }
-          { proportion = 0.66667; }
+          {proportion = 0.33333;}
+          {proportion = 0.5;}
+          {proportion = 0.66667;}
+          {proportion = 1.0;}
         ];
 
-        default-column-width = { proportion = 0.5; };
+        default-column-width = {proportion = 0.5;};
 
         focus-ring = {
           enable = true;
@@ -126,19 +174,17 @@ in
           active.color = "#6a818f";
           inactive.color = "#595959aa";
         };
-        
-        border = { enable = false; };
+
+        border = {enable = false;};
       };
 
       # --- Правила окон ---
       # Важно: window-rules (множественное число), список объектов
       window-rules = [
         {
-          geometry-corner-radius =
-            let
+          geometry-corner-radius = let
             r = 8.0;
-            in
-          {
+          in {
             top-left = r;
             top-right = r;
             bottom-left = r;
@@ -148,38 +194,42 @@ in
           clip-to-geometry = true;
         }
         {
-          matches = [{ app-id = "^steam$"; }];
-          open-on-output = "HDMI-A-1"; 
-          default-column-width = { proportion = 1.0; };
+          matches = [{app-id = "^steam$";}];
+          open-on-output = "HDMI-A-1";
+          default-column-width = {proportion = 1.0;};
         }
         {
-          matches = [{ app-id = "org.telegram.desktop"; }];
+          matches = [{app-id = "org.telegram.desktop";}];
           open-on-workspace = "3";
         }
         {
-          matches = [{ app-id = "Alacritty"; }];
+          matches = [{app-id = "Alacritty";}];
           open-on-output = "DP-3";
-          default-window-height = { proportion = 1. / 2.; };
-          default-column-width = { proportion = 1. / 1.; };
+          default-window-height = {proportion = 1. / 2.;};
+          default-column-width = {proportion = 1. / 1.;};
         }
         {
-          matches = [{ app-id = "firefox"; }];
+          matches = [{app-id = "firefox";}];
           open-maximized = true;
           open-on-output = "DP-2";
         }
         {
-          matches = [{ app-id = "librewolf"; }];
+          matches = [{app-id = "librewolf";}];
           open-maximized = true;
           open-on-output = "DP-2";
         }
         {
           matches = [
-            { app-id = "pavucontrol"; }
-            { app-id = ".blueman-manager-wrapped"; }
-            { app-id = "thunar"; title = "File Operation Progress"; }
-            { app-id = "mpv"; }
-            { title = "Media viewer"; }
-            { title = "^Picture-in-Picture$"; }
+            {app-id = "pavucontrol";}
+            {app-id = ".blueman-manager-wrapped";}
+            {
+              app-id = "thunar";
+              title = "File Operation Progress";
+            }
+            {app-id = "mpv";}
+            {app-id = "org.gnome.Nautilus";}
+            {title = "Media viewer";}
+            {title = "^Picture-in-Picture$";}
           ];
           open-floating = true;
         }
@@ -189,7 +239,7 @@ in
       # Важно: используем структуру .action.<действие>
       # Аргументы передаются строкой (если один) или списком (если несколько)
       binds = {
-        "Mod+Shift+M".action.quit = { skip-confirmation = true; };
+        "Mod+Shift+M".action.quit = {skip-confirmation = true;};
         "Mod+C".action.close-window = {};
         "Mod+F".action.fullscreen-window = {};
         "Mod+Shift+F".action.maximize-column = {};
@@ -198,10 +248,14 @@ in
         "Mod+Return".action.spawn = "alacritty";
         "Mod+Q".action.spawn = "librewolf";
         "Mod+Shift+Q".action.spawn = "firefox";
-        "Mod+KP_Left".action.spawn = "thunar";
+        "Mod+KP_Left".action.spawn = "nautilus";
         "Mod+KP_Home".action.spawn = "telegram-desktop";
         "Mod+R".action.spawn = ["wofi" "--show" "drun"];
-        "Mod+Shift+L".action.spawn = ["dms" "ipc" "call" "lock" "lock"];
+        "Mod+Shift+L".action.spawn = [
+          "sh" "-c"
+          "dms ipc call lock lock && niri msg action power-off-monitors"
+        ];
+        "Mod+V".action.spawn = "cliphist-picker";
 
         "Mod+Delete".action.screenshot = {};
         "Shift+Print".action.screenshot-screen = {};
@@ -231,7 +285,7 @@ in
         "Mod+Shift+1".action.move-column-to-workspace = 1;
         "Mod+Shift+2".action.move-column-to-workspace = 2;
         "Mod+Shift+3".action.move-column-to-workspace = 3;
-        
+
         "Mod+WheelScrollDown".action.focus-workspace-down = {};
         "Mod+WheelScrollUp".action.focus-workspace-up = {};
       };

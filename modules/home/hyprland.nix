@@ -3,8 +3,7 @@
   config,
   pkgs,
   ...
-}:
-{
+}: {
   # imports = [
   #   inputs.dms.homeModules.dankMaterialShell.default
   # ];
@@ -29,5 +28,4 @@
     hypridle
     clipse
   ];
-
 }

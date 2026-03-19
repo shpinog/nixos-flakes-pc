@@ -1,11 +1,10 @@
-
-{ pkgs, config, lib, ... }: {
-
-services.gnome.core-os-services.enable = true;
-services.gnome.gnome-user-share.enable = true;
-services.gnome.core-utilities.enable = true;
-environment.systemPackages = with pkgs; [
-  glib  
-];
-
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}: {
+  services.gvfs.enable = true; # Для Корзины, монтирования MTP (Android) и сетевых дисков
+  services.tumbler.enable = true; # Для генерации миниатюр
+  services.elephant.enable = true;
 }

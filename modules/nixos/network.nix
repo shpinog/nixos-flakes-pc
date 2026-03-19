@@ -4,9 +4,7 @@
   config,
   pkgs,
   ...
-}:
-{
-
+}: {
   networking.useDHCP = false;
   networking.enableIPv6 = true;
   networking.networkmanager.enable = true;
@@ -104,5 +102,4 @@
     StartLimitIntervalSec = lib.mkForce 0;
     StartLimitBurst = lib.mkForce 0;
   };
-
 }

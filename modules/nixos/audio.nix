@@ -3,9 +3,7 @@
   config,
   lib,
   ...
-}:
-{
-
+}: {
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -77,7 +75,7 @@
         Enable = "Socket,Media,Sink,Source";
         # MultiProfile = "multiple";
         ControllerMode = "bredr";
-        Disable= "Input";
+        Disable = "Input";
         # FastConnectable = "true";
         # Experimental = true;
         # KernelExperimental = true;

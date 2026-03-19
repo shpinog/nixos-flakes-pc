@@ -1,5 +1,8 @@
-{ config, pkgs, ... }:{
-
+{
+  config,
+  pkgs,
+  ...
+}: {
   programs.tmux.enable = true;
 
   xdg.configFile."tmux" = {
@@ -7,4 +10,3 @@
     source = "${../configFiles/tmux}";
   };
 }
-  

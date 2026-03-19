@@ -1,9 +1,11 @@
-{ pkgs, config, lib, ... }:
-
-let
-  inputs = config._module.args.inputs;
-in
 {
+  pkgs,
+  config,
+  lib,
+  ...
+}: let
+  inputs = config._module.args.inputs;
+in {
   systemd.services.greetd.serviceConfig = {
     ExecStartPre = "-${pkgs.procps}/bin/pkill -KILL niri";
     KillSignal = "SIGKILL";
@@ -12,7 +14,9 @@ in
 
   programs.niri = {
     enable = true;
-package = inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri-unstable;  };
+    # package = inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri-stable;
+    package = pkgs.niri;
+  };
 
   programs.dank-material-shell.greeter = {
     enable = true;
@@ -20,6 +24,7 @@ package = inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri-unstable;
     compositor = {
       name = "niri";
       customConfig = ''
+
         cursor {
           xcursor-theme "Adwaita"
           xcursor-size 24
